@@ -1,0 +1,6 @@
+.DS_STORE
+_pycache_/
+data/
+*.jpg
+*.h5
+*.png
