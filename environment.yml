@@ -6,8 +6,8 @@ dependencies:
   - aiosqlite=0.18.0
   - alabaster=0.7.12
   - anyio=3.5.0
-  - applaunchservices=0.3.0
-  - appnope=0.1.2
+  # - applaunchservices=0.3.0
+  # - appnope=0.1.2
   - argon2-cffi=21.3.0
   - argon2-cffi-bindings=21.2.0
   - arrow=1.2.3
@@ -46,11 +46,11 @@ dependencies:
   - exceptiongroup=1.0.4
   - executing=0.8.3
   - flake8=6.0.0
-  - gettext=0.21.0
+  # - gettext=0.21.0
   - giflib=5.2.1
   - glib=2.69.1
-  - gst-plugins-base=1.14.1
-  - gstreamer=1.14.1
+  # - gst-plugins-base=1.14.1
+  # - gstreamer=1.14.1
   - icu=58.2
   - idna=3.4
   - imagesize=1.4.1
@@ -88,9 +88,9 @@ dependencies:
   - lazy-object-proxy=1.6.0
   - lerc=3.0
   - libclang13=14.0.6
-  - libcxx=14.0.6
+  # - libcxx=14.0.6
   - libdeflate=1.17
-  - libedit=3.1.20221030
+  # - libedit=3.1.20221030
   - libffi=3.4.4
   - libiconv=1.16
   - libllvm14=14.0.6
@@ -114,12 +114,12 @@ dependencies:
   - mistune=0.8.4
   - more-itertools=10.1.0
   - mypy_extensions=1.0.0
-  - mysql=5.7.24
+  # - mysql=5.7.24
   - nbclassic=0.5.5
   - nbclient=0.5.13
   - nbconvert=6.5.4
   - nbformat=5.9.2
-  - ncurses=6.4
+  # - ncurses=6.4
   - nest-asyncio=1.5.6
   - notebook=6.5.4
   - notebook-shim=0.2.2
@@ -150,10 +150,10 @@ dependencies:
   - pylint=2.16.2
   - pylint-venv=2.3.0
   - pyls-spyder=0.4.0
-  - pyobjc-core=9.0
-  - pyobjc-framework-cocoa=9.0
-  - pyobjc-framework-coreservices=9.0
-  - pyobjc-framework-fsevents=9.0
+  # - pyobjc-core=9.0
+  # - pyobjc-framework-cocoa=9.0
+  # - pyobjc-framework-coreservices=9.0
+  # - pyobjc-framework-fsevents=9.0
   - pyopenssl=23.2.0
   - pyqt=5.15.7
   - pyqtwebengine=5.15.7
@@ -167,7 +167,7 @@ dependencies:
   - python-lsp-jsonrpc=1.0.0
   - python-lsp-server=1.7.2
   - python-slugify=5.0.2
-  - python.app=3
+  # - python.app=3
   - pytoolconfig=1.2.6
   - pytz=2022.7
   - pyyaml=6.0
@@ -180,7 +180,7 @@ dependencies:
   - qtconsole=5.4.2
   - qtpy=2.2.0
   - qtwebkit=5.212
-  - readline=8.2
+  # - readline=8.2
   - requests=2.31.0
   - rfc3339-validator=0.1.4
   - rfc3986-validator=0.1.1
@@ -228,7 +228,7 @@ dependencies:
   - whatthepatch=1.0.2
   - wheel=0.38.4
   - widgetsnbextension=4.0.5
-  - wurlitzer=3.0.2
+  # - wurlitzer=3.0.2
   - xz=5.4.2
   - y-py=0.5.9
   - yaml=0.2.5
@@ -279,7 +279,7 @@ dependencies:
     - pyparsing==3.1.1
     - pyqt5==5.15.10
     - pyqt5-plugins==5.15.4.2.2
-    - pyqt5-qt5==5.15.11
+    # - pyqt5-qt5==5.15.11
     - pyqt5-sip==12.13.0
     - pyqt5-tools==5.15.4.3.2
     - python-dotenv==1.0.0
