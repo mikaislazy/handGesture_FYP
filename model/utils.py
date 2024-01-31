@@ -6,6 +6,163 @@ import json
 import os
 import cv2
 import mediapipe as mp
+        
+def get_frames_from_video(videoPath, ctg, fps, target_size, videoName, imgPath):
+    """ 
+    imgPath: the directory to save the images
+    videoPath: the path to the video
+    ctg: number of classes of hand gestures
+    fps: the number of frames to skip
+    target_size: the size of the image
+    videoName: name of the video
+    """
+    # check if video exists
+    if not Path(videoPath).exists():
+        print('Video {} not exists'.format(videoPath))
+        return
+    
+    # process the video
+    cap = cv2.VideoCapture(videoPath)
+    i = 0
+    # variable to set number of frames to skip
+    frame_skip = fps
+    # variable to keep track of the frame to be saved
+    frame_count = 0
+    # make directory for categories in data folder if folder not exists
+    cwd = os.getcwd()
+    print("current dir: {}".format(cwd))
+    mkdir( Path(imgPath))
+    mkdir(Path(imgPath+ctg))
+
+    # a while loop to extract frames
+    while cap.isOpened():
+        ret, frame = cap.read()
+        if not ret:
+            break
+        if i > frame_skip - 1:
+            processed_frame = image_processing(target_size, frame, True)
+            if processed_frame is None:
+                continue
+            frame_count += 1
+            #frame name
+            frame_name = '{}_{}.jpg'.format(videoName, frame_count)
+            #frame path
+            frame_path = imgPath+ ctg + "/" + frame_name
+            cv2.imwrite(frame_path, processed_frame)
+            i = 0
+            continue
+        i += 1
+
+    cap.release()
+
+
+def process_videos(fps, target_size, imgPath):
+    '''
+    Args:
+        fps: the number of frames to skip
+        target_size: tuple(width, height)
+    '''
+
+    # video folder directory 
+    base_dir = Path('./data')
+    print(base_dir)
+    video_dir = base_dir / 'video' / 'selectedGesture'
+    print(video_dir)
+    categories = get_child_dir_names(video_dir)
+    print('Total number of gesture classes: {}, which are {}'.format(len(categories), categories))
+
+    # convert the frames in video to jpg
+    # process videos in each category
+    for ctg in categories:
+        # get all the path of  all videos in a category
+        videos = [
+            path for path in (video_dir / ctg).iterdir() if path.is_file()
+        ]
+        for video in videos:
+          try:
+              # print("video_dir:{}".format(video_dir))
+              # print("ctg:{}".format(ctg))
+              # print("video:{}".format(video))
+              videoName = str(video).split("/")[-1].replace(".mp4", "")
+              print('Processing video{} at path: {}'.format(videoName, "./"+ str(video)))
+              # process video 
+              get_frames_from_video( "./"+ str(video) , ctg ,fps, target_size, videoName, imgPath)
+          except:
+              print("get into trouble in {}".format(video))
+              continue
+
+    print('videos process completed.')
+
+def split_dataset(image_folder, org_img_dir, video_folder, splited_dataset_folder):
+    """
+    Args:
+        image_folder (string): destination folder to save the splited dataset
+        org_img_dir (path): the path to the original images
+        video_folder (string): the name of the videos folder stored the
+        splited_dataset_folder (string): the name of the splited dataset
+    """
+    
+    base_dir = Path('./data')
+    video_dir = base_dir / 'video' / video_folder
+    categories = get_child_dir_names(video_dir)
+    print('The {} number of classes are: {}'.format(len(categories), categories))
+    mkdir(base_dir/splited_dataset_folder)
+    data_dir = Path(base_dir/splited_dataset_folder) # data_dir is the directory to save the splited dataset
+    org_img_dir = Path(org_img_dir)
+    
+    
+    # create directory for training, validation and testing set
+    train_dir = data_dir / 'train'
+    val_dir = data_dir / 'val'
+    test_dir = data_dir / 'test'
+    for dir in [train_dir, val_dir, test_dir]:
+        mkdir(dir)
+        for ctg in categories:
+            mkdir(dir / ctg) #create folder for each gesture
+
+    # random split the images
+    for ctg in categories:
+        cur_dir = org_img_dir / ctg
+        jpgs = np.array([image for image in cur_dir.iterdir() if image.match('*.jpg')])#turn the image in the category into array
+        train, val, test = random_split(jpgs) #split the array into train, val, test    
+        move_paths(train, train_dir / ctg)
+        move_paths(val, val_dir / ctg)
+        move_paths(test, test_dir / ctg)
+
+def get_sub_dir(path):
+    """
+    return list of the child directory names 
+    """
+    return [dir.name for dir in path.iterdir() if dir.is_dir()]
+
+def count_jpgs(path):
+    return len(list(path.rglob('*.jpg')))
+
+
+def move_paths(paths, dst_dir):
+    # move the file to the destination directory
+    for path in paths:
+        dst = dst_dir / path.name
+        shutil.move(path, dst)
+        print('{} is moved to {}'.format(path, dst))
+
+
+def random_split(x, train_ratio, val_ratio):
+    """
+    Args:
+    x: the np.array of the images
+    train_ratio: the ratio of the training set
+    val_ratio: the ratio of the validation set
+    """
+    random.seed(99)
+    np.random.shuffle(x)
+    n = len(x)
+    train = math.ceil(n * train_ratio)
+    val = math.ceil(n * val_ratio) 
+    test = train+val
+    train, val, test = x[:train],  x[train:test], x[test:]
+    return train, val, test
+
 
 def mkdir(path):
     if not path.exists():
