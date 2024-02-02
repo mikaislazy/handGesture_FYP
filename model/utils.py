@@ -106,7 +106,7 @@ def split_dataset(image_folder, org_img_dir, video_folder, splited_dataset_folde
     
     base_dir = Path('./data')
     video_dir = base_dir / 'video' / video_folder
-    categories = get_child_dir_names(video_dir)
+    categories = get_sub_dir(video_dir)
     print('The {} number of classes are: {}'.format(len(categories), categories))
     mkdir(base_dir/splited_dataset_folder)
     data_dir = Path(base_dir/splited_dataset_folder) # data_dir is the directory to save the splited dataset
