@@ -1,5 +1,7 @@
 from pathlib import Path
 import shutil
+import imageio
+from PIL import Image
 import numpy as np
 import math
 import json
@@ -7,7 +9,7 @@ import os
 import cv2
 import mediapipe as mp
         
-def get_frames_from_video(videoPath, ctg, fps, target_size, videoName, imgPath):
+def get_frames_from_video(videoPath, ctg, skip_fps, target_size, videoName, imgPath):
     """ 
     imgPath: the directory to save the images
     videoPath: the path to the video
@@ -25,7 +27,7 @@ def get_frames_from_video(videoPath, ctg, fps, target_size, videoName, imgPath):
     cap = cv2.VideoCapture(videoPath)
     i = 0
     # variable to set number of frames to skip
-    frame_skip = fps
+    frame_skip = skip_fps
     # variable to keep track of the frame to be saved
     frame_count = 0
     # make directory for categories in data folder if folder not exists
@@ -58,9 +60,8 @@ def get_frames_from_video(videoPath, ctg, fps, target_size, videoName, imgPath):
 
 def process_videos(fps, target_size, imgPath):
     '''
-    Args:
-        fps: the number of frames to skip
-        target_size: tuple(width, height)
+    fps: int
+    target_size: tuple(width, height)
     '''
 
     # video folder directory 
@@ -68,13 +69,13 @@ def process_videos(fps, target_size, imgPath):
     print(base_dir)
     video_dir = base_dir / 'video' / 'selectedGesture'
     print(video_dir)
-    categories = get_child_dir_names(video_dir)
+    categories = get_sub_dir(video_dir)
     print('Total number of gesture classes: {}, which are {}'.format(len(categories), categories))
 
     # convert the frames in video to jpg
     # process videos in each category
     for ctg in categories:
-        # get all the path of  all videos in a category
+        # get all the path of  all video in a category
         videos = [
             path for path in (video_dir / ctg).iterdir() if path.is_file()
         ]
@@ -91,6 +92,7 @@ def process_videos(fps, target_size, imgPath):
               print("get into trouble in {}".format(video))
               continue
 
+    # split_dataset("splited_dataset", imgPath)
     print('videos process completed.')
 
 def split_dataset(image_folder, org_img_dir, video_folder, splited_dataset_folder):
@@ -230,13 +232,13 @@ def image_processing(target_size, img, hand_area_only):
     # automatic contrast adjustment
     adjustedImg = auto_contrast_adjustment(gaussBlurImg, 255, 0)
     # convert image to grayscale
-    # grayImg = cv2.cvtColor(adjustedImg, cv2.COLOR_BGR2GRAY)
+    grayImg = cv2.cvtColor(adjustedImg, cv2.COLOR_BGR2GRAY)
     # apply binary thresholding to image
-    # ret, threshImg = cv2.threshold(grayImg,160,255,cv2.THRESH_BINARY)
+    ret, threshImg = cv2.threshold(grayImg,160,255,cv2.THRESH_BINARY)
     # apply canny edge detection to image
-    # cannyImg = cv2.Canny(threshImg,10,100)
+    cannyImg = cv2.Canny(threshImg,10,100)
     # resize the image to target size
-    resizedImg = cv2.resize(adjustedImg, target_size)
+    resizedImg = cv2.resize(cannyImg, target_size)
     return resizedImg
 
 def auto_contrast_adjustment(img, max_val, min_val):
