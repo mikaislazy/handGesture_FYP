@@ -95,7 +95,7 @@ def process_videos(fps, target_size, imgPath):
     # split_dataset("splited_dataset", imgPath)
     print('videos process completed.')
 
-def split_dataset(image_folder, org_img_dir, video_folder, splited_dataset_folder):
+def split_dataset( splited_dataset_folder ,org_img_dir, video_folder):
     """
     Args:
         image_folder (string): destination folder to save the splited dataset
@@ -126,7 +126,7 @@ def split_dataset(image_folder, org_img_dir, video_folder, splited_dataset_folde
     for ctg in categories:
         cur_dir = org_img_dir / ctg
         jpgs = np.array([image for image in cur_dir.iterdir() if image.match('*.jpg')])#turn the image in the category into array
-        train, val, test = random_split(jpgs) #split the array into train, val, test    
+        train, val, test = random_split(jpgs, 0.6, 0.2) #split the array into train, val, test    
         move_paths(train, train_dir / ctg)
         move_paths(val, val_dir / ctg)
         move_paths(test, test_dir / ctg)
@@ -156,7 +156,7 @@ def random_split(x, train_ratio, val_ratio):
     train_ratio: the ratio of the training set
     val_ratio: the ratio of the validation set
     """
-    random.seed(99)
+    np.random.seed(99)
     np.random.shuffle(x)
     n = len(x)
     train = math.ceil(n * train_ratio)
@@ -232,13 +232,13 @@ def image_processing(target_size, img, hand_area_only):
     # automatic contrast adjustment
     adjustedImg = auto_contrast_adjustment(gaussBlurImg, 255, 0)
     # convert image to grayscale
-    grayImg = cv2.cvtColor(adjustedImg, cv2.COLOR_BGR2GRAY)
-    # apply binary thresholding to image
-    ret, threshImg = cv2.threshold(grayImg,160,255,cv2.THRESH_BINARY)
-    # apply canny edge detection to image
-    cannyImg = cv2.Canny(threshImg,10,100)
+    # grayImg = cv2.cvtColor(adjustedImg, cv2.COLOR_BGR2GRAY)
+    # # apply binary thresholding to image
+    # ret, threshImg = cv2.threshold(grayImg,160,255,cv2.THRESH_BINARY)
+    # # apply canny edge detection to image
+    # cannyImg = cv2.Canny(threshImg,10,100)
     # resize the image to target size
-    resizedImg = cv2.resize(cannyImg, target_size)
+    resizedImg = cv2.resize(adjustedImg, target_size)
     return resizedImg
 
 def auto_contrast_adjustment(img, max_val, min_val):
