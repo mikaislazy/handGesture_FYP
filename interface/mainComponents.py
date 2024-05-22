@@ -2,14 +2,18 @@ import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QGridLayout, QStackedWidget
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QSize
-from  handGestureComponent import HandGestureWidget 
+from handGestureComponent import handGestureWidget 
 from handGestureRecognition import handGestureRecognitionWidget
+from handGestureKnowledge import handGestureKnowledgeTaskWidget
+from handGesturePractice import handGesturePracticeWidget
+from handGesturePracticeTool import handGesturePracticeToolWidget
+from handGestureTaskSelection import handGestureTaskSelectionWidget
 
 class mainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.setWindowTitle('Hand Gesture Learning')
+        self.setWindowTitle('EdTech Application for learning Taoism and Buddhism gestures')
         self.setGeometry(100, 100, 1200, 800)  # Set the size of the main window
 
         # Main widget
@@ -60,10 +64,14 @@ class mainWindow(QMainWindow):
         main_layout.addWidget(self.central_widget)
         
         # Create and add the hand gesture learning widget
-        self.hand_gesture_widget = HandGestureWidget(self)
+        self.hand_gesture_widget = handGestureWidget(self)
         self.central_widget.addWidget(self.hand_gesture_widget)
+        self.central_widget.setCurrentWidget(self.hand_gesture_widget)
         
         # Set the testing widget to hand gesture learning
-        self.testingWidget = handGestureRecognitionWidget(self)
-        self.central_widget.addWidget(self.testingWidget)
-        self.central_widget.setCurrentWidget(self.testingWidget)
+        # self.testingWidget = handGestureWidget(self)
+        # self.central_widget.addWidget(self.testingWidget)
+
+    def resize_main_window(self):
+        print('try to resize back the orignal window')
+        self.setGeometry(100, 100, 1200, 800)

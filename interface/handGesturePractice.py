@@ -35,14 +35,14 @@ class handGesturePracticeWidget(QWidget):
             gesture_icon.setPixmap(pixmap)
             gesture_icon.setAlignment(Qt.AlignCenter)
             gesture_icon.setFixedSize(100, 100)
-            gesture_icon.setStyleSheet("background-color: yellow;")
+            # gesture_icon.setStyleSheet("background-color: yellow;")
             
             vbox = QVBoxLayout()
             vbox.setSpacing(0)  # Set spacing to 0
             vbox.addWidget(gesture_icon)
             name_label = QLabel(f"{i+1}. {gesture_name}")
             name_label.setAlignment(Qt.AlignCenter)
-            name_label.setStyleSheet("background-color: white;") 
+            # name_label.setStyleSheet("background-color: white;") 
             name_label.setFixedSize(100, 30)
             vbox.addWidget(name_label)
             
@@ -77,14 +77,19 @@ class handGesturePracticeWidget(QWidget):
 
         # Radio buttons for desired effect
         self.effect_group = QGroupBox()
+        self.effect_group.setStyleSheet("background-color: transparent; border: none;")
+        
+        # layout for radio buttons
         effect_layout = QVBoxLayout()
         effect_layout.setSpacing(0)  # Set spacing to 0
         effect_layout.setContentsMargins(0, 0, 0, 0)  # Set margins to 0
+        
         self.fire_effect = QRadioButton("Fire effect")
         self.thunder_effect = QRadioButton("Thunder effect")
         self.lighting_effect = QRadioButton("Lighting effect")
+        # style the radio buttons
         self.fire_effect.setFixedSize(200, 30)
-        self.fire_effect.setStyleSheet("font-size: 16px;")
+        self.fire_effect.setStyleSheet("font-size: 16px; ")
         self.thunder_effect.setFixedSize(200, 30)
         self.thunder_effect.setStyleSheet("font-size: 16px;")
         self.lighting_effect.setFixedSize(200, 30)

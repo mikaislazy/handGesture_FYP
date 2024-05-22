@@ -1,33 +1,23 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QButtonGroup
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QHBoxLayout, QSizePolicy
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QPushButton, QButtonGroup, QHBoxLayout
 from PyQt5.QtCore import Qt
-import json 
 
 class handGestureKnowledgeTaskWidget(QWidget):
-    def __init__(self,gesture_name, parent=None):
+    def __init__(self, question, options, answer, parent=None):
         super().__init__(parent)
-        
-        # Load questions from JSON file
-        with open('other/question.json', 'r') as f:
-            question_bank = json.load(f)
-            q_opt = question_bank[gesture_name]['questions'][0] # take the first as testing
-            questions = q_opt['question']
-            options = q_opt['options']
-            
-        #load answer from JSON file
-        with open('other/answer.json', 'r') as f:
-            answers = json.load(f)
-            q_a = answers[gesture_name]["answers"][0]
-            answer = q_a['correct_option']
+        print(f"Completed hand gesture question: {question}")
+        self.question = question
+        self.options = options
+        self.answer = answer
+        self.parent_widget = parent
         
         # layout 
-        layout = QVBoxLayout()
+        layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
         
         # Question label
-        self.question_label = QLabel(f"Question: {questions}")
+        self.question_label = QLabel(f"Question: {question}")
         self.question_label.setFixedSize(800, 80)
         self.question_label.setWordWrap(True) 
         self.question_label.setStyleSheet("""
@@ -41,17 +31,17 @@ class handGestureKnowledgeTaskWidget(QWidget):
         """)
 
         layout.addWidget(self.question_label, alignment=Qt.AlignCenter)
-        # layout.addSpacerItem(QSpacerItem(0, 5, QSizePolicy.Minimum, QSizePolicy.Expanding))
         
         # Options buttons
         self.optionGroup = QButtonGroup()
+        self.optionGroup.setExclusive(True)
         self.option_buttons = []
         opt_order = ["A.", "B.", "C."]
         
         for order, option_text in zip(opt_order, options):
-            button = QPushButton(f"{order} {option_text}")
-            button.setFixedSize(700, 50)
-            button.setStyleSheet("""
+            btn = QPushButton(f"{order} {option_text}")
+            btn.setFixedSize(700, 50)
+            btn.setStyleSheet("""
                 font-size: 16px;
                 padding: 10px;
                 border: 1px solid black;
@@ -61,15 +51,33 @@ class handGestureKnowledgeTaskWidget(QWidget):
                 text-align: left;
                 margin: 0;
             """)
-            button.setCursor(Qt.PointingHandCursor)
-            button.clicked.connect(self.on_option_click)
-            self.option_buttons.append(button)
-            self.optionGroup.addButton(button)
-            layout.addWidget(button, alignment=Qt.AlignCenter)
-            
-        # add question and option to the layout
+            btn.setCursor(Qt.PointingHandCursor)
+            btn.clicked.connect(lambda checked, option_text=option_text: self.on_option_click(option_text))
+            self.option_buttons.append(btn)
+            self.optionGroup.addButton(btn)
+            layout.addWidget(btn, alignment=Qt.AlignCenter)
+        
+        self.result_label = QLabel("")
+        self.result_label.setAlignment(Qt.AlignCenter)
+        layout.addWidget(self.result_label)    
+        # Set the layout only once
         self.setLayout(layout)
 
-    def on_option_click(self):
-        sender = self.sender()
-        print(f'Button clicked: {sender.text()}')
+    def on_option_click(self, selected_option):
+        print(f'Option clicked: {selected_option}')
+        print(f"Correct answer: {self.answer}")
+        parent = self.parentWidget().parentWidget()
+        if selected_option.lower() == self.answer.lower():
+            self.result_label.setText("Correct!")
+            self.result_label.setStyleSheet("color: green;")
+            self.navigate_to_next_question()
+        else:
+            self.parent_widget.navigate_to_main_widget()
+
+    def navigate_to_next_question(self):
+        parent = self.parent_widget
+        current_index = parent.stacked_questions.currentIndex()
+        if current_index < parent.stacked_questions.count() - 1:
+            parent.stacked_questions.setCurrentIndex(current_index + 1)
+        else:
+            parent.navigate_to_main_widget()

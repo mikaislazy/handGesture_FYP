@@ -1,16 +1,15 @@
-import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QGridLayout, QPushButton, QHBoxLayout, QStackedWidget
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QGridLayout, QPushButton, QHBoxLayout, QStackedWidget, QMainWindow, QSizePolicy
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QSize, Qt
-from handGestureTaskSelection import TaskSelectionWidget
+from handGestureTaskSelection import handGestureTaskSelectionWidget
+from tool import GESTURES
+from handGestureKnowledge import handGestureKnowledgeTaskWidget
 
-class HandGestureWidget(QWidget):
+class handGestureWidget(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
+        self.setMaximumWidth(1000)
         self.setStyleSheet("""
-            # QWidget {
-            #     background-color: #FFFFFF;  /* Set the main background to white */
-            # }
             QPushButton {
                 border: none;  /* No border for buttons */
                 background-color: transparent;  /* Transparent background to show icon only */
@@ -19,40 +18,25 @@ class HandGestureWidget(QWidget):
                 background-color: #DDDDDD;  /* Slight grey background when pressed */
             }
         """)
-        
-        layout = QHBoxLayout(self)
-        
+
+        self.original_size = self.size()  # Original size of the window
+
+        self.layout = QHBoxLayout(self)
+        # self.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
         # Gesture layout
-        
-        # add Gesture button to the private variables and save in layout
         self.gesture_widget = QWidget()
         gesture_layout = QGridLayout()
         self.gesture_widget.setLayout(gesture_layout)
-        layout.addWidget(self.gesture_widget)
-        
-        # Stacked Layout
-        self.stacked_widget= QStackedWidget(self)
-        layout.addWidget(self.stacked_widget) 
-        
-        # Gestures
-        gestures = [
-            'HuoYanYin',
-            'ChanDingYin',
-            'MiTuoDingYin',
-            'Retsu',
-            'Rin',
-            'Zai',
-            'Zen',
-            'ZhiJiXiangYin',
-            'TaiJiYin'
-        ]
 
-        for i, name in enumerate(gestures):
+        # Stacked Layout
+        self.stacked_widget = None  # Initially, there's no stacked widget
+
+        for i, name in enumerate(GESTURES):
             image_path = f'images/handGestureBtn/{name}Btn.png'
             btn = QPushButton()
             btn.setIcon(QIcon(image_path))
-            btn.setIconSize(QSize(200, 200))  # Ensure the icon size fits the button
-            btn.setFixedSize(200, 200)  # Set the size of the buttons
+            btn.setIconSize(QSize(200, 200))
+            btn.setFixedSize(200, 200)
             btn.setCursor(Qt.PointingHandCursor)
             btn.setStyleSheet("""
                 QPushButton {
@@ -60,7 +44,7 @@ class HandGestureWidget(QWidget):
                     padding: 0;
                     background-color: transparent;
                 }
-            """)  # Remove border and padding, set background to transparent
+            """)
             btn.clicked.connect(lambda checked, n=name: self.openTaskSelection(n))
             row, col = divmod(i, 3)
             gesture_layout.addWidget(btn, row, col)
@@ -68,7 +52,7 @@ class HandGestureWidget(QWidget):
         # Practice button
         btn_practice = QPushButton()
         btn_practice.setIcon(QIcon('images/otherBtn/practiceBtn.png'))
-        btn_practice.setIconSize(QSize(300, 300))  # Ensure the icon size fits the button
+        btn_practice.setIconSize(QSize(300, 300))
         btn_practice.setFixedSize(300, 300)
         btn_practice.setCursor(Qt.PointingHandCursor)
         btn_practice.setStyleSheet("""
@@ -77,25 +61,70 @@ class HandGestureWidget(QWidget):
                 padding: 0;
                 background-color: transparent;
             }
-        """)  # Remove border and padding, set background to transparent
-        
-        # add Practice button to the private variables and save in layout
+        """)
+
         self.btn_practice_widget = QWidget()
         btn_practice_layout = QGridLayout()
         btn_practice_layout.addWidget(btn_practice)
         self.btn_practice_widget.setLayout(btn_practice_layout)
-        layout.addWidget(self.btn_practice_widget)
-        # layout.addWidget(btn_practice)
-    
+        
+        # Layout add widget
+        self.layout.addWidget(self.gesture_widget)
+        self.layout.addWidget(self.btn_practice_widget)
+
     def openTaskSelection(self, gesture_name):
-        # Placeholder function to handle gesture button clicks
-        print(f'Gesture {gesture_name} clicked!')
-        # hide the handGestureSelection widget
         self.gesture_widget.hide()
         self.btn_practice_widget.hide()
-        self.stacked_widget.setCurrentIndex(0)
-        # Add the gesture layout to the QStackedWidget
-        self.taskSelection = TaskSelectionWidget(gesture_name)
+
+        self.stacked_widget = QStackedWidget(self)
+        self.layout.addWidget(self.stacked_widget)
+
+        self.taskSelection = handGestureTaskSelectionWidget(
+            gesture_name, 
+            self.start_gesture_knowledge_task, 
+            parent=self
+        )
         self.stacked_widget.addWidget(self.taskSelection)
         self.stacked_widget.setCurrentWidget(self.taskSelection)
 
+    def start_gesture_knowledge_task(self, gesture_name, questions, options, answers):
+        self.stacked_questions = QStackedWidget(self)
+        # self.stacked_questions.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
+        for q, opt, ans in zip(questions, options, answers):
+            question_widget = handGestureKnowledgeTaskWidget(q, opt, ans, self)
+            self.stacked_questions.addWidget(question_widget)
+
+        self.stacked_widget.addWidget(self.stacked_questions)
+        self.stacked_widget.setCurrentWidget(self.stacked_questions)
+        self.navigate_to_question(self.stacked_questions.widget(0))
+
+    def navigate_to_main_widget(self):
+        self.resize(self.original_size )
+        self.gesture_widget.show()
+        self.btn_practice_widget.show()
+
+        if self.stacked_widget is not None:
+            self.layout.removeWidget(self.stacked_widget)
+            self.stacked_widget.deleteLater()
+            self.stacked_widget = None
+
+        # Set the geometry of the main window directly
+        # main_window = self.find_main_window()
+        # if main_window:
+        #     print("main window is found")
+        #     main_window.resize_main_window()
+
+        # self.layout.setStretch(0, 1)
+        # self.layout.setStretch(1, 0)
+        # self.layout.setStretch(2, 0)
+
+    def navigate_to_question(self, question_widget):
+        self.stacked_widget.setCurrentWidget(question_widget)
+
+    def find_main_window(self):
+        parent = self.parent()
+        while parent is not None:
+            if isinstance(parent, QMainWindow):
+                return parent
+            parent = parent.parent()
+        return None
