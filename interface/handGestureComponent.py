@@ -127,10 +127,12 @@ class handGestureWidget(QWidget):
         self.gesture_widget.show()
         self.btn_practice_widget.show()
 
-        if self.stacked_widget is not None:
-            self.layout.removeWidget(self.stacked_widget)
-            self.stacked_widget.deleteLater()
-            self.stacked_widget = None
+        # if self.stacked_widget is not None:
+        #     self.layout.removeWidget(self.stacked_widget)
+        #     self.stacked_widget.deleteLater()
+        #     self.stacked_widget = None
+        self.layout.removeWidget(self.stacked_widget)
+        self.stacked_widget = QStackedWidget(self) 
 
     def navigate_to_question(self, question_widget):
         
