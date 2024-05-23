@@ -1,328 +1,333 @@
 {
-    
-        "ChanDingYin": {
-            "questions": [
-                {
-                    "question": "Question 1 for ChanDingYin?",
-                    "options": [
-                        "Option A",
-                        "Option B",
-                        "Option C"
-                    ]
-                },
-                {
-                    "question": "Question 2 for ChanDingYin?",
-                    "options": [
-                        "Option A",
-                        "Option B",
-                        "Option C"
-                    ]
-                },
-                {
-                    "question": "Question 3 for ChanDingYin?",
-                    "options": [
-                        "Option A",
-                        "Option B",
-                        "Option C"
-                    ]
-                },
-                {
-                    "question": "Question 4 for ChanDingYin?",
-                    "options": [
-                        "Option A",
-                        "Option B",
-                        "Option C"
-                    ]
-                }
-            ]
-        },
-        "HuoYanYin": {
-            "questions": [
-                {
-                    "question": "Question 1 for HuoYanYin?",
-                    "options": [
-                        "Option A",
-                        "Option B",
-                        "Option C"
-                    ]
-                },
-                {
-                    "question": "Question 2 for HuoYanYin?",
-                    "options": [
-                        "Option A",
-                        "Option B",
-                        "Option C"
-                    ]
-                },
-                {
-                    "question": "Question 3 for HuoYanYin?",
-                    "options": [
-                        "Option A",
-                        "Option B",
-                        "Option C"
-                    ]
-                },
-                {
-                    "question": "Question 4 for HuoYanYin?",
-                    "options": [
-                        "Option A",
-                        "Option B",
-                        "Option C"
-                    ]
-                }
-            ]
-        },
-        "MiTuoDingYin": {
-            "questions": [
-                {
-                    "question": "Question 1 for MiTuoDingYin?",
-                    "options": [
-                        "Option A",
-                        "Option B",
-                        "Option C"
-                    ]
-                },
-                {
-                    "question": "Question 2 for MiTuoDingYin?",
-                    "options": [
-                        "Option A",
-                        "Option B",
-                        "Option C"
-                    ]
-                },
-                {
-                    "question": "Question 3 for MiTuoDingYin?",
-                    "options": [
-                        "Option A",
-                        "Option B",
-                        "Option C"
-                    ]
-                },
-                {
-                    "question": "Question 4 for MiTuoDingYin?",
-                    "options": [
-                        "Option A",
-                        "Option B",
-                        "Option C"
-                    ]
-                }
-            ]
-        },
-        "Retsu": {
-            "questions": [
-                {
-                    "question": "Question 1 for Retsu?",
-                    "options": [
-                        "Option A",
-                        "Option B",
-                        "Option C"
-                    ]
-                },
-                {
-                    "question": "Question 2 for Retsu?",
-                    "options": [
-                        "Option A",
-                        "Option B",
-                        "Option C"
-                    ]
-                },
-                {
-                    "question": "Question 3 for Retsu?",
-                    "options": [
-                        "Option A",
-                        "Option B",
-                        "Option C"
-                    ]
-                },
-                {
-                    "question": "Question 4 for Retsu?",
-                    "options": [
-                        "Option A",
-                        "Option B",
-                        "Option C"
-                    ]
-                }
-            ]
-        },
-        "Rin": {
-            "questions": [
-                {
-                    "question": "Question 1 for Rin?",
-                    "options": [
-                        "Option A",
-                        "Option B",
-                        "Option C"
-                    ]
-                },
-                {
-                    "question": "Question 2 for Rin?",
-                    "options": [
-                        "Option A",
-                        "Option B",
-                        "Option C"
-                    ]
-                },
-                {
-                    "question": "Question 3 for Rin?",
-                    "options": [
-                        "Option A",
-                        "Option B",
-                        "Option C"
-                    ]
-                },
-                {
-                    "question": "Question 4 for Rin?",
-                    "options": [
-                        "Option A",
-                        "Option B",
-                        "Option C"
-                    ]
-                }
-            ]
-        },
-        "TaiJiYin": {
-            "questions": [
-                {
-                    "question": "Question 1 for TaiJiYin?",
-                    "options": [
-                        "Option A",
-                        "Option B",
-                        "Option C"
-                    ]
-                },
-                {
-                    "question": "Question 2 for TaiJiYin?",
-                    "options": [
-                        "Option A",
-                        "Option B",
-                        "Option C"
-                    ]
-                },
-                {
-                    "question": "Question 3 for TaiJiYin?",
-                    "options": [
-                        "Option A",
-                        "Option B",
-                        "Option C"
-                    ]
-                },
-                {
-                    "question": "Question 4 for TaiJiYin?",
-                    "options": [
-                        "Option A",
-                        "Option B",
-                        "Option C"
-                    ]
-                }
-            ]
-        },
-        "Zai": {
-            "questions": [
-                {
-                    "question": "Question 1 for Zai?",
-                    "options": [
-                        "Option A",
-                        "Option B",
-                        "Option C"
-                    ]
-                },
-                {
-                    "question": "Question 2 for Zai?",
-                    "options": [
-                        "Option A",
-                        "Option B",
-                        "Option C"
-                    ]
-                },
-                {
-                    "question": "Question 3 for Zai?",
-                    "options": [
-                        "Option A",
-                        "Option B",
-                        "Option C"
-                    ]
-                },
-                {
-                    "question": "Question 4 for Zai?",
-                    "options": [
-                        "Option A",
-                        "Option B",
-                        "Option C"
-                    ]
-                }
-            ]
-        },
-        "Zen": {
-            "questions": [
-                {
-                    "question": "Question 1 for Zen?",
-                    "options": [
-                        "Option A",
-                        "Option B",
-                        "Option C"
-                    ]
-                },
-                {
-                    "question": "Question 2 for Zen?",
-                    "options": [
-                        "Option A",
-                        "Option B",
-                        "Option C"
-                    ]
-                },
-                {
-                    "question": "Question 3 for Zen?",
-                    "options": [
-                        "Option A",
-                        "Option B",
-                        "Option C"
-                    ]
-                },
-                {
-                    "question": "Question 4 for Zen?",
-                    "options": [
-                        "Option A",
-                        "Option B",
-                        "Option C"
-                    ]
-                }
-            ]
-        },
-        "ZhiJiXiangYin": {
-            "questions": [
-                {
-                    "question": "Question 1 for ZhiJiXiangYin?",
-                    "options": [
-                        "Option A",
-                        "Option B",
-                        "Option C"
-                    ]
-                },
-                {
-                    "question": "Question 2 for ZhiJiXiangYin?",
-                    "options": [
-                        "Option A",
-                        "Option B",
-                        "Option C"
-                    ]
-                },
-                {
-                    "question": "Question 3 for ZhiJiXiangYin?",
-                    "options": [
-                        "Option A",
-                        "Option B",
-                        "Option C"
-                    ]
-                },
-                {
-                    "question": "Question 4 for ZhiJiXiangYin?",
-                    "options": [
-                        "Option A",
-                        "Option B",
-                        "Option C"
-                    ]
-                }
-            ]
-        }
-    
+    "ChanDingYin": {
+        "questions": [
+            {
+                "question": "What is the 'ChanDingYin' hand gesture also known as?",
+                "options": [
+                    "Dharmadhatu Mudra",
+                    "Avalokiteshvara Mudra",
+                    "Great Compassion Mantra Mudra"
+                ]
+            },
+            {
+                "question": "Which hand is placed on top in the 'ChanDingYin' hand gesture?",
+                "options": [
+                    "Left hand",
+                    "Right hand",
+                    "Both hands are at the same level"
+                ]
+            },
+            {
+                "question": "What does the 'ChanDingYin' hand gesture symbolize?",
+                "options": [
+                    "Wisdom and enlightenment",
+                    "Inner peace and meditation",
+                    "Protection from evil"
+                ]
+            },
+            {
+                "question": "Which Buddha is associated with the 'ChanDingYin' hand gesture?",
+                "options": [
+                    "Amida Buddha",
+                    "Vairocana (Mahavairocana)",
+                    "Gautama Buddha (Shakyamuni)"
+                ]
+            }
+        ]
+    },
+    "HuoYanYin": {
+        "questions": [
+            {
+                "question": "Which group of deities does the 'HuoYanYin' hand gesture belong to?",
+                "options": [
+                    "Bodhisattvas",
+                    "Mingwang (Wrathful Kings)",
+                    "Dakinis"
+                ]
+            },
+            {
+                "question": "Who is the main deity associated with the 'HuoYanYin' hand gesture?",
+                "options": [
+                    "Avalokiteshvara",
+                    "Acalinatha (Fudo Myo-o)",
+                    "Manjushri"
+                ]
+            },
+            {
+                "question": "What does the 'HuoYanYin' hand gesture symbolize?",
+                "options": [
+                    "Compassion and protection",
+                    "Wisdom and enlightenment",
+                    "Power and wrath"
+                ]
+            },
+            {
+                "question": "What is a unique feature of the 'HuoYanYin' hand gesture?",
+                "options": [
+                    "Thumb presses against the back of three fingers",
+                    "Index finger and middle finger are crossed",
+                    "Right thumb touches the left palm"
+                ]
+            }
+        ]
+    },
+    "MiTuoDingYin": {
+        "questions": [
+            {
+              "question": "What does the 'MiTuoDingYin' hand gesture symbolize?",
+              "options": [
+                "The union of wisdom and method",
+                "The manifestation of the four wisdoms of Bodhi",
+                "Protection from evil"
+              ]
+            },
+            {
+              "question": "Which fingers are crossed in the 'MiTuoDingYin' hand gesture?",
+              "options": [
+                "Thumbs and index fingers",
+                "Middle and ring fingers",
+                "Little, ring, and middle fingers"
+              ]
+            },
+            {
+              "question": "Which Buddha uses the 'MiTuoDingYin' hand gesture?",
+              "options": [
+                "Vairocana",
+                "Amitabha (Amida)",
+                "Shakyamuni"
+              ]
+            },
+            {
+              "question": "What is another name for the 'MiTuoDingYin' hand gesture?",
+              "options": [
+                "Dharmadhatu Mudra",
+                "Samadhi Mudra",
+                "Wondrous Observing Wisdom Mudra"
+              ]
+            }
+          ]
+          
+    },
+    "Retsu": {
+        "questions": [
+            {
+              "question": "What does the 'Retsu' hand gesture symbolize?",
+              "options": [
+                "Time and space control, representing the heart to help others",
+                "Protection from evil",
+                "Enlightenment and wisdom"
+              ]
+            },
+            {
+              "question": "Which Buddha is associated with the 'Retsu' hand gesture?",
+              "options": [
+                "Shakyamuni",
+                "Amitabha",
+                "Vairocana (Mahavairocana)"
+              ]
+            },
+            {
+              "question": "How is the 'Retsu' hand gesture performed?",
+              "options": [
+                "Both hands form vajra fists, left index finger points up, right little finger wraps around left index finger",
+                "Right hand on top of left hand, both palms facing up",
+                "Hands are placed in front of the chest with fingers interlaced"
+              ]
+            },
+            {
+              "question": "What is another name for the 'Retsu' hand gesture?",
+              "options": [
+                "Dharmadhatu Mudra",
+                "Great Wisdom Fist Mudra",
+                "Lotus Flower Mudra"
+              ]
+            }
+          ]
+          
+    },
+    "Rin": {
+        "questions": [
+            {
+              "question": "What does the 'Rin' hand gesture symbolize?",
+              "options": [
+                "Protection from evil",
+                "Stability of body and mind, representing an unwavering will",
+                "Compassion and mercy"
+              ]
+            },
+            {
+              "question": "What is the name of the mudra (hand gesture) associated with 'Rin'?",
+              "options": [
+                "Vajra Fist Mudra",
+                "Immovable Wisdom King Mudra",
+                "Lotus Flower Mudra"
+              ]
+            },
+            {
+              "question": "Which mantra is associated with the 'Rin' hand gesture?",
+              "options": [
+                "Heart Mantra of Amitabha",
+                "Heart Mantra of Vajrasattva",
+                "Heart Mantra of Avalokiteshvara"
+              ]
+            },
+            {
+              "question": "What does the 'Rin' hand gesture help achieve?",
+              "options": [
+                "Enlightenment and wisdom",
+                "Stability and unwavering determination",
+                "Protection from negative energies"
+              ]
+            }
+          ]
+          
+    },
+    "TaiJiYin": {
+        "questions": [
+            {
+              "question": "How is the 'TaiJiYin' hand gesture performed?",
+              "options": [
+                "Left hand on the outside, right hand on the inside, both palms facing inward",
+                "Right hand on the outside, left hand on the inside, both palms facing outward",
+                "Both hands crossed with palms facing down"
+              ]
+            },
+            {
+              "question": "Which fingers are involved in forming the 'TaiJiYin' hand gesture?",
+              "options": [
+                "Left thumb pinching left middle finger tip, right thumb pinching left ring finger root",
+                "Right thumb pinching right index finger tip, left thumb pinching left pinky finger root",
+                "Both thumbs pinching index finger tips"
+              ]
+            },
+            {
+              "question": "What does the 'TaiJiYin' hand gesture symbolize?",
+              "options": [
+                "Union of Yin and Yang",
+                "Enlightenment and wisdom",
+                "Protection from evil"
+              ]
+            },
+            {
+              "question": "In the 'TaiJiYin' hand gesture, what does the position of the right hand represent?",
+              "options": [
+                "Yang embracing Yin",
+                "Yin embracing Yang",
+                "Balance and harmony"
+              ]
+            }
+          ]
+          
+    },
+    "Zai": {
+        "questions": [
+            {
+              "question": "What does the 'Zai' hand gesture symbolize?",
+              "options": [
+                "Union of Yin and Yang",
+                "Control of the five elements, representing the free use of supernatural abilities",
+                "Protection from evil"
+              ]
+            },
+            {
+              "question": "What is the name of the mudra (hand gesture) associated with 'Zai'?",
+              "options": [
+                "Lotus Flower Mudra",
+                "Sun Wheel Mudra",
+                "Great Wisdom Fist Mudra"
+              ]
+            },
+            {
+              "question": "Which mantra is associated with the 'Zai' hand gesture?",
+              "options": [
+                "Heart Mantra of Amitabha",
+                "Heart Mantra of Vajrasattva",
+                "Heart Mantra of Vairocana (Mahavairocana)"
+              ]
+            },
+            {
+              "question": "What ability does the 'Zai' hand gesture enhance?",
+              "options": [
+                "Compassion and mercy",
+                "Wisdom and enlightenment",
+                "The free use of supernatural abilities"
+              ]
+            }
+          ]
+          
+    },
+    "Zen": {
+        "questions": [
+            {
+              "question": "What does the 'Zen' hand gesture symbolize?",
+              "options": [
+                "Protection from evil",
+                "Telepathy and invisibility, representing the ability to gather wealth and love",
+                "Union of Yin and Yang"
+              ]
+            },
+            {
+              "question": "What is the name of the mudra (hand gesture) associated with 'Zen'?",
+              "options": [
+                "Inner Binding Mudra",
+                "Lotus Flower Mudra",
+                "Sun Wheel Mudra"
+              ]
+            },
+            {
+              "question": "Which mantra is associated with the 'Zen' hand gesture?",
+              "options": [
+                "Heart Mantra of Amitabha",
+                "Six-Syllable Vajra Mantra of Padmasambhava",
+                "Heart Mantra of Vairocana (Mahavairocana)"
+              ]
+            },
+            {
+              "question": "What abilities does the 'Zen' hand gesture enhance?",
+              "options": [
+                "Wisdom and enlightenment",
+                "Protection and stability",
+                "Telepathy and invisibility"
+              ]
+            }
+          ]
+          
+    },
+    "ZhiJiXiangYin": {
+        "questions": [
+            {
+              "question": "How is the 'ZhiJiXiangYin' hand gesture performed?",
+              "options": [
+                "Both hands each place the thumb under the middle finger, other fingers extended, left hand in front of the chest, right hand above but not touching",
+                "Right hand on top of left hand, both palms facing up",
+                "Both hands form vajra fists with index fingers pointing up"
+              ]
+            },
+            {
+              "question": "What does the 'ZhiJiXiangYin' hand gesture symbolize?",
+              "options": [
+                "Protection from evil",
+                "Bestowing wisdom and good fortune",
+                "Union of Yin and Yang"
+              ]
+            },
+            {
+              "question": "Which Buddha's fundamental mudra is the 'ZhiJiXiangYin' hand gesture?",
+              "options": [
+                "Vairocana (Mahavairocana)",
+                "Shakyamuni",
+                "Akshobhya"
+              ]
+            },
+            {
+              "question": "What variation is used for the Dharmakaya (Truth Body) preaching mudra?",
+              "options": [
+                "Thumb under the ring finger",
+                "Thumb under the index finger",
+                "Thumb under the little finger"
+              ]
+            }
+          ]
+          
+    }
 }

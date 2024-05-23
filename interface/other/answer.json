@@ -3,182 +3,190 @@
         "ChanDingYin": {
             "answers": [
                 {
-                    "question": "Question 1 for ChanDingYin?",
-                    "correct_option": "Option A"
+                  "question": "What is the 'ChanDingYin' hand gesture also known as?",
+                  "correct_option": "Dharmadhatu Mudra"
                 },
                 {
-                    "question": "Question 2 for ChanDingYin?",
-                    "correct_option": "Option B"
+                  "question": "Which hand is placed on top in the 'ChanDingYin' hand gesture?",
+                  "correct_option": "Right hand"
                 },
                 {
-                    "question": "Question 3 for ChanDingYin?",
-                    "correct_option": "Option C"
+                  "question": "What does the 'ChanDingYin' hand gesture symbolize?",
+                  "correct_option": "Inner peace and meditation"
                 },
                 {
-                    "question": "Question 4 for ChanDingYin?",
-                    "correct_option": "Option A"
+                  "question": "Which Buddha is associated with the 'ChanDingYin' hand gesture?",
+                  "correct_option": "Vairocana (Mahavairocana)"
                 }
-            ]
+              ]
+              
         },
         "HuoYanYin": {
             "answers": [
                 {
-                    "question": "Question 1 for HuoYanYin?",
-                    "correct_option": "Option B"
+                  "question": "Which group of deities does the 'HuoYanYin' hand gesture belong to?",
+                  "correct_option": "Mingwang (Wrathful Kings)"
                 },
                 {
-                    "question": "Question 2 for HuoYanYin?",
-                    "correct_option": "Option C"
+                  "question": "Who is the main deity associated with the 'HuoYanYin' hand gesture?",
+                  "correct_option": "Acalinatha (Fudo Myo-o)"
                 },
                 {
-                    "question": "Question 3 for HuoYanYin?",
-                    "correct_option": "Option A"
+                  "question": "What does the 'HuoYanYin' hand gesture symbolize?",
+                  "correct_option": "Compassion and protection"
                 },
                 {
-                    "question": "Question 4 for HuoYanYin?",
-                    "correct_option": "Option B"
+                  "question": "What is a unique feature of the 'HuoYanYin' hand gesture?",
+                  "correct_option": "Thumb presses against the back of three fingers"
                 }
-            ]
+              ]
         },
         "MiTuoDingYin": {
             "answers": [
                 {
-                    "question": "Question 1 for MiTuoDingYin?",
-                    "correct_option": "Option C"
+                  "question": "What does the 'MiTuoDingYin' hand gesture symbolize?",
+                  "correct_option": "The manifestation of the four wisdoms of Bodhi"
                 },
                 {
-                    "question": "Question 2 for MiTuoDingYin?",
-                    "correct_option": "Option A"
+                  "question": "Which fingers are crossed in the 'MiTuoDingYin' hand gesture?",
+                  "correct_option": "Little, ring, and middle fingers"
                 },
                 {
-                    "question": "Question 3 for MiTuoDingYin?",
-                    "correct_option": "Option B"
+                  "question": "Which Buddha uses the 'MiTuoDingYin' hand gesture?",
+                  "correct_option": "Amitabha (Amida)"
                 },
                 {
-                    "question": "Question 4 for MiTuoDingYin?",
-                    "correct_option": "Option C"
+                  "question": "What is another name for the 'MiTuoDingYin' hand gesture?",
+                  "correct_option": "Wondrous Observing Wisdom Mudra"
                 }
-            ]
+              ]
+              
         },
         "Retsu": {
             "answers": [
                 {
-                    "question": "Question 1 for Retsu?",
-                    "correct_option": "Option A"
+                  "question": "What does the 'Retsu' hand gesture symbolize?",
+                  "correct_option": "Time and space control, representing the heart to help others"
                 },
                 {
-                    "question": "Question 2 for Retsu?",
-                    "correct_option": "Option B"
+                  "question": "Which Buddha is associated with the 'Retsu' hand gesture?",
+                  "correct_option": "Vairocana (Mahavairocana)"
                 },
                 {
-                    "question": "Question 3 for Retsu?",
-                    "correct_option": "Option C"
+                  "question": "How is the 'Retsu' hand gesture performed?",
+                  "correct_option": "Both hands form vajra fists, left index finger points up, right little finger wraps around left index finger"
                 },
                 {
-                    "question": "Question 4 for Retsu?",
-                    "correct_option": "Option A"
+                  "question": "What is another name for the 'Retsu' hand gesture?",
+                  "correct_option": "Great Wisdom Fist Mudra"
                 }
-            ]
+              ]
+              
         },
         "Rin": {
             "answers": [
                 {
-                    "question": "Question 1 for Rin?",
-                    "correct_option": "Option B"
+                  "question": "What does the 'Rin' hand gesture symbolize?",
+                  "correct_option": "Stability of body and mind, representing an unwavering will"
                 },
                 {
-                    "question": "Question 2 for Rin?",
-                    "correct_option": "Option C"
+                  "question": "What is the name of the mudra (hand gesture) associated with 'Rin'?",
+                  "correct_option": "Immovable Wisdom King Mudra"
                 },
                 {
-                    "question": "Question 3 for Rin?",
-                    "correct_option": "Option A"
+                  "question": "Which mantra is associated with the 'Rin' hand gesture?",
+                  "correct_option": "Heart Mantra of Vajrasattva"
                 },
                 {
-                    "question": "Question 4 for Rin?",
-                    "correct_option": "Option B"
+                  "question": "What does the 'Rin' hand gesture help achieve?",
+                  "correct_option": "Stability and unwavering determination"
                 }
-            ]
+              ]
+              
         },
         "TaiJiYin": {
             "answers": [
                 {
-                    "question": "Question 1 for TaiJiYin?",
-                    "correct_option": "Option C"
+                  "question": "How is the 'TaiJiYin' hand gesture performed?",
+                  "correct_option": "Left hand on the outside, right hand on the inside, both palms facing inward"
                 },
                 {
-                    "question": "Question 2 for TaiJiYin?",
-                    "correct_option": "Option A"
+                  "question": "Which fingers are involved in forming the 'TaiJiYin' hand gesture?",
+                  "correct_option": "Left thumb pinching left middle finger tip, right thumb pinching left ring finger root"
                 },
                 {
-                    "question": "Question 3 for TaiJiYin?",
-                    "correct_option": "Option B"
+                  "question": "What does the 'TaiJiYin' hand gesture symbolize?",
+                  "correct_option": "Union of Yin and Yang"
                 },
                 {
-                    "question": "Question 4 for TaiJiYin?",
-                    "correct_option": "Option C"
+                  "question": "In the 'TaiJiYin' hand gesture, what does the position of the right hand represent?",
+                  "correct_option": "Yang embracing Yin"
                 }
-            ]
+              ]
+              
         },
         "Zai": {
             "answers": [
                 {
-                    "question": "Question 1 for Zai?",
-                    "correct_option": "Option A"
+                  "question": "What does the 'Zai' hand gesture symbolize?",
+                  "correct_option": "Control of the five elements, representing the free use of supernatural abilities"
                 },
                 {
-                    "question": "Question 2 for Zai?",
-                    "correct_option": "Option B"
+                  "question": "What is the name of the mudra (hand gesture) associated with 'Zai'?",
+                  "correct_option": "Sun Wheel Mudra"
                 },
                 {
-                    "question": "Question 3 for Zai?",
-                    "correct_option": "Option C"
+                  "question": "Which mantra is associated with the 'Zai' hand gesture?",
+                  "correct_option": "Heart Mantra of Vairocana (Mahavairocana)"
                 },
                 {
-                    "question": "Question 4 for Zai?",
-                    "correct_option": "Option A"
+                  "question": "What ability does the 'Zai' hand gesture enhance?",
+                  "correct_option": "The free use of supernatural abilities"
                 }
-            ]
+              ]
+              
         },
         "Zen": {
             "answers": [
                 {
-                    "question": "Question 1 for Zen?",
-                    "correct_option": "Option B"
+                  "question": "What does the 'Zen' hand gesture symbolize?",
+                  "correct_option": "Telepathy and invisibility, representing the ability to gather wealth and love"
                 },
                 {
-                    "question": "Question 2 for Zen?",
-                    "correct_option": "Option C"
+                  "question": "What is the name of the mudra (hand gesture) associated with 'Zen'?",
+                  "correct_option": "Inner Binding Mudra"
                 },
                 {
-                    "question": "Question 3 for Zen?",
-                    "correct_option": "Option A"
+                  "question": "Which mantra is associated with the 'Zen' hand gesture?",
+                  "correct_option": "Six-Syllable Vajra Mantra of Padmasambhava"
                 },
                 {
-                    "question": "Question 4 for Zen?",
-                    "correct_option": "Option B"
+                  "question": "What abilities does the 'Zen' hand gesture enhance?",
+                  "correct_option": "Telepathy and invisibility"
                 }
-            ]
+              ]
+              
         },
         "ZhiJiXiangYin": {
             "answers": [
                 {
-                    "question": "Question 1 for ZhiJiXiangYin?",
-                    "correct_option": "Option C"
+                  "question": "How is the 'ZhiJiXiangYin' hand gesture performed?",
+                  "correct_option": "Both hands each place the thumb under the middle finger, other fingers extended, left hand in front of the chest, right hand above but not touching"
                 },
                 {
-                    "question": "Question 2 for ZhiJiXiangYin?",
-                    "correct_option": "Option A"
+                  "question": "What does the 'ZhiJiXiangYin' hand gesture symbolize?",
+                  "correct_option": "Bestowing wisdom and good fortune"
                 },
                 {
-                    "question": "Question 3 for ZhiJiXiangYin?",
-                    "correct_option": "Option B"
+                  "question": "Which Buddha's fundamental mudra is the 'ZhiJiXiangYin' hand gesture?",
+                  "correct_option": "Vairocana (Mahavairocana)"
                 },
                 {
-                    "question": "Question 4 for ZhiJiXiangYin?",
-                    "correct_option": "Option C"
+                  "question": "What variation is used for the Dharmakaya (Truth Body) preaching mudra?",
+                  "correct_option": "Thumb under the ring finger"
                 }
-            ]
+              ]
+              
         }
     
 }
