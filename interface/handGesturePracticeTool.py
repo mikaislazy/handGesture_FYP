@@ -4,6 +4,7 @@ from PyQt5.QtGui import QPixmap, QFont, QIcon, QImage
 from PyQt5.QtCore import Qt, QTimer, QTime
 import cv2
 import os
+from tool import GESTURES
 
 # Add model path
 abs_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../model'))
@@ -35,8 +36,8 @@ class handGesturePracticeToolWidget(QWidget):
         self.gesture_layout.setSpacing(0)  # Set spacing to 0
         self.gesture_layout.setContentsMargins(0, 0, 0, 0)
         for gesture_name in gesture_names:
-            img = f'images/handGesture/{gesture_name}.png'
-            pixmap = QPixmap(img).scaled(100, 100, Qt.KeepAspectRatio)
+            img = f'images/handGestureBtn/{gesture_name}Btn.png'
+            pixmap = QPixmap(img).scaled(120, 100, Qt.KeepAspectRatio)
             gesture_icon = QLabel()
             gesture_icon.setPixmap(pixmap)
             gesture_icon.setAlignment(Qt.AlignCenter)
@@ -120,7 +121,7 @@ class HandGestureRecognitionWidget(QWidget):
                     tf_img = tf.image.convert_image_dtype(image, tf.dtypes.uint8)
                     x = tf.expand_dims(image, 0)
                     pred = self.model.predict(x)[0]
-                    labels = ['ChanDingYin', 'HuoYanYin', 'MiTuoDingYin', 'Retsu', 'Rin', 'TaiJiYin', 'Zai', 'Zen', 'ZhiJiXiangYin']
+                    labels = GESTURES
                     class_indices = {i: labels[i] for i in range(len(labels))}
                     exist, area = utils.find_hand_region(imageShow)
                     if exist:

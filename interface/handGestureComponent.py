@@ -5,6 +5,8 @@ from handGestureTaskSelection import handGestureTaskSelectionWidget
 from tool import GESTURES
 from handGestureKnowledge import handGestureKnowledgeTaskWidget
 from handGestureRecognition import  handGestureRecognitionWidget
+from handGesturePractice import handGesturePracticeWidget
+from handGesturePracticeTool import handGesturePracticeToolWidget
 
 class handGestureWidget(QWidget):
     def __init__(self, parent=None):
@@ -30,7 +32,7 @@ class handGestureWidget(QWidget):
         self.gesture_widget.setLayout(gesture_layout)
 
         # Stacked Layout
-        self.stacked_widget = None  # Initially, there's no stacked widget
+        self.stacked_widget = QStackedWidget(self) 
 
         for i, name in enumerate(GESTURES):
             image_path = f'images/handGestureBtn/{name}Btn.png'
@@ -56,6 +58,7 @@ class handGestureWidget(QWidget):
         btn_practice.setIconSize(QSize(300, 300))
         btn_practice.setFixedSize(300, 300)
         btn_practice.setCursor(Qt.PointingHandCursor)
+        btn_practice.clicked.connect(self.openPracticeTool)
         btn_practice.setStyleSheet("""
             QPushButton {
                 border: none;
@@ -76,8 +79,7 @@ class handGestureWidget(QWidget):
     def openTaskSelection(self, gesture_name):
         self.gesture_widget.hide()
         self.btn_practice_widget.hide()
-
-        self.stacked_widget = QStackedWidget(self)
+        
         self.layout.addWidget(self.stacked_widget)
 
         self.taskSelection = handGestureTaskSelectionWidget(
@@ -88,7 +90,17 @@ class handGestureWidget(QWidget):
         )
         self.stacked_widget.addWidget(self.taskSelection)
         self.stacked_widget.setCurrentWidget(self.taskSelection)
-
+    
+    def openPracticeTool(self):
+        self.gesture_widget.hide()
+        self.btn_practice_widget.hide()
+        
+        self.layout.addWidget(self.stacked_widget)
+        
+        self.practice_widget = handGesturePracticeWidget(self.start_practice, self)
+        self.stacked_widget.addWidget(self.practice_widget)
+        self.stacked_widget.setCurrentWidget(self.practice_widget)
+        
     def start_gesture_knowledge_task(self, gesture_name, questions, options, answers):
         self.stacked_questions = QStackedWidget(self)
         # self.stacked_questions.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
@@ -104,8 +116,11 @@ class handGestureWidget(QWidget):
         self.recognition_widget = handGestureRecognitionWidget(gesture_name, self)
         self.stacked_widget.addWidget(self.recognition_widget)
         self.stacked_widget.setCurrentWidget(self.recognition_widget)
-        
-        
+    
+    def start_practice(self, gesture_names):
+        self.practiceTool_widget = handGesturePracticeToolWidget(gesture_names, self)
+        self.stacked_widget.addWidget(self.practiceTool_widget)
+        self.stacked_widget.setCurrentWidget(self.practiceTool_widget)
 
     def navigate_to_main_widget(self):
         # self.resize(self.original_size )
@@ -118,6 +133,7 @@ class handGestureWidget(QWidget):
             self.stacked_widget = None
 
     def navigate_to_question(self, question_widget):
+        
         self.stacked_widget.setCurrentWidget(question_widget)
 
     def find_main_window(self):

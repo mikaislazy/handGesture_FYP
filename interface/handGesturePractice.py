@@ -1,11 +1,14 @@
-import sys
 from PyQt5.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QRadioButton, QGroupBox, QPushButton, QSizePolicy)
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt
+from tool import GESTURES
 
 class handGesturePracticeWidget(QWidget):
-    def __init__(self, parent=None):
+    def __init__(self, start_practice_callback, parent=None):
         super().__init__(parent)
+        
+        self.start_practice_callback = start_practice_callback
+        self.gesture_names = []
         
         main_layout = QVBoxLayout()
         main_layout.setContentsMargins(0, 0, 0, 0)  # Set margins to 0
@@ -15,17 +18,7 @@ class handGesturePracticeWidget(QWidget):
         gesture_layout = QHBoxLayout()
         gesture_layout.setSpacing(0)  # Set spacing to 0
         gesture_layout.setContentsMargins(0, 0, 0, 0)
-        gestures = [
-            'HuoYanYin',
-            'ChanDingYin',
-            'MiTuoDingYin',
-            'Retsu',
-            'Rin',
-            'Zai',
-            'Zen',
-            'ZhiJiXiangYin',
-            'TaiJiYin'
-        ]
+        gestures = GESTURES
         
         for i, gesture_name in enumerate(gestures):
             img = f'images/handGesture/{gesture_name}.png'
@@ -35,14 +28,12 @@ class handGesturePracticeWidget(QWidget):
             gesture_icon.setPixmap(pixmap)
             gesture_icon.setAlignment(Qt.AlignCenter)
             gesture_icon.setFixedSize(100, 100)
-            # gesture_icon.setStyleSheet("background-color: yellow;")
             
             vbox = QVBoxLayout()
             vbox.setSpacing(0)  # Set spacing to 0
             vbox.addWidget(gesture_icon)
             name_label = QLabel(f"{i+1}. {gesture_name}")
             name_label.setAlignment(Qt.AlignCenter)
-            # name_label.setStyleSheet("background-color: white;") 
             name_label.setFixedSize(100, 30)
             vbox.addWidget(name_label)
             
@@ -58,7 +49,6 @@ class handGesturePracticeWidget(QWidget):
         instruction_label.setStyleSheet("font-size: 16px;border:none;")
         instruction_label.setFixedSize(800, 50)
         instruction_label.setContentsMargins(-1, -1, -1, 0)
-        # instruction_label.setStyleSheet("font-size: 16px;")
         main_layout.addWidget(instruction_label, alignment=Qt.AlignLeft)
 
         # Text input for gesture order
@@ -68,6 +58,9 @@ class handGesturePracticeWidget(QWidget):
         self.gesture_order_input.setFixedSize(800, 30)
         self.gesture_order_input.setAlignment(Qt.AlignTop)
         main_layout.addWidget(self.gesture_order_input, alignment=Qt.AlignLeft)
+
+        # Connect the textChanged signal to the method that enables/disables the button
+        self.gesture_order_input.textChanged.connect(self.update_button_state)
 
         # Desired effect label
         effect_label = QLabel("Please choose the desired effect after finishing the practice:")
@@ -103,8 +96,8 @@ class handGesturePracticeWidget(QWidget):
         main_layout.addWidget(self.effect_group, alignment=Qt.AlignTop)
 
         # Submit button (arrow button)
-        self.submit_button = QPushButton("→")
-        self.submit_button.setStyleSheet("""
+        self.next_btn = QPushButton("→")
+        self.next_btn.setStyleSheet("""
             font-size: 24px;
             padding: 10px;
             border: 1px solid black;
@@ -112,9 +105,27 @@ class handGesturePracticeWidget(QWidget):
             background-color: white;
             color: black;
         """)
-        self.submit_button.setCursor(Qt.PointingHandCursor)
-        main_layout.addWidget(self.submit_button, alignment=Qt.AlignRight)
+        self.next_btn.setCursor(Qt.PointingHandCursor)
+        self.next_btn.clicked.connect(self.start_practice)
+        self.next_btn.setEnabled(False)  # Initially disable the button
+
+        main_layout.addWidget(self.next_btn, alignment=Qt.AlignRight)
 
         self.setLayout(main_layout)
 
+    def update_button_state(self):
+        input_value = self.gesture_order_input.text().strip()
+        self.next_btn.setEnabled(bool(input_value))
+
+    def start_practice(self):
+        input_value = self.gesture_order_input.text().strip()
+        if input_value:  # Check if input_value is not empty
+            self.gesture_names = self.get_input_gesture_names(input_value)
+            self.start_practice_callback(self.gesture_names)
+
+    def get_input_gesture_names(self, input_gesture_order):
+        gesture_names = []
+        for i in input_gesture_order.split():
+            gesture_names.append(GESTURES[int(i)-1])
+        return gesture_names
 
