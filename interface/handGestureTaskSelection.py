@@ -5,12 +5,13 @@ from handGestureKnowledge import handGestureKnowledgeTaskWidget
 from tool import load_question, load_answer
 
 class handGestureTaskSelectionWidget(QWidget):
-    def __init__(self, gesture_name, start_knowledge_task_callback, parent=None):
+    def __init__(self, gesture_name, start_knowledge_task_callback, start_recognition_task_callback, parent=None):
         super().__init__(parent)
         print("selecting hand gesture task...")
         self.layout = QHBoxLayout(self)
         self.gesture_name = gesture_name
         self.start_knowledge_task_callback = start_knowledge_task_callback
+        self.start_recognition_task_callback = start_recognition_task_callback
 
         for i in range(2):
             gesture_layout = QVBoxLayout()
@@ -33,7 +34,7 @@ class handGestureTaskSelectionWidget(QWidget):
                 btn.clicked.connect(self.start_gesture_knowledge_task)
             else:
                 task_label.setText('Hand Gesture Recognition Task')
-                # btn.clicked.connect(self.start_gesture_recognition_task)
+                btn.clicked.connect(self.start_gesture_recognition_task)
 
             gesture_layout.addWidget(task_label)
             gesture_layout.addWidget(btn)
@@ -45,3 +46,6 @@ class handGestureTaskSelectionWidget(QWidget):
         questions, options = load_question(gesture_name, 'other/question.json')
         answers = load_answer(gesture_name, 'other/answer.json')
         self.start_knowledge_task_callback(gesture_name, questions, options, answers)
+
+    def start_gesture_recognition_task(self):
+        self.start_recognition_task_callback(self.gesture_name)

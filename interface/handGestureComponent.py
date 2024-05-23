@@ -4,11 +4,12 @@ from PyQt5.QtCore import QSize, Qt
 from handGestureTaskSelection import handGestureTaskSelectionWidget
 from tool import GESTURES
 from handGestureKnowledge import handGestureKnowledgeTaskWidget
+from handGestureRecognition import  handGestureRecognitionWidget
 
 class handGestureWidget(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setMaximumWidth(1000)
+        self.setMaximumWidth(1200)
         self.setStyleSheet("""
             QPushButton {
                 border: none;  /* No border for buttons */
@@ -81,7 +82,8 @@ class handGestureWidget(QWidget):
 
         self.taskSelection = handGestureTaskSelectionWidget(
             gesture_name, 
-            self.start_gesture_knowledge_task, 
+            self.start_gesture_knowledge_task,
+            self.start_gesture_recognition_task,
             parent=self
         )
         self.stacked_widget.addWidget(self.taskSelection)
@@ -98,6 +100,13 @@ class handGestureWidget(QWidget):
         self.stacked_widget.setCurrentWidget(self.stacked_questions)
         self.navigate_to_question(self.stacked_questions.widget(0))
 
+    def start_gesture_recognition_task(self, gesture_name):
+        self.recognition_widget = handGestureRecognitionWidget(gesture_name)
+        self.stacked_widget.addWidget(self.recognition_widget)
+        self.stacked_widget.setCurrentWidget(self.recognition_widget)
+        
+        
+
     def navigate_to_main_widget(self):
         self.resize(self.original_size )
         self.gesture_widget.show()
@@ -107,16 +116,6 @@ class handGestureWidget(QWidget):
             self.layout.removeWidget(self.stacked_widget)
             self.stacked_widget.deleteLater()
             self.stacked_widget = None
-
-        # Set the geometry of the main window directly
-        # main_window = self.find_main_window()
-        # if main_window:
-        #     print("main window is found")
-        #     main_window.resize_main_window()
-
-        # self.layout.setStretch(0, 1)
-        # self.layout.setStretch(1, 0)
-        # self.layout.setStretch(2, 0)
 
     def navigate_to_question(self, question_widget):
         self.stacked_widget.setCurrentWidget(question_widget)

@@ -11,6 +11,8 @@ class handGestureKnowledgeTaskWidget(QWidget):
         self.answer = answer
         self.parent_widget = parent
         
+        self.result = None
+        
         # layout 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
@@ -60,24 +62,73 @@ class handGestureKnowledgeTaskWidget(QWidget):
         self.result_label = QLabel("")
         self.result_label.setAlignment(Qt.AlignCenter)
         layout.addWidget(self.result_label)    
+        
+        # Next Button 
+        self.next_button = QPushButton("→")
+        self.next_button.setFixedSize(150, 50)
+        self.next_button.setCursor(Qt.PointingHandCursor)
+        self.next_button.setStyleSheet("background-color: #3ba6ff; border: none; font: 15px; color: white;")
+        self.next_button.clicked.connect(self.on_next_button_clicked)
+        layout.addWidget(self.next_button, alignment=Qt.AlignRight)
+        
+        # Next button hide before the option is selected
+        self.next_button.hide()
+        
         # Set the layout only once
         self.setLayout(layout)
-
+        
+    def on_next_button_clicked(self):
+        parent = self.parent_widget
+        if self.result == True:
+            self.navigate_to_next_question()
+        else:
+            parent.navigate_to_main_widget()
+            
+        
     def on_option_click(self, selected_option):
         print(f'Option clicked: {selected_option}')
         print(f"Correct answer: {self.answer}")
         parent = self.parentWidget().parentWidget()
+        self.next_button.show()
         if selected_option.lower() == self.answer.lower():
+            self.result = True
             self.result_label.setText("Correct!")
-            self.result_label.setStyleSheet("color: green;")
-            self.navigate_to_next_question()
+            self.result_label.setStyleSheet("color: green; font:15px;")
+            if self.is_last_question():
+                self.next_button.setText("Back to Main Page")
+            # self.navigate_to_next_question()
         else:
-            self.parent_widget.navigate_to_main_widget()
+            self.result = False
+            self.result_label.setText(f"Wrong! The correct option is {self.answer}.")
+            self.result_label.setStyleSheet("color: red;  font:15px;")
+            # self.parent_widget.navigate_to_main_widget()
+            # set the next button to back to main
+            self.next_button.setText("Back to Main Page")
+        for btn in self.option_buttons:
+            btn.setEnabled(False)
+            btn.setStyleSheet("""
+                font-size: 16px;
+                padding: 10px;
+                border: 1px solid black;
+                border-radius: 5px;
+                background-color: grey;
+                color: black;
+                text-align: left;
+                margin: 0;
+            """)
+        
 
     def navigate_to_next_question(self):
         parent = self.parent_widget
         current_index = parent.stacked_questions.currentIndex()
-        if current_index < parent.stacked_questions.count() - 1:
+        if not self.is_last_question():
             parent.stacked_questions.setCurrentIndex(current_index + 1)
         else:
             parent.navigate_to_main_widget()
+    
+    def is_last_question(self):
+        parent = self.parent_widget
+        current_index = parent.stacked_questions.currentIndex()
+        if current_index == parent.stacked_questions.count() - 1:
+            return True
+        return False
