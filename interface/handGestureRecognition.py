@@ -3,61 +3,71 @@ from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QGridLayout, QPu
 from PyQt5.QtGui import QIcon, QPixmap, QImage
 from PyQt5.QtCore import QSize, Qt, QTimer
 import cv2
-
-
 import os
 import sys
+
 # Calculate the absolute path
 abs_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../model'))
-# print(f'Absolute path: {abs_path}')
 sys.path.insert(0, abs_path)
+
 import utils
 import mediapipe as mp
 import numpy as np
 import tensorflow as tf
 
-
 class handGestureRecognitionWidget(QWidget):
-    def __init__(self, gesture_name,  parent=None):
+    def __init__(self, gesture_name, parent=None):
         super().__init__(parent)
         
-        # hand gesture recognition setup
+        self.parent_widget = parent
+        
+        # Hand gesture recognition setup
         self.LENIENCY = 100
-        NUM_FRAMES = 0
         self.target_size = (224, 224)
-        self.cap = cv2.VideoCapture(0)
         mpHands = mp.solutions.hands
-        self.hands = mpHands.Hands(max_num_hands=2, min_detection_confidence=0.1, min_tracking_confidence= 0.1) #use to detect both hand
+        self.hands = mpHands.Hands(max_num_hands=2, min_detection_confidence=0.1, min_tracking_confidence=0.1)
         mpDraw = mp.solutions.drawing_utils
         self.model = tf.keras.models.load_model("Model/color_fps4_hand_splited_dataset.h5")
         
-        # layout
+        # Layout
         self.layout = QVBoxLayout(self)
+        button_layout = QHBoxLayout(self)
         
         if not gesture_name:
             gesture_name = 'Testing'
-
         
         # Add webcam feed
         self.video_frame = QLabel(f"{gesture_name} Recognition Task")
         self.video_frame.setFrameShape(QFrame.Box)
-        self.video_frame.setFixedWidth(640*1.2)  # Set the width of the video frame
-        self.video_frame.setFixedHeight(480*1.2)  # Set the height of the video frame
-        self.video_frame.setAlignment(Qt.AlignCenter)  # Center the text
-        self.video_frame.setStyleSheet(" font: 15px;")
+        self.video_frame.setFixedWidth(640*1.2)
+        self.video_frame.setFixedHeight(480*1.2)
+        self.video_frame.setAlignment(Qt.AlignCenter)
+        self.video_frame.setStyleSheet("font: 15px;")
         self.layout.addWidget(self.video_frame, alignment=Qt.AlignCenter)
-        self.layout.addStretch()
+        # self.layout.addStretch()
         
-        # add Start Button
+        # Add Start Button
         self.startBtn = QPushButton(f"Start!")
         self.startBtn.setContentsMargins(0, 0, 0, 0)
-        self.startBtn.setFixedSize(100, 50)  # Set the size of the buttons
+        self.startBtn.setFixedSize(100, 50)
         self.startBtn.setCursor(Qt.PointingHandCursor)
-        self.startBtn.setStyleSheet("background-color:green; border: none; font: 15px; color: white;")
-        self.startBtn.clicked.connect(lambda checked: self.toggleStart())
-        self.layout.addWidget(self.startBtn)
-         
+        self.startBtn.setStyleSheet("background-color: green; border: none; font: 15px; color: white;")
+        self.startBtn.clicked.connect(self.toggleStart)
+        button_layout.addWidget(self.startBtn, alignment=Qt.AlignLeft)
+        # self.layout.addWidget(self.startBtn, alignment=Qt.AlignLeft)
         
+        # Add Close Button
+        self.closeBtn = QPushButton("Close")
+        self.closeBtn.setContentsMargins(0, 0, 0, 0)
+        self.closeBtn.setFixedSize(100, 50)
+        self.closeBtn.setCursor(Qt.PointingHandCursor)
+        self.closeBtn.setStyleSheet("background-color: red; border: none; font: 15px; color: white;")
+        self.closeBtn.clicked.connect(self.backToMain)
+        button_layout.addWidget(self.closeBtn, alignment=Qt.AlignRight)
+        # self.layout.addWidget(self.closeBtn, alignment=Qt.AlignRight)
+        
+        self.layout.addLayout(button_layout)
+    
     def recognize_hand_gesture(self, frame):
         imageShow = frame.copy()
         results = self.hands.process(frame)
@@ -92,14 +102,14 @@ class handGestureRecognitionWidget(QWidget):
             height, width, channel = imageShow.shape
             bytesPerLine = 3 * width
             qImg = QImage(imageShow.data, width, height, bytesPerLine, QImage.Format_RGB888)
-            return qImg            
+            return qImg
+    
     def toggleStart(self):
         self.startBtn.hide()
         self.recognitionTask()
     
     def recognitionTask(self):
         self.timer = QTimer(self)
-            
         self.timer.timeout.connect(self.update_frame)
         
         # Open the default webcam
@@ -117,11 +127,12 @@ class handGestureRecognitionWidget(QWidget):
         if ret:
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             frame = cv2.flip(frame, 1)
-            q_img = self.recognize_hand_gesture(frame)
-            # height, width, channel = frame.shape
-            # step = channel * width
-            # q_img = QImage(frame.data, width, height, step, QImage.Format_RGB888)
-            self.video_frame.setPixmap(QPixmap.fromImage(q_img))
+            # q_img = self.recognize_hand_gesture(frame)
+            # self.video_frame.setPixmap(QPixmap.fromImage(q_img))
+            height, width, channel = frame.shape
+            bytesPerLine = 3 * width
+            qImg = QImage(frame.data, width, height, bytesPerLine, QImage.Format_RGB888)
+            self.video_frame.setPixmap(QPixmap.fromImage(qImg))
     
     def correctGesture(self):
         self.status_label = QLabel("Hand Gesture Correct!")
@@ -129,9 +140,6 @@ class handGestureRecognitionWidget(QWidget):
         self.status_label.setStyleSheet("font-size: 20px; color: green;")
         self.layout.addWidget(self.status_label)
     
-    def closeEvent(self, event):
-        self.cap.release()
-        self.timer.stop()
-        event.accept()
-    
-        
+    def backToMain(self):
+        self.parent_widget.navigate_to_main_widget()
+        self.close()

@@ -101,14 +101,14 @@ class handGestureWidget(QWidget):
         self.navigate_to_question(self.stacked_questions.widget(0))
 
     def start_gesture_recognition_task(self, gesture_name):
-        self.recognition_widget = handGestureRecognitionWidget(gesture_name)
+        self.recognition_widget = handGestureRecognitionWidget(gesture_name, self)
         self.stacked_widget.addWidget(self.recognition_widget)
         self.stacked_widget.setCurrentWidget(self.recognition_widget)
         
         
 
     def navigate_to_main_widget(self):
-        self.resize(self.original_size )
+        # self.resize(self.original_size )
         self.gesture_widget.show()
         self.btn_practice_widget.show()
 
