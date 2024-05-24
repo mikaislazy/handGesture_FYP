@@ -1,8 +1,8 @@
 import sqlite3
 from sqlite3 import Error
 import pandas as pd
-
-database_name = "data.db"
+from  datetime import date
+database_name = "UserData/data.db"
 
 def create_db():
     conn = None
@@ -40,7 +40,8 @@ def create_db():
         if conn:
             conn.commit()
             conn.close()
-    
+
+# retrieve data from database  
 def retrieve_user_info():
     conn = sqlite3.connect(database_name)
     user_data_query = 'SELECT * FROM User;'
@@ -57,14 +58,15 @@ def retrieve_table_info():
     tables = c.fetchall()
     print("list all tables: \n {}".format(tables))
     for table in tables:
-        retrieve_tableData_info(table)
+        print("table: {}".format(table[0]))
+        retrieve_tableData_info(table[0])
     
     conn.close()
     
 def retrieve_tableData_info(table_name):
     conn = sqlite3.connect(database_name)
     c = conn.cursor()
-    c.execute('SELECT * FROM {}'.format(table_name[0]))
+    c.execute('SELECT * FROM {}'.format(table_name))
     rows = c.fetchall()
     for row in rows:
         print(row)
@@ -91,15 +93,26 @@ def retrieve_gesture_duration_task2(gesture_name):
     conn.close()
     return user_data_df
 
+#calculation function
 def calculate_error_rate_task1(gesture_name):
     gesture_score = retrieve_gesture_score_task1(gesture_name)
     trial = len(gesture_score)
     if gesture_score.empty:
         return None
     else:
-        total_score = gesture_score.sum().values[0]
-        full_score = trial * 4
-        error_rate = (full_score - total_score) / full_score
+        # total_score = gesture_score.sum().values[0]
+        all_score = gesture_score['score'].tolist()
+        accumulated_score = []
+        for i in range(0, len(all_score)):
+            if i == 0:
+                accumulated_score.append(all_score[i])
+            else:
+                accumulated_score.append(accumulated_score[i-1] + all_score[i])
+        error_rate = []
+        for i, score in enumerate(accumulated_score):
+            full_score = (i+1) * 4
+            rate = accumulated_score[i]/ full_score
+            error_rate.append(rate)
         return error_rate
 
 def calculate_error_rate_task2(gesture_name):
@@ -108,9 +121,24 @@ def calculate_error_rate_task2(gesture_name):
     if gesture_status.empty:
         return None
     else:
-        fail_trials = (gesture_status['status'] == False).sum()
-        error_rate = fail_trials / trial
-        return error_rate
+        all_status = gesture_status['status'].tolist()
+        error_rate = []
+        trial_success = 0
+        for i, status in enumerate( all_status):
+            if status:
+                trial_success += 1
+            error_rate.append(trial_success/(i+1))
+    return error_rate
+            
+# database operation
+def insert_record_task1(gesture_name, score ):
+    conn = sqlite3.connect(database_name)
+    c = conn.cursor()
+    c.execute('INSERT INTO Gesture_Task1 VALUES (?, ?, ?)', (gesture_name, score, date.today().strftime('%Y-%m-%d')))
+    conn.commit()
+    conn.close()
+    #print to test
+    retrieve_tableData_info("Gesture_Task1")
 
 def populate_test_data():
     conn = sqlite3.connect(database_name)
@@ -119,28 +147,29 @@ def populate_test_data():
     user_data = [
         ('test_user1', '2022-01-01'),
     ]
+    
     c.execute('DELETE FROM User')
     c.executemany('INSERT INTO User VALUES (?, ?)', user_data)
 
     gesture_task1_data = [
-        ('gesture1', 4, '2022-05-01'),
-        ('gesture1', 3, '2022-05-02'),
-        ('gesture1', 2, '2022-05-03'),
+        ('ZhiJiXiangYin', 4, '2022-05-01'),
+        ('ZhiJiXiangYin', 3, '2022-05-02'),
+        ('ZhiJiXiangYin', 2, '2022-05-03'),
     ]
     c.execute('DELETE FROM Gesture_Task1')
     c.executemany('INSERT INTO Gesture_Task1 VALUES (?, ?, ?)', gesture_task1_data)
 
     gesture_task2_data = [
-        ('gesture1', True, 120, '2022-05-01'),
-        ('gesture1', False, 150, '2022-05-02'),
-        ('gesture1', True, 130, '2022-05-03'),
+        ('ZhiJiXiangYin', True, 120, '2022-05-01'),
+        ('ZhiJiXiangYin', False, 150, '2022-05-02'),
+        ('ZhiJiXiangYin', True, 130, '2022-05-03'),
     ]
     c.execute('DELETE FROM Gesture_Task2')
     c.executemany('INSERT INTO Gesture_Task2 VALUES (?, ?, ?, ?)', gesture_task2_data)
 
     conn.commit()
     conn.close()
-
+    
 # Test case functions
 def test_retrieve_user_info():
     user_data_df = retrieve_user_info()
@@ -149,32 +178,44 @@ def test_retrieve_user_info():
     assert user_data_df.iloc[0]['username'] == 'test_user1'
 
 def test_retrieve_gesture_score_task1():
-    scores = retrieve_gesture_score_task1('gesture1')
+    scores = retrieve_gesture_score_task1('ZhiJiXiangYin')
     print("Scores retrieved from Gesture_Task1:", scores)
     assert scores.shape[0] == 3
     assert scores['score'].tolist() == [4, 3, 2]
 
 def test_retrieve_gesture_status_task2():
-    statuses = retrieve_gesture_status_task2('gesture1')
+    statuses = retrieve_gesture_status_task2('ZhiJiXiangYin')
     print("Statuses retrieved from Gesture_Task2:", statuses)
     assert statuses.shape[0] == 3
     assert statuses['status'].tolist() == [True, False, True]
 
 def test_retrieve_gesture_duration_task2():
-    durations = retrieve_gesture_duration_task2('gesture1')
+    durations = retrieve_gesture_duration_task2('ZhiJiXiangYin')
     print("Durations retrieved from Gesture_Task2:", durations)
     assert durations.shape[0] == 3
     assert durations['duration'].tolist() == [120, 150, 130]
 
 def test_calculate_error_rate_task1():
-    error_rate = calculate_error_rate_task1('gesture1')
+    error_rate = calculate_error_rate_task1('ZhiJiXiangYin')
     print("Error rate for Gesture_Task1:", error_rate)
-    assert error_rate == 0.25  # Total score: 9, Full score: 12, Error rate: (12 - 9) / 12
+     # Expected accumulated error rates for 'gesture1'
+    # Given scores: [4, 3, 2]
+    # Accumulated scores: [4, 7, 9]
+    # Error rates: [4/4, 7/8, 9/12] = [1.0, 0.875, 0.75]
+    expected_error_rates = [1.0, 7/8, 0.75]
+    # Calculate the error rates using the function
+    calculated_error_rates = calculate_error_rate_task1('ZhiJiXiangYin')
+    
+    # Check if the calculated error rates match the expected values
+    assert calculated_error_rates == expected_error_rates, f"Expected {expected_error_rates}, but got {calculated_error_rates}"
 
 def test_calculate_error_rate_task2():
-    error_rate = calculate_error_rate_task2('gesture1')
-    print("Error rate for Gesture_Task2:", error_rate)
-    assert error_rate == 1/3  # One failure out of three trials
+    error_rates = calculate_error_rate_task2('ZhiJiXiangYin')
+    print("Error rates for Gesture_Task2:", error_rates)
+    expected_rates = [1/1, 1/2, 2/3]  # Assuming the test data: [(True), (False), (True)]
+    assert len(error_rates) == len(expected_rates)
+    for rate, expected in zip(error_rates, expected_rates):
+        assert abs(rate - expected) < 1e-6  # Allowing small floating-point error
 
 def teardown_test_db():
     conn = sqlite3.connect(database_name)
@@ -203,5 +244,6 @@ def test_database():
 
 if __name__ == "__main__":
     create_db()
+    test_database()
     # retrieve_table_info()
     
