@@ -84,4 +84,9 @@ class mainWindow(QMainWindow):
         self.central_widget.setCurrentWidget(self.hand_gesture_widget)
     
     def switch_to_user(self):
+        self.central_widget.removeWidget(self.user_performance_widget)
+        self.user_performance_widget.setParent(None)
+        self.user_performance_widget = None
+        self.user_performance_widget = userPerformanceWidget(self)
+        self.central_widget.addWidget(self.user_performance_widget)
         self.central_widget.setCurrentWidget(self.user_performance_widget)

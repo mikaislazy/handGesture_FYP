@@ -3,12 +3,14 @@ from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QPushBut
 from PyQt5.QtCore import Qt
 
 class handGestureKnowledgeTaskWidget(QWidget):
-    def __init__(self, question, options, answer, parent=None):
+    def __init__(self, gesture_name, question, options, answer,add_question_score_task1_callback, parent=None):
         super().__init__(parent)
         print(f"Completed hand gesture question: {question}")
+        self.gesture_name = gesture_name
         self.question = question
         self.options = options
         self.answer = answer
+        self.add_question_score_task1_callback = add_question_score_task1_callback
         self.parent_widget = parent
         
         self.result = None
@@ -120,6 +122,9 @@ class handGestureKnowledgeTaskWidget(QWidget):
                 text-align: left;
                 margin: 0;
             """)
+        
+        # add score
+        self.add_question_score_task1_callback( self.gesture_name,self.result, self.is_last_question())
         
 
     def navigate_to_next_question(self):

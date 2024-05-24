@@ -7,6 +7,7 @@ from handGestureKnowledge import handGestureKnowledgeTaskWidget
 from handGestureRecognition import  handGestureRecognitionWidget
 from handGesturePractice import handGesturePracticeWidget
 from handGesturePracticeTool import handGesturePracticeToolWidget
+from  UserData import db_utils 
 
 class handGestureWidget(QWidget):
     def __init__(self, parent=None):
@@ -102,10 +103,11 @@ class handGestureWidget(QWidget):
         self.stacked_widget.setCurrentWidget(self.practice_widget)
         
     def start_gesture_knowledge_task(self, gesture_name, questions, options, answers):
+        self.trial_score = 0
         self.stacked_questions = QStackedWidget(self)
         # self.stacked_questions.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         for q, opt, ans in zip(questions, options, answers):
-            question_widget = handGestureKnowledgeTaskWidget(q, opt, ans, self)
+            question_widget = handGestureKnowledgeTaskWidget(gesture_name,q, opt, ans, self.add_question_score_task1, self)
             self.stacked_questions.addWidget(question_widget)
 
         self.stacked_widget.addWidget(self.stacked_questions)
@@ -145,3 +147,14 @@ class handGestureWidget(QWidget):
                 return parent
             parent = parent.parent()
         return None
+    
+    def add_question_score_task1(self, gesture_name, score, is_last_question):
+        print("add_question_score_task1")
+        self.trial_score += score
+        if is_last_question:
+            print('insert record of task 1 to db.')
+            db_utils.insert_record_task1(gesture_name, self.trial_score)
+            
+            
+        
+        
