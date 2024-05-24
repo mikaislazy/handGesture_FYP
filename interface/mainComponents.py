@@ -8,6 +8,7 @@ from handGestureKnowledge import handGestureKnowledgeTaskWidget
 from handGesturePractice import handGesturePracticeWidget
 from handGesturePracticeTool import handGesturePracticeToolWidget
 from handGestureTaskSelection import handGestureTaskSelectionWidget
+from userPerformance import userPerformanceWidget
 
 class mainWindow(QMainWindow):
     def __init__(self):
@@ -46,10 +47,12 @@ class mainWindow(QMainWindow):
         
         # Dashboard button
         btn_dashboard = QPushButton('Dashboard')
+        btn_dashboard.clicked.connect(self.switch_to_dashboard)
         sidebar_layout.addWidget(btn_dashboard)
         
         # User button
         btn_user = QPushButton('User')
+        btn_user.clicked.connect(self.switch_to_user)
         sidebar_layout.addWidget(btn_user)
         
         # Setting button
@@ -68,10 +71,17 @@ class mainWindow(QMainWindow):
         self.central_widget.addWidget(self.hand_gesture_widget)
         self.central_widget.setCurrentWidget(self.hand_gesture_widget)
         
+        # add the User Performance widget
+        self.user_performance_widget = userPerformanceWidget(self)
+        self.central_widget.addWidget(self.user_performance_widget)
+        
+        
         # Set the testing widget to hand gesture learning
         # self.testingWidget = handGestureWidget(self)
         # self.central_widget.addWidget(self.testingWidget)
-
-    def resize_main_window(self):
-        print('try to resize back the orignal window')
-        self.setGeometry(100, 100, 1200, 800)
+        
+    def switch_to_dashboard(self):
+        self.central_widget.setCurrentWidget(self.hand_gesture_widget)
+    
+    def switch_to_user(self):
+        self.central_widget.setCurrentWidget(self.user_performance_widget)
