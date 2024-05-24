@@ -2,10 +2,12 @@ import sqlite3
 from sqlite3 import Error
 import pandas as pd
 
+database_name = "data.db"
+
 def create_db():
     conn = None
     try:
-        conn = sqlite3.connect('data.db')
+        conn = sqlite3.connect(database_name)
         c = conn.cursor()
         # Create database for hand gesture task progress
         c.execute('''
@@ -40,37 +42,50 @@ def create_db():
             conn.close()
     
 def retrieve_user_info():
-    conn = sqlite3.connect('data.db')
+    conn = sqlite3.connect(database_name)
     user_data_query = 'SELECT * FROM User;'
     user_data_df = pd.read_sql_query(user_data_query, conn)
     conn.close()
     return user_data_df
 
 def retrieve_table_info():
-    conn = sqlite3.connect('data.db')
+    conn = sqlite3.connect(database_name)
     sql_query = """SELECT name FROM sqlite_master 
     WHERE type='table';"""
     c = conn.cursor()
     c.execute(sql_query)
-    print("list all tables: \n {}".format(c.fetchall()))
+    tables = c.fetchall()
+    print("list all tables: \n {}".format(tables))
+    for table in tables:
+        retrieve_tableData_info(table)
+    
+    conn.close()
+    
+def retrieve_tableData_info(table_name):
+    conn = sqlite3.connect(database_name)
+    c = conn.cursor()
+    c.execute('SELECT * FROM {}'.format(table_name[0]))
+    rows = c.fetchall()
+    for row in rows:
+        print(row)
     conn.close()
 
 def retrieve_gesture_score_task1(gesture_name):
-    conn = sqlite3.connect('data.db')
+    conn = sqlite3.connect(database_name)
     user_data_query = 'SELECT score FROM Gesture_Task1 WHERE gesture_name = "{}";'.format(gesture_name)
     user_data_df = pd.read_sql_query(user_data_query, conn)
     conn.close()
     return user_data_df
 
 def retrieve_gesture_status_task2(gesture_name):
-    conn = sqlite3.connect('data.db')
+    conn = sqlite3.connect(database_name)
     user_data_query = 'SELECT status FROM Gesture_Task2 WHERE gesture_name = "{}";'.format(gesture_name)
     user_data_df = pd.read_sql_query(user_data_query, conn)
     conn.close()
     return user_data_df
 
 def retrieve_gesture_duration_task2(gesture_name):
-    conn = sqlite3.connect('data.db')
+    conn = sqlite3.connect(database_name)
     user_data_query = 'SELECT duration FROM Gesture_Task2 WHERE gesture_name = "{}";'.format(gesture_name)
     user_data_df = pd.read_sql_query(user_data_query, conn)
     conn.close()
@@ -98,7 +113,7 @@ def calculate_error_rate_task2(gesture_name):
         return error_rate
 
 def populate_test_data():
-    conn = sqlite3.connect('data.db')
+    conn = sqlite3.connect(database_name)
     c = conn.cursor()
     
     user_data = [
@@ -162,7 +177,7 @@ def test_calculate_error_rate_task2():
     assert error_rate == 1/3  # One failure out of three trials
 
 def teardown_test_db():
-    conn = sqlite3.connect('data.db')
+    conn = sqlite3.connect(database_name)
     c = conn.cursor()
     
     c.execute('DROP TABLE IF EXISTS User')
@@ -188,3 +203,5 @@ def test_database():
 
 if __name__ == "__main__":
     create_db()
+    # retrieve_table_info()
+    
