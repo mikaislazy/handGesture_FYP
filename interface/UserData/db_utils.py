@@ -139,7 +139,17 @@ def insert_record_task1(gesture_name, score ):
     conn.close()
     #print to test
     retrieve_tableData_info("Gesture_Task1")
-
+    
+def insert_record_task2(gesture_name, status, duration):
+    conn = sqlite3.connect(database_name)
+    c = conn.cursor()
+    c.execute('INSERT INTO Gesture_Task2 VALUES (?, ?, ?, ?)', (gesture_name, status, duration, date.today().strftime('%Y-%m-%d')))
+    conn.commit()
+    conn.close()
+    #print to test
+    retrieve_tableData_info("Gesture_Task2")
+    
+# sample data
 def populate_test_data():
     conn = sqlite3.connect(database_name)
     c = conn.cursor()
