@@ -34,7 +34,7 @@ class handGestureRecognitionWidget(QWidget):
         
         self.gesture_name = gesture_name
         self.status = False
-        self.duration = 60
+        self.duration = 5
         # Layout
         self.layout = QVBoxLayout(self)
         bottom_layout = QHBoxLayout(self)

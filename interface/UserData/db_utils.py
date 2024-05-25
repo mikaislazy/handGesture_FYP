@@ -253,7 +253,8 @@ def test_database():
     print("All tests passed!")
 
 if __name__ == "__main__":
+    # test_database()
+    teardown_test_db()
     create_db()
-    test_database()
-    # retrieve_table_info()
+    retrieve_table_info()
     
