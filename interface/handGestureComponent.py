@@ -115,7 +115,7 @@ class handGestureWidget(QWidget):
         self.navigate_to_question(self.stacked_questions.widget(0))
 
     def start_gesture_recognition_task(self, gesture_name):
-        self.recognition_widget = handGestureRecognitionWidget(gesture_name, self)
+        self.recognition_widget = handGestureRecognitionWidget(gesture_name,self.insert_record_task2 , self)
         self.stacked_widget.addWidget(self.recognition_widget)
         self.stacked_widget.setCurrentWidget(self.recognition_widget)
     
@@ -154,6 +154,11 @@ class handGestureWidget(QWidget):
         if is_last_question:
             print('insert record of task 1 to db.')
             db_utils.insert_record_task1(gesture_name, self.trial_score)
+    
+    def insert_record_task2(self, gesture_name, status, duration):
+        print('insert record of task 2 to db.')
+        db_utils.insert_record_task2(gesture_name, status, duration)
+        
             
             
         
