@@ -5,7 +5,7 @@ from PyQt5.QtCore import QSize, Qt, QTimer
 import cv2
 import os
 import sys
-from tool import GESTURES, GESTURES_INDICS
+import tool
 import numpy 
 
 # Calculate the absolute path
@@ -34,7 +34,7 @@ class handGestureRecognitionWidget(QWidget):
         
         self.gesture_name = gesture_name
         self.status = False
-        self.duration = 5
+        self.duration = 60
         # Layout
         self.layout = QVBoxLayout(self)
         bottom_layout = QHBoxLayout(self)
@@ -44,14 +44,8 @@ class handGestureRecognitionWidget(QWidget):
         self.layout.addWidget(self.timerLabel, alignment=Qt.AlignCenter)
         
         # Add webcam feed
-        self.frameWidth = 1280/1.2
-        self.frameHeight = 720/1.2
-        self.video_frame = QLabel(f"{gesture_name} Recognition Task")
-        self.video_frame.setFrameShape(QFrame.Box)
-        self.video_frame.setFixedWidth(self.frameWidth)
-        self.video_frame.setFixedHeight(self.frameHeight)
-        self.video_frame.setAlignment(Qt.AlignCenter)
-        self.video_frame.setStyleSheet("font: 15px;")
+        video_frame_title = f"{gesture_name} Recognition Task"
+        self.video_frame = tool.create_webcam_widget(video_frame_title)
         self.layout.addWidget(self.video_frame, alignment=Qt.AlignCenter)
         # self.layout.addStretch()
         
@@ -82,31 +76,7 @@ class handGestureRecognitionWidget(QWidget):
         
         self.layout.addLayout(bottom_layout)
     
-    def recognize_hand_gesture(self, frame):
-        imageShow = frame.copy()
-        processed_hand_image = utils.image_processing(self.target_size, imageShow, True)
-        exist, hand_area_coordinates = utils.find_hand_region(imageShow)  # return the hand area coordinates
-        if exist:
-            x = tf.expand_dims(processed_hand_image, 0)
-            pred = self.model.predict(x)[0]
-            cx, cy, cw, ch = hand_area_coordinates
-            prediction = GESTURES_INDICS[pred.argmax()]
-            prediction_text = utils.show_pred_max_toString(pred, GESTURES_INDICS)
-            cv2.putText(imageShow,prediction_text, (int(self.frameWidth//2), 50), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
-            imageShow = cv2.rectangle(img=imageShow, pt1=(cx, cy), pt2=(cx+cw, cy+ch), color=(245, 66, 108), thickness=2)
-            if prediction == self.gesture_name:
-                self.status = True
-                self.correctGesture()
-                # end the task
-                self.release_webcam()
-                self.closeBtn.show()
-        else:
-            self.show_hand_absence_alert()
-            
-        height, width, channel = imageShow.shape
-        bytesPerLine = 3 * width
-        qImg = QImage(imageShow.data, width, height, bytesPerLine, QImage.Format_RGB888)
-        return qImg
+    
     
     def toggleStart(self):
         self.startBtn.hide()
@@ -136,22 +106,31 @@ class handGestureRecognitionWidget(QWidget):
         
         # Open the default webcam
         self.cap = cv2.VideoCapture(0)
-        self.timer.start(500)  # Update the frame every 20 ms
+        self.timer.start(500) 
 
-        # # Label for status and result
-        # self.status_label = QLabel("")
-        # self.status_label.setAlignment(Qt.AlignCenter)
-        # self.status_label.setStyleSheet("font-size: 20px; color: green;")
-        # self.layout.addWidget(self.status_label)
+       
     
     def update_frame(self):
         ret, frame = self.cap.read()
         if ret:
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             # frame = cv2.flip(frame, 1)
-            q_img = self.recognize_hand_gesture(frame)
+            self.status, q_img = tool.recognize_hand_gesture(self.gesture_name,  frame)
+            self.show_gesture_comment(self.status)
+            if self.status:
+                # end the task
+                self.release_webcam()
+                self.closeBtn.show()
             self.video_frame.setPixmap(QPixmap.fromImage(q_img))
     
+    def show_gesture_comment(self, status):
+        if status is None:
+                self.show_hand_absence_alert()
+        elif status == True:
+            self.correctGesture()
+        else:
+            self.wrongGesture()
+            
     def correctGesture(self):
         self.status_label.setText("Correct Gesture!")
         self.status_label.setStyleSheet("font-size: 20px; color: green;")
