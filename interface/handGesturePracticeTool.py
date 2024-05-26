@@ -22,6 +22,7 @@ class handGesturePracticeToolWidget(QWidget):
         self.currentGesture_idx = 0
         self.gesture_names = gesture_names
         self.duration = 0
+        self.parent_widget = parent
 
         # Layout setup
         main_layout = QVBoxLayout()
@@ -121,7 +122,7 @@ class handGesturePracticeToolWidget(QWidget):
         
         # Open the default webcam
         self.cap = cv2.VideoCapture(0)
-        self.timer.start(500)  
+        self.timer.start(300)  
         
     def update_frame(self):
         ret, frame = self.cap.read()
@@ -146,8 +147,8 @@ class handGesturePracticeToolWidget(QWidget):
     
     def backToMain(self):
         self.release_webcam()
-        self.close()
         self.parent_widget.navigate_to_main_widget()
+        self.close()
     
     def release_webcam(self):
         if self.cap.isOpened():

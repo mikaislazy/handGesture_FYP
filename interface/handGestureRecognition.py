@@ -106,7 +106,7 @@ class handGestureRecognitionWidget(QWidget):
         
         # Open the default webcam
         self.cap = cv2.VideoCapture(0)
-        self.timer.start(500) 
+        self.timer.start(300) 
 
        
     

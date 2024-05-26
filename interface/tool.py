@@ -48,7 +48,7 @@ def recognize_hand_gesture(gesture_name ,frame):
     
      # Initialize MediaPipe Hands
     mp_hands = mp.solutions.hands
-    hands = mp_hands.Hands(static_image_mode=True,min_detection_confidence=0.5,  min_tracking_confidence=0.5, max_num_hands=2)
+    hands = mp_hands.Hands(static_image_mode=True,min_detection_confidence=0.3,  min_tracking_confidence=0.3, max_num_hands=2)
     mp_drawing = mp.solutions.drawing_utils
     # Convert the BGR image to RGB and process it with MediaPipe Hands
     processed_image = utils.image_processing(target_size, imageShow, False)
@@ -75,10 +75,11 @@ def recognize_hand_gesture(gesture_name ,frame):
         pred = model.predict(x)[0]
         cx, cy, cw, ch = hand_area_coordinates
         prediction = GESTURES_INDICS[pred.argmax()]
+        prediction_percentage = pred[pred.argmax()]
         prediction_text = utils.show_pred_max_toString(pred, GESTURES_INDICS)
         cv2.putText(imageShow,prediction_text, (cx,cy), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
         imageShow = cv2.rectangle(img=imageShow, pt1=(cx, cy), pt2=(cx+cw, cy+ch), color=(245, 66, 108), thickness=2)
-        if prediction == gesture_name:
+        if prediction == gesture_name and prediction_percentage >= 0.9:
             status = True
             # self.correctGesture()
             # end the task
