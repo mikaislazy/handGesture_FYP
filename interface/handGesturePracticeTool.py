@@ -16,14 +16,17 @@ import tensorflow as tf
 from handGestureRecognition import handGestureRecognitionWidget
 
 class handGesturePracticeToolWidget(QWidget):
-    def __init__(self, gesture_names, parent=None):
+    def __init__(self, gesture_names, effect_name,  parent=None):
         super().__init__(parent)
         
         self.currentGesture_idx = 0
         self.gesture_names = gesture_names
         self.duration = 0
         self.parent_widget = parent
-
+        self.effect = effect_name
+        self.effect_length = tool.get_effect_frame_length(self.effect)
+        self.png_num = 1
+        self.finish_practice = False
         # Layout setup
         main_layout = QVBoxLayout()
         
@@ -122,29 +125,44 @@ class handGesturePracticeToolWidget(QWidget):
         
         # Open the default webcam
         self.cap = cv2.VideoCapture(0)
-        self.timer.start(300)  
+        self.timer.start(100)  
         
     def update_frame(self):
         ret, frame = self.cap.read()
         if ret:
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             # frame = cv2.flip(frame, 1)
-            self.status, q_img = tool.recognize_hand_gesture(self.gesture_names[self.currentGesture_idx],  frame)
-            if self.status == True:
-                if self.currentGesture_idx != len(self.gesture_names) - 1:
-                    self.currentGesture_idx += 1
-                    self.status_label.setText("Correct! Next gesture")
-                    self.status_label.setStyleSheet("color: green;")
+            if self.finish_practice == False:
+                self.status, q_img = tool.recognize_hand_gesture(self.gesture_names[self.currentGesture_idx],  frame)
+                if self.status == True:
+                    if self.currentGesture_idx != len(self.gesture_names) - 1:
+                        self.currentGesture_idx += 1
+                        self.status_label.setText(f"Correct! Next gesture: {self.gesture_names[self.currentGesture_idx]}")
+                        self.status_label.setStyleSheet("color: green;")
+                    else:
+                        self.finish_practice = True
+                        self.clock.stop()
+                        self.finishPractice()
+            else:
+                if self.effect and  self.png_num <= self.effect_length:
+                    q_img = self.play_effect(frame)
+                    self.png_num += 1
                 else:
-                    self.stop_timer()
-                    self.finishPractice()
+                    height, width, channel = frame.shape
+                    bytesPerLine = 3 * width
+                    q_img = QImage(frame.data, width, height, bytesPerLine, QImage.Format_RGB888)
+                        
             self.video_frame.setPixmap(QPixmap.fromImage(q_img))
 
     def finishPractice(self):
         self.status_label.setText("You finish practice all selected gesture!")
         self.status_label.setStyleSheet("font-size: 20px; color: green;")
     
-    
+    def play_effect(self, frame):
+        frame = tool.add_gif2frame(self.effect, frame ,self.png_num)
+        return frame
+        
+        
     def backToMain(self):
         self.release_webcam()
         self.parent_widget.navigate_to_main_widget()

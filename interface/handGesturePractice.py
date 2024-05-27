@@ -9,6 +9,7 @@ class handGesturePracticeWidget(QWidget):
         
         self.start_practice_callback = start_practice_callback
         self.gesture_names = []
+        self.selected_effect = None
         
         main_layout = QVBoxLayout()
         main_layout.setContentsMargins(0, 0, 0, 0)  # Set margins to 0
@@ -80,6 +81,10 @@ class handGesturePracticeWidget(QWidget):
         self.fire_effect = QRadioButton("Fire effect")
         self.thunder_effect = QRadioButton("Thunder effect")
         self.lighting_effect = QRadioButton("Lighting effect")
+        
+        self.fire_effect.toggled.connect(lambda: self.update_selected_effect("fire_effect"))
+        self.thunder_effect.toggled.connect(lambda: self.update_selected_effect("thunder_effect"))
+        self.lighting_effect.toggled.connect(lambda: self.update_selected_effect("lighting_effect"))
         # style the radio buttons
         self.fire_effect.setFixedSize(200, 30)
         self.fire_effect.setStyleSheet("font-size: 16px; ")
@@ -121,7 +126,7 @@ class handGesturePracticeWidget(QWidget):
         input_value = self.gesture_order_input.text().strip()
         if input_value:  # Check if input_value is not empty
             self.gesture_names = self.get_input_gesture_names(input_value)
-            self.start_practice_callback(self.gesture_names)
+            self.start_practice_callback(self.gesture_names, self.selected_effect)
 
     def get_input_gesture_names(self, input_gesture_order):
         gesture_names = []
@@ -129,3 +134,6 @@ class handGesturePracticeWidget(QWidget):
             gesture_names.append(GESTURES[int(i)-1])
         return gesture_names
 
+    def update_selected_effect(self, effect_name):
+        self.selected_effect = effect_name
+        print("update_selected_effect", self.selected_effect)

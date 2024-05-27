@@ -119,8 +119,8 @@ class handGestureWidget(QWidget):
         self.stacked_widget.addWidget(self.recognition_widget)
         self.stacked_widget.setCurrentWidget(self.recognition_widget)
     
-    def start_practice(self, gesture_names):
-        self.practiceTool_widget = handGesturePracticeToolWidget(gesture_names, self)
+    def start_practice(self, gesture_names, effect_name):
+        self.practiceTool_widget = handGesturePracticeToolWidget(gesture_names, effect_name,self)
         self.stacked_widget.addWidget(self.practiceTool_widget)
         self.stacked_widget.setCurrentWidget(self.practiceTool_widget)
 

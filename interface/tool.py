@@ -104,6 +104,50 @@ def create_webcam_widget(title):
     video_frame.setFixedHeight(frameHeight)
     video_frame.setStyleSheet("font: 15px;")
     return video_frame
+
+def add_gif2frame(effect_name, frame, png_num):
+    effect_frame_path = f"other/frames/{effect_name}"
+    if os.path.exists(effect_frame_path):
+        png_path = f"{effect_frame_path}/{effect_name}_{png_num}.png"
+        pngimg = cv2.imread(png_path)
+        frame = add_png2frame(frame, pngimg)
+        
+    else:
+        print(f"Path {effect_frame_path} does not exist.")
+    
+    height, width, channel = frame.shape
+    bytesPerLine = 3 * width
+    return QImage(frame.data, width, height, bytesPerLine, QImage.Format_RGB888)
+    
+def add_png2frame(frame, pngimg):
+    rows1,cols1,channels1 = frame.shape
+    pngimg = cv2.resize(pngimg, (cols1, rows1))
+    pngimg = cv2.cvtColor(pngimg, cv2.COLOR_BGR2RGB)
+   
+    # get the background mask
+    img2gray = cv2.cvtColor(pngimg,cv2.COLOR_BGR2GRAY)
+    ret, mask = cv2.threshold(img2gray, 180, 255, cv2.THRESH_BINARY)
+    mask_inv = cv2.bitwise_not(mask) # get the effect area in png
+
+    # black-out the area of effect in frame
+    img1_bg = cv2.bitwise_and(frame,frame,mask = mask_inv)
+
+    # get the effect area in png
+    img2_fg = cv2.bitwise_and(pngimg,pngimg,mask = mask)
+
+    # combine frame and effect
+    frame = cv2.add(img1_bg,img2_fg)
+    
+
+    return frame
+
+  
+
+def get_effect_frame_length( effect_name):
+    effect_frame_path = f"other/frames/{effect_name}"
+    effect_frame_length = len(os.listdir(effect_frame_path)) 
+    return effect_frame_length
+
     
     
 GESTURES = [
