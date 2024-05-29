@@ -3,3 +3,4 @@ _pycache_/
 data/
 *.jpg
 *.h5
+*.db
