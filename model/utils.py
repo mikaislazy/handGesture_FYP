@@ -7,6 +7,9 @@ import os
 import cv2
 import mediapipe as mp
 
+def count_jpgs(path):
+    return len(list(path.rglob('*.jpg')))
+
 def mkdir(path):
     if not path.exists():
         path.mkdir()
