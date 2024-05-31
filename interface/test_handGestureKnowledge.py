@@ -6,17 +6,21 @@ from unittest.mock import Mock
 from handGestureKnowledge import handGestureKnowledgeTaskWidget  # Adjust the import as needed
 import tool
 
-
+# Fixture to create a mock function of add_question_score_task1_callback
 @pytest.fixture
 def mock_add_question_score_task1_callback():
     return Mock()
 
+gesture_name = "ChanDingYin"
+gesture_questions, gesture_options = tool.load_question(gesture_name, 'other/question.json')
+question = gesture_questions[0]
+options = gesture_options[0]
+gesture_answers = tool.load_answer(gesture_name, 'other/answer.json')
+answer = gesture_answers[0]
+answer_index = options.index(answer)
+# Fixture to create a temporary widget for testing
 @pytest.fixture
 def app(mock_add_question_score_task1_callback, qtbot):
-    gesture_name = "TestGesture"
-    question = "What is this gesture?"
-    options = ["Option 1", "Option 2", "Option 3"]
-    answer = "Option 2"
     test_handGestureKnowledgeTaskWidget = handGestureKnowledgeTaskWidget(
         gesture_name,
         question,
@@ -28,21 +32,23 @@ def app(mock_add_question_score_task1_callback, qtbot):
     qtbot.addWidget(test_handGestureKnowledgeTaskWidget)
     return test_handGestureKnowledgeTaskWidget
 
+# Test the initial state of the widget
 def test_initial_state(app):
-    assert app.gesture_name == "TestGesture"
-    assert app.question == "What is this gesture?"
-    assert app.options == ["Option 1", "Option 2", "Option 3"]
-    assert app.answer == "Option 2"
+    assert app.gesture_name == gesture_name
+    assert app.question == question
+    assert app.options == options
+    assert app.answer == answer
 
-    assert app.question_label.text() == "Question: What is this gesture?"
+    assert app.question_label.text() == f"Question: {question}"
     assert app.result_label.text() == ""
 
     for i, btn in enumerate(app.option_buttons):
         assert btn.text() == f"{['A.', 'B.', 'C.'][i]} {app.options[i]}"
 
+# Test the option selection
 def test_option_selection(app, mock_add_question_score_task1_callback, qtbot):
     # Select the correct option
-    correct_option_button = app.option_buttons[1]
+    correct_option_button = app.option_buttons[answer_index]
     qtbot.mouseClick(correct_option_button, Qt.LeftButton)
     
     assert app.result == True
@@ -64,9 +70,9 @@ def test_option_selection(app, mock_add_question_score_task1_callback, qtbot):
             """)
 
     # Select an incorrect option
-    incorrect_option_button = app.option_buttons[0]
+    incorrect_option_button = app.option_buttons[2-answer_index]
     qtbot.mouseClick(incorrect_option_button, Qt.LeftButton)
     
     assert app.result == False
-    assert app.result_label.text() == "Wrong! The correct option is Option 2."
+    assert app.result_label.text() == f"Wrong! The correct option is {answer}."
     

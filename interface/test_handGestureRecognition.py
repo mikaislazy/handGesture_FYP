@@ -5,23 +5,26 @@ from PyQt5.QtCore import Qt, QTimer
 from handGestureRecognition import handGestureRecognitionWidget
 from unittest.mock import Mock
 
+# Fixture to create a mock function of insert_record_task2_callback
 @pytest.fixture
 def mock_insert_record_task2_callback():
     return Mock()
 
+# Fixture to create a temporary widget for testing
 @pytest.fixture
 def app(mock_insert_record_task2_callback, qtbot):
     test_handGestureRecognitionWidget = handGestureRecognitionWidget('TestGesture', mock_insert_record_task2_callback)
     qtbot.addWidget(test_handGestureRecognitionWidget)
     return test_handGestureRecognitionWidget
 
+# Testing the initial state of the widget
 def test_initial_state(app):
     assert app.gesture_name == 'TestGesture'
     assert app.duration == 60
     assert not app.status
     assert app.timerLabel.text() == "01:00"
 
-
+# Test the start button and its associated behavior
 def test_start_task(app, qtbot):
     qtbot.mouseClick(app.startBtn, Qt.LeftButton)
     assert not app.startBtn.isVisible()
@@ -37,6 +40,7 @@ def test_start_task(app, qtbot):
     app.clock.stop()
     app.timer.stop()
 
+# Test the comment of user hand gesture
 def test_show_gesture_comment(app, qtbot):
     app.show_gesture_comment(True)
     assert app.status_label.text() == "Correct Gesture!"
@@ -50,11 +54,13 @@ def test_show_gesture_comment(app, qtbot):
     assert app.status_label.text() == "No hand detected!"
     assert "red" in app.status_label.styleSheet()
 
+# Test the status_label of fail task
 def test_fail_task(app):
     app.fail_task()
     assert app.status_label.text() == "Task Failed!"
     assert "red" in app.status_label.styleSheet()
 
+# Test the back to main function
 def test_back_to_main(app, qtbot):
     app.status = False
     app.duration = 30
@@ -64,6 +70,7 @@ def test_back_to_main(app, qtbot):
     assert app.status_label.text() == "Task Failed!"
     assert "red" in app.status_label.styleSheet()
 
+# Test the release webcam function
 def test_release_webcam(app):
     app.recognitionTask()
     assert app.cap.isOpened()

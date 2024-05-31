@@ -22,7 +22,7 @@ def app():
 @pytest.fixture
 def main_window(app, qtbot):
     window = mainWindow()
-    window.setAttribute(Qt.WA_DontShowOnScreen, True)
+    window.setAttribute(Qt.WA_DontShowOnScreen, True) # dont show the GUI on screen
     qtbot.addWidget(window)
     window.show()
     yield window
