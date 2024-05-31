@@ -38,28 +38,28 @@ def extract_hand_keypoints(image):
 
     return hand_keypoints
 
-def get_hand_landmarks_keypoints_dataset(category, main_dataset_folder, sub_dataset_folder):
+def get_hand_landmarks_keypoints_dataset(category, main_dataset_folder):
     for gesture in category:
         gesture_keypoints = {}
 
-        for sub in sub_dataset_folder:
-            gesture_sub_path = os.path.join(main_dataset_folder, sub, gesture)
-            print(gesture_sub_path)
-            if os.path.exists(gesture_sub_path):
-                for image_filename in os.listdir(gesture_sub_path):
-                    image_path = os.path.join(gesture_sub_path, image_filename)
+        gesture_path = os.path.join(main_dataset_folder, gesture)
+        print(f"Processing gesture: {gesture}")
 
-                    # Load the image
-                    image = cv2.imread(image_path)
+        if os.path.exists(gesture_path):
+            for image_filename in os.listdir(gesture_path):
+                image_path = os.path.join(gesture_path, image_filename)
 
-                    # Extract hand keypoints from the image
-                    hand_keypoints = extract_hand_keypoints(image)
+                # Load the image
+                image = cv2.imread(image_path)
 
-                    # Save the keypoints in the dictionary
-                    img_name = os.path.splitext(image_filename)[0]
-                    gesture_keypoints[img_name] = hand_keypoints
-            else:
-                print(f"Path not found: {gesture_sub_path}")
+                # Extract hand keypoints from the image
+                hand_keypoints = extract_hand_keypoints(image)
+
+                # Save the keypoints in the dictionary
+                img_name = os.path.splitext(image_filename)[0]
+                gesture_keypoints[img_name] = hand_keypoints
+        else:
+            print(f"Path not found: {gesture_path}")
 
         # Save all keypoints for the current gesture in a separate JSON file
         json_filename = f'{gesture}.json'
@@ -70,8 +70,7 @@ def get_hand_landmarks_keypoints_dataset(category, main_dataset_folder, sub_data
 
 if __name__ == '__main__':
     # Process the dataset
-    main_dataset_folder = 'data/color_fps4_hand_splited_dataset'
-    sub_dataset_folder = ['train', 'test', 'val']
+    main_dataset_folder = 'data/frame_fps4'
     category = [
         "ChanDingYin",
         "HuoYanYin",
@@ -83,4 +82,4 @@ if __name__ == '__main__':
         "Zen",
         "ZhiJiXiangYin"
     ]
-    get_hand_landmarks_keypoints_dataset(category, main_dataset_folder, sub_dataset_folder)
+    get_hand_landmarks_keypoints_dataset(category, main_dataset_folder)
