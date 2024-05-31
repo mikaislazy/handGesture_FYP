@@ -91,7 +91,6 @@ class handGestureKnowledgeTaskWidget(QWidget):
     def on_option_click(self, selected_option):
         print(f'Option clicked: {selected_option}')
         print(f"Correct answer: {self.answer}")
-        parent = self.parentWidget().parentWidget()
         self.next_button.show()
         if selected_option.lower() == self.answer.lower():
             self.result = True
@@ -137,7 +136,8 @@ class handGestureKnowledgeTaskWidget(QWidget):
     
     def is_last_question(self):
         parent = self.parent_widget
-        current_index = parent.stacked_questions.currentIndex()
-        if current_index == parent.stacked_questions.count() - 1:
-            return True
+        if parent:
+            current_index = parent.stacked_questions.currentIndex()
+            if current_index == parent.stacked_questions.count() - 1:
+                return True
         return False

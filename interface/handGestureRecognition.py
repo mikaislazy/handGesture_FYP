@@ -31,6 +31,7 @@ class handGestureRecognitionWidget(QWidget):
         self.hands = mpHands.Hands(max_num_hands=2, min_detection_confidence=0.1, min_tracking_confidence=0.1)
         mpDraw = mp.solutions.drawing_utils
         self.model = tf.keras.models.load_model("Model/color_fps4_hand_splited_dataset.h5")
+        self.cap = cv2.VideoCapture(0)
         
         self.gesture_name = gesture_name
         self.status = False
@@ -105,7 +106,7 @@ class handGestureRecognitionWidget(QWidget):
         self.timer.timeout.connect(self.update_frame)
         
         # Open the default webcam
-        self.cap = cv2.VideoCapture(0)
+        
         self.timer.start(300) 
 
        
@@ -155,19 +156,10 @@ class handGestureRecognitionWidget(QWidget):
         self.insert_record_task2_callback(self.gesture_name, self.status, time)
         self.release_webcam()
         self.close()
-        self.parent_widget.navigate_to_main_widget()
+        if self.parent_widget:
+            self.parent_widget.navigate_to_main_widget()
     
     def release_webcam(self):
         if self.cap.isOpened():
             self.cap.release()
 
-# Main application to run the widget
-def main():
-    app = QApplication([])
-    gesture_name = 'gesture1'  # Example gesture name
-    widget = handGestureRecognitionWidget(gesture_name)
-    widget.show()
-    sys.exit(app.exec_())
-
-if __name__ == "__main__":
-    main()

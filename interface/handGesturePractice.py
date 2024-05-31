@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QRadioButton, QGroupBox, QPushButton, QSizePolicy)
+from PyQt5.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QRadioButton, QGroupBox, QPushButton, QSizePolicy, QMessageBox)
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt
 from tool import GESTURES
@@ -85,7 +85,8 @@ class handGesturePracticeWidget(QWidget):
         self.fire_effect.toggled.connect(lambda: self.update_selected_effect("fire_effect"))
         self.thunder_effect.toggled.connect(lambda: self.update_selected_effect("thunder_effect"))
         self.lighting_effect.toggled.connect(lambda: self.update_selected_effect("lighting_effect"))
-        # style the radio buttons
+        
+        # Style the radio buttons
         self.fire_effect.setFixedSize(200, 30)
         self.fire_effect.setStyleSheet("font-size: 16px; ")
         self.thunder_effect.setFixedSize(200, 30)
@@ -124,9 +125,11 @@ class handGesturePracticeWidget(QWidget):
 
     def start_practice(self):
         input_value = self.gesture_order_input.text().strip()
-        if input_value:  # Check if input_value is not empty
+        checked = self.check_input_value(input_value)
+        if checked: 
             self.gesture_names = self.get_input_gesture_names(input_value)
             self.start_practice_callback(self.gesture_names, self.selected_effect)
+        
 
     def get_input_gesture_names(self, input_gesture_order):
         gesture_names = []
@@ -137,3 +140,18 @@ class handGesturePracticeWidget(QWidget):
     def update_selected_effect(self, effect_name):
         self.selected_effect = effect_name
         print("update_selected_effect", self.selected_effect)
+    
+    def check_input_value(self, input_value):
+        if not input_value: 
+            QMessageBox.warning(self, "Input Error", "Please input at least one number.")
+            return False
+        for num in input_value.split():
+            try:
+                if int(num) < 1 or int(num) > 9:
+                    QMessageBox.warning(self, "Input Error", "Please input number between 1 to 9.")
+                    return False
+            except ValueError:
+                    QMessageBox.warning(self, "Input Error", "Please input integer.")
+                    return False
+        return True
+            
