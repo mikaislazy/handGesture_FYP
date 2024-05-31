@@ -5,20 +5,19 @@ from PyQt5.QtCore import Qt
 from unittest.mock import Mock
 from handGestureKnowledge import handGestureKnowledgeTaskWidget  # Adjust the import as needed
 import tool
-# Ensure QApplication is only created once
-app = QApplication([])
+
 
 @pytest.fixture
 def mock_add_question_score_task1_callback():
     return Mock()
 
 @pytest.fixture
-def widget(mock_add_question_score_task1_callback, qtbot):
+def app(mock_add_question_score_task1_callback, qtbot):
     gesture_name = "TestGesture"
     question = "What is this gesture?"
     options = ["Option 1", "Option 2", "Option 3"]
     answer = "Option 2"
-    widget = handGestureKnowledgeTaskWidget(
+    test_handGestureKnowledgeTaskWidget = handGestureKnowledgeTaskWidget(
         gesture_name,
         question,
         options,
@@ -26,32 +25,32 @@ def widget(mock_add_question_score_task1_callback, qtbot):
         mock_add_question_score_task1_callback,
         parent=None
     )
-    qtbot.addWidget(widget)
-    return widget
+    qtbot.addWidget(test_handGestureKnowledgeTaskWidget)
+    return test_handGestureKnowledgeTaskWidget
 
-def test_initial_state(widget):
-    assert widget.gesture_name == "TestGesture"
-    assert widget.question == "What is this gesture?"
-    assert widget.options == ["Option 1", "Option 2", "Option 3"]
-    assert widget.answer == "Option 2"
+def test_initial_state(app):
+    assert app.gesture_name == "TestGesture"
+    assert app.question == "What is this gesture?"
+    assert app.options == ["Option 1", "Option 2", "Option 3"]
+    assert app.answer == "Option 2"
 
-    assert widget.question_label.text() == "Question: What is this gesture?"
-    assert widget.result_label.text() == ""
+    assert app.question_label.text() == "Question: What is this gesture?"
+    assert app.result_label.text() == ""
 
-    for i, btn in enumerate(widget.option_buttons):
-        assert btn.text() == f"{['A.', 'B.', 'C.'][i]} {widget.options[i]}"
+    for i, btn in enumerate(app.option_buttons):
+        assert btn.text() == f"{['A.', 'B.', 'C.'][i]} {app.options[i]}"
 
-def test_option_selection(widget, mock_add_question_score_task1_callback, qtbot):
+def test_option_selection(app, mock_add_question_score_task1_callback, qtbot):
     # Select the correct option
-    correct_option_button = widget.option_buttons[1]
+    correct_option_button = app.option_buttons[1]
     qtbot.mouseClick(correct_option_button, Qt.LeftButton)
     
-    assert widget.result == True
-    assert widget.result_label.text() == "Correct!"
+    assert app.result == True
+    assert app.result_label.text() == "Correct!"
      
     # reset the button state
-    widget.result_label.setText("")
-    for btn in widget.option_buttons:
+    app.result_label.setText("")
+    for btn in app.option_buttons:
             btn.setEnabled(True)
             btn.setStyleSheet("""
                 font-size: 16px;
@@ -65,9 +64,9 @@ def test_option_selection(widget, mock_add_question_score_task1_callback, qtbot)
             """)
 
     # Select an incorrect option
-    incorrect_option_button = widget.option_buttons[0]
+    incorrect_option_button = app.option_buttons[0]
     qtbot.mouseClick(incorrect_option_button, Qt.LeftButton)
     
-    assert widget.result == False
-    assert widget.result_label.text() == "Wrong! The correct option is Option 2."
+    assert app.result == False
+    assert app.result_label.text() == "Wrong! The correct option is Option 2."
     
