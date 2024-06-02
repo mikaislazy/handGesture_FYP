@@ -4,7 +4,7 @@ from PyQt5.QtTest import QTest
 from PyQt5.QtCore import Qt
 from unittest.mock import Mock
 from handGestureKnowledge import handGestureKnowledgeTaskWidget  # Adjust the import as needed
-import tool
+import tool 
 
 # Fixture to create a mock function of add_question_score_task1_callback
 @pytest.fixture

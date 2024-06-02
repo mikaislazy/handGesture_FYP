@@ -5,7 +5,7 @@ from PyQt5.QtCore import QSize, Qt, QTimer
 import cv2
 import os
 import sys
-import tool
+import  tool
 import numpy 
 
 # Calculate the absolute path
@@ -30,7 +30,6 @@ class handGestureRecognitionWidget(QWidget):
         mpHands = mp.solutions.hands
         self.hands = mpHands.Hands(max_num_hands=2, min_detection_confidence=0.1, min_tracking_confidence=0.1)
         mpDraw = mp.solutions.drawing_utils
-        self.model = tf.keras.models.load_model("Model/color_fps4_hand_splited_dataset.h5")
         self.cap = cv2.VideoCapture(0)
         
         self.gesture_name = gesture_name

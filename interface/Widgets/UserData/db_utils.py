@@ -2,7 +2,13 @@ import sqlite3
 from sqlite3 import Error
 import pandas as pd
 from  datetime import date
-database_name = "UserData/data.db"
+import os
+# Get the directory of the current script
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Construct the absolute path to the model file
+database_name = "data.db"
+database_name  = os.path.join(current_dir, database_name)
 
 def create_db():
     conn = None
@@ -73,6 +79,7 @@ def retrieve_tableData_info(table_name):
     conn.close()
 
 def retrieve_gesture_score_task1(gesture_name):
+    # print("database_name:", database_name)
     conn = sqlite3.connect(database_name)
     user_data_query = 'SELECT score FROM Gesture_Task1 WHERE gesture_name = "{}";'.format(gesture_name)
     user_data_df = pd.read_sql_query(user_data_query, conn)

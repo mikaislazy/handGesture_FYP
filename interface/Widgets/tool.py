@@ -2,9 +2,6 @@
 import json
 import os
 import sys
-# Calculate the absolute path
-abs_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../model'))
-sys.path.insert(0, abs_path)
 import utils
 import mediapipe as mp
 import numpy as np
@@ -15,10 +12,18 @@ from PyQt5.QtCore import Qt, QTimer, QTime
 import cv2
 import numpy
 
+# Get the parent directory
+# parent_dir = os.path.dirname( os.getcwd())
+# Get the directory of the current script
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Construct the absolute path to the model file
+model_path = os.path.join(current_dir, '../Model/color_fps4_splited_dataset.h5')
+print('model_path:',model_path)
 
 # variable
 target_size = (224, 224)
-model = tf.keras.models.load_model("Model/color_fps4_splited_dataset.h5")
+model = tf.keras.models.load_model(model_path)
 frameWidth = 1280/1.2
 frameHeight = 720/1.2
 label_x, label_y = int(frameWidth//2), 50
