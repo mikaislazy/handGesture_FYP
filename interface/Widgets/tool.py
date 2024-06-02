@@ -12,16 +12,11 @@ from PyQt5.QtCore import Qt, QTimer, QTime
 import cv2
 import numpy
 from gesture_constants import GESTURES_INDICS
-
+from Model.VGGModel  import VGGModel 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
-# Construct the absolute path to the model file
-model_path = os.path.join(current_dir, '../Model/color_fps4_splited_dataset.h5')
-print('model_path:',model_path)
-
 # variable
-target_size = (224, 224)
-model = tf.keras.models.load_model(model_path)
+model = VGGModel()
 frameWidth = 1280/1.2
 frameHeight = 720/1.2
 label_x, label_y = int(frameWidth//2), 50
@@ -86,20 +81,15 @@ def recognize_hand_gesture(gesture_name ,frame):
     #         cx, cy, cw, ch = int(x_min * width), int(y_min * height), int((x_max - x_min) * width), int((y_max - y_min) * height)
     #         hand_area_coordinates = (cx, cy, cw, ch) 
         
-        x = tf.expand_dims(processed_image, 0)
-        pred = model.predict(x)[0]
+        # x = tf.expand_dims(processed_image, 0)
+        
         cx, cy, cw, ch = hand_area_coordinates
-        prediction = GESTURES_INDICS[pred.argmax()]
-        prediction_percentage = pred[pred.argmax()]
-        prediction_text = utils.show_pred_max_toString(pred, GESTURES_INDICS)
+        all_pred, prediction, prediction_percentage = model.get_max_prediction(imageShow)
+        prediction_text = f"{prediction}: {prediction_percentage:.2f}%"
         cv2.putText(imageShow,prediction_text, (cx,cy), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
         imageShow = cv2.rectangle(img=imageShow, pt1=(cx, cy), pt2=(cx+cw, cy+ch), color=(245, 66, 108), thickness=2)
         if prediction == gesture_name and prediction_percentage >= 0.9:
             status = True
-            # self.correctGesture()
-            # end the task
-            # self.release_webcam()
-            # self.closeBtn.show()
         else:
             status = False
     else:
