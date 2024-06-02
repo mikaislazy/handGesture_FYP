@@ -10,7 +10,7 @@ mp_hands = mp.solutions.hands
 hands = mp_hands.Hands()
 # Function to normalize the given keypoints
 def normalize_keypoints(keypoints):
-    if not keypoints:
+    if len( keypoints ) == 0:
         return keypoints
     
     keypoints = np.array(keypoints)  # Convert keypoints to a numpy array
@@ -53,6 +53,34 @@ def extract_hand_keypoints(image):
             elif hand_label == 'Right':
                 hand_keypoints['right_hand_pts'] = keypoints
                 hand_keypoints['is_right'] = True
-
+    
     return hand_keypoints
 
+# Function to load and normalize the template keypoints from JSON file
+def load_and_normalize_json(json_path):
+    with open(json_path, 'r') as file:
+        data = json.load(file)
+    
+    left_hand_points = []
+    right_hand_points = []
+    
+    for _, points in data.items():
+        if points['is_left']:
+            left_hand_points.append(np.array(points['left_hand_pts']))
+        if points['is_right']:
+            right_hand_points.append(np.array(points['right_hand_pts']))
+    
+    if left_hand_points:
+        left_hand_points = np.mean(left_hand_points, axis=0)
+        left_normalized= normalize_keypoints(left_hand_points)
+    else:
+        left_normalized = []
+
+    if right_hand_points:
+        right_hand_points = np.mean(right_hand_points, axis=0)
+        right_normalized= normalize_keypoints(right_hand_points)
+    else:
+        right_normalized = []
+
+    return {'left_hand_pts': left_normalized, 'right_hand_pts': right_normalized, 
+            'is_left': bool(left_normalized), 'is_right': bool(right_normalized)}

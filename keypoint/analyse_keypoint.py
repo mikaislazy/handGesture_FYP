@@ -15,64 +15,6 @@ hands = mp_hands.Hands()
 buffer_size = 15  # Number of frames to consider for temporal smoothing
 prediction_buffer = deque(maxlen=buffer_size)
 
-# Function to extract hand keypoints from an image
-def extract_hand_keypoints(image):
-    # Convert the BGR image to RGB
-    rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-
-    # Process the image with MediaPipe Hands
-    results = hands.process(rgb_image)
-
-    hand_keypoints = {'left_hand_pts': [], 'right_hand_pts': [], 'is_left': False, 'is_right': False}
-
-    # Check if hand landmarks are detected
-    if results.multi_hand_landmarks:
-        for hand_landmarks, handedness in zip(results.multi_hand_landmarks, results.multi_handedness):
-            # Extract hand landmark coordinates
-            landmarks = np.array([[landmark.x, landmark.y, landmark.z] for landmark in hand_landmarks.landmark])
-            # Determine if it's left or right hand
-            if handedness.classification[0].label == 'Left':
-                hand_keypoints['left_hand_pts'] = landmarks.tolist()
-                hand_keypoints['is_left'] = True
-            else:
-                hand_keypoints['right_hand_pts'] = landmarks.tolist()
-                hand_keypoints['is_right'] = True
-
-    # Return None if no landmarks are found
-    if not hand_keypoints['is_left'] and not hand_keypoints['is_right']:
-        return None
-
-    return hand_keypoints
-
-# Function to load and normalize the template keypoints from JSON file
-def load_and_normalize_json(json_path):
-    with open(json_path, 'r') as file:
-        data = json.load(file)
-    
-    left_hand_points = []
-    right_hand_points = []
-    
-    for _, points in data.items():
-        if points['is_left']:
-            left_hand_points.append(np.array(points['left_hand_pts']))
-        if points['is_right']:
-            right_hand_points.append(np.array(points['right_hand_pts']))
-    
-    if left_hand_points:
-        left_hand_points = np.mean(left_hand_points, axis=0)
-        left_normalized= utils.normalize_keypoints(left_hand_points)
-    else:
-        left_normalized = []
-
-    if right_hand_points:
-        right_hand_points = np.mean(right_hand_points, axis=0)
-        right_normalized= utils.normalize_keypoints(right_hand_points)
-    else:
-        right_normalized = []
-
-    return {'left_hand_pts': left_normalized, 'right_hand_pts': right_normalized, 
-            'is_left': bool(left_normalized), 'is_right': bool(right_normalized)}
-
 # Compare keypoints with the template keypoints and provide feedback
 def compare_keypoints(current_keypoints, template_keypoints):
     feedback = []
@@ -189,13 +131,13 @@ def process_webcam(model, gesture_name, template_keypoints, buffer_size=4):
 # Load the normalized template keypoints for the specific gesture
 gesture_name = "ChanDingYin"
 json_filename = "normalized_keypoints_data/ChanDingYin_normalized.json"
-template_keypoints = load_and_normalize_json(json_filename)
+template_keypoints = utils.load_and_normalize_json(json_filename)
 
 # Assuming you have a trained model that can classify gestures
 class TrainedModel:
     def __init__(self):
         self.target_size = (224, 224)
-        self.model = tf.keras.models.load_model("interface/Model/color_fps4_splited_dataset.h5")
+        self.model = tf.keras.models.load_model("../interface/Model/color_fps4_splited_dataset.h5")
 
     def predict(self, frame):
         processed_image = cv2.resize(frame, self.target_size)
