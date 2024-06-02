@@ -12,10 +12,10 @@ def mock_add_question_score_task1_callback():
     return Mock()
 
 gesture_name = "ChanDingYin"
-gesture_questions, gesture_options = tool.load_question(gesture_name, 'other/question.json')
+gesture_questions, gesture_options = tool.load_question(gesture_name, 'Widgets/other/question.json')
 question = gesture_questions[0]
 options = gesture_options[0]
-gesture_answers = tool.load_answer(gesture_name, 'other/answer.json')
+gesture_answers = tool.load_answer(gesture_name, 'Widgets/other/answer.json')
 answer = gesture_answers[0]
 answer_index = options.index(answer)
 # Fixture to create a temporary widget for testing

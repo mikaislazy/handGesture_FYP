@@ -234,13 +234,13 @@ def test_calculate_error_rate_task2():
     for rate, expected in zip(error_rates, expected_rates):
         assert abs(rate - expected) < 1e-6  # Allowing small floating-point error
 
-def teardown_test_db():
+def clear_db():
     conn = sqlite3.connect(database_name)
     c = conn.cursor()
     
-    c.execute('DROP TABLE IF EXISTS User')
-    c.execute('DROP TABLE IF EXISTS Gesture_Task1')
-    c.execute('DROP TABLE IF EXISTS Gesture_Task2')
+    c.execute('DELETE FROM User')
+    c.execute('DELETE FROM Gesture_Task1')
+    c.execute('DELETE FROM Gesture_Task2')
     
     conn.commit()
     conn.close()
@@ -256,12 +256,12 @@ def test_database():
     test_calculate_error_rate_task1()
     test_calculate_error_rate_task2()
     
-    teardown_test_db()
+    clear_db()
     print("All tests passed!")
 
 if __name__ == "__main__":
     # test_database()
-    teardown_test_db()
+    clear_db()
     create_db()
     retrieve_table_info()
     
