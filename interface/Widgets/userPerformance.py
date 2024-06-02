@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QTo
 from PyQt5.QtGui import QCursor
 import pyqtgraph as pg
 from UserData import db_utils 
-from tool import GESTURES  
+from gesture_constants import GESTURES  
 
 class userPerformanceWidget(QWidget):
     def __init__(self, parent=None):

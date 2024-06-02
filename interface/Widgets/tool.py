@@ -11,10 +11,8 @@ from PyQt5.QtGui import QPixmap, QFont, QIcon, QImage
 from PyQt5.QtCore import Qt, QTimer, QTime
 import cv2
 import numpy
+from gesture_constants import GESTURES_INDICS
 
-# Get the parent directory
-# parent_dir = os.path.dirname( os.getcwd())
-# Get the directory of the current script
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
 # Construct the absolute path to the model file
@@ -64,7 +62,7 @@ def recognize_hand_gesture(gesture_name ,frame):
     # hands = mp_hands.Hands(static_image_mode=True,min_detection_confidence=0.3,  min_tracking_confidence=0.3, max_num_hands=2)
     # mp_drawing = mp.solutions.drawing_utils
     # # Convert the BGR image to RGB and process it with MediaPipe Hands
-    exist, hand_area_coordinates = hand_segmentation(imageShow)
+    exist, hand_area_coordinates = hand_segmentation_MOG(imageShow)
     # # exist, hand_area_coordinates = utils.find_hand_region(imageShow)  # return the hand area coordinates
     
     # results = hands.process(processed_image)
@@ -123,7 +121,7 @@ def create_webcam_widget(title):
     return video_frame
 
 def add_gif2frame(effect_name, frame, png_num):
-    effect_frame_path = f"other/frames/{effect_name}"
+    effect_frame_path = get_effect_frame_path(effect_name)
     if os.path.exists(effect_frame_path):
         png_path = f"{effect_frame_path}/{effect_name}_{png_num}.png"
         pngimg = cv2.imread(png_path)
@@ -164,14 +162,13 @@ def get_effect_frame_length( effect_name):
     if not effect_name:
         effect_frame_length = 0
     else:
-        effect_frame_path = f"other/frames/{effect_name}"
+        effect_frame_path = get_effect_frame_path(effect_name)
         effect_frame_length = len(os.listdir(effect_frame_path)) 
 
     return effect_frame_length
 
-def hand_segmentation(frame):
+def hand_segmentation_MOG(frame):
     # Apply background subtraction
-    # frame = cv2.medianBlur(frame, 5)
     fg_mask = bg_subtractor.apply(frame)
     
     # Convert frame to HSV
@@ -192,24 +189,8 @@ def hand_segmentation(frame):
         # Draw the bounding rectangle on the original frame
         return True,[x, y, w, h]
     return False, None
-    
-GESTURES = [
-    'HuoYanYin',
-    'ChanDingYin',
-    'MiTuoDingYin',
-    'Retsu',
-    'Rin',
-    'Zai',
-    'Zen',
-    'ZhiJiXiangYin',
-    'TaiJiYin'
-]
-GESTURES_INDICS = {0: 'ChanDingYin', 
-                 1: 'HuoYanYin', 
-                 2: 'MiTuoDingYin', 
-                 3: 'Retsu', 
-                 4: 'Rin', 
-                 5: 'TaiJiYin', 
-                 6: 'Zai', 
-                 7: 'Zen', 
-                 8: 'ZhiJiXiangYin'}
+
+def get_effect_frame_path(effect_name):
+    effect_frame_path = f"other/frames/{effect_name}"
+    return  os.path.join(current_dir, effect_frame_path )
+     

@@ -5,7 +5,7 @@ from PyQt5.QtTest import QTest
 from PyQt5.QtCore import Qt
 from unittest.mock import Mock, patch
 from handGesturePractice import handGesturePracticeWidget  # Adjust the import as needed
-from tool import GESTURES
+from gesture_constants import GESTURES
 
 # Fixture to create a mock function of start_practice_callback
 @pytest.fixture

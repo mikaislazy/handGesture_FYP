@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QGridLayout, QPu
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QSize, Qt
 from handGestureTaskSelection import handGestureTaskSelectionWidget
-from tool import GESTURES
+from gesture_constants import GESTURES
 from handGestureKnowledge import handGestureKnowledgeTaskWidget
 from handGestureRecognition import  handGestureRecognitionWidget
 from handGesturePractice import handGesturePracticeWidget

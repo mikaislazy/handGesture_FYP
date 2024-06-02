@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QRadioButton, QGroupBox, QPushButton, QSizePolicy, QMessageBox)
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt
-from tool import GESTURES
+from gesture_constants import GESTURES
 
 class handGesturePracticeWidget(QWidget):
     def __init__(self, start_practice_callback, parent=None):
