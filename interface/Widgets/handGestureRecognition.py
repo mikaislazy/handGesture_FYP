@@ -1,3 +1,4 @@
+from collections import deque
 from PyQt5 import QtWidgets, QtGui, QtCore
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QGridLayout, QPushButton, QHBoxLayout, QStackedWidget, QLabel, QFrame
 from PyQt5.QtGui import QIcon, QPixmap, QImage
@@ -24,12 +25,11 @@ class handGestureRecognitionWidget(QWidget):
         self.parent_widget = parent
         self.insert_record_task2_callback = insert_record_task2_callback
         
-        # Hand gesture recognition setup
-        self.LENIENCY = 100
-        self.target_size = (224, 224)
-        mpHands = mp.solutions.hands
-        self.hands = mpHands.Hands(max_num_hands=2, min_detection_confidence=0.1, min_tracking_confidence=0.1)
-        mpDraw = mp.solutions.drawing_utils
+        # set the buffer
+        self.buffer_size = 8  # Number of frames to consider for temporal smoothing
+        self.prediction_buffer = deque(maxlen=self.buffer_size)
+        self.draw_feedback = False
+        # Open the default webcam
         self.cap = cv2.VideoCapture(0)
         
         self.gesture_name = gesture_name
@@ -108,19 +108,27 @@ class handGestureRecognitionWidget(QWidget):
         
         self.timer.start(300) 
 
-       
-    
     def update_frame(self):
         ret, frame = self.cap.read()
         if ret:
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             # frame = cv2.flip(frame, 1)
-            self.status, imgShow = utils.recognize_hand_gesture(self.gesture_name,  frame)
+            self.status, imgShow, prediction = utils.recognize_hand_gesture(self.gesture_name,  frame, self.draw_feedback)
+            # only draw feedback when buffer is full
+            if self.draw_feedback: 
+                self.draw_feedback = False
+            self.prediction_buffer.append(prediction)
+            prediction_count = self.prediction_buffer.count(self.gesture_name)
             self.show_gesture_comment(self.status)
-            if self.status:
+            
+            if self.status == True and prediction_count >= 4 :
                 # end the task
                 self.release_webcam()
                 self.closeBtn.show()
+             # Check if buffer is full
+            if len(self.prediction_buffer) == self.buffer_size:
+                self.draw_feedback = True
+                self.prediction_buffer.clear()  # Clear the buffer after processing
             q_img = tool.frame2QImg(imgShow)
             self.video_frame.setPixmap(QPixmap.fromImage(q_img))
     

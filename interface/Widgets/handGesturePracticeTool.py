@@ -1,3 +1,4 @@
+from collections import deque
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QGroupBox, QRadioButton, QStackedWidget, QFrame
 from PyQt5.QtGui import QPixmap, QFont, QIcon, QImage
@@ -27,6 +28,9 @@ class handGesturePracticeToolWidget(QWidget):
         self.effect_length = tool.get_effect_frame_length(self.effect)
         self.png_num = 1
         self.finish_practice = False
+        self.buffer_size = 8  # Number of frames to consider for temporal smoothing
+        self.prediction_buffer = deque(maxlen=self.buffer_size)
+        self.draw_feedback = False
         # Layout setup
         main_layout = QVBoxLayout()
         
@@ -131,10 +135,16 @@ class handGesturePracticeToolWidget(QWidget):
         ret, frame = self.cap.read()
         if ret:
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            # frame = cv2.flip(frame, 1)
             if self.finish_practice == False:
-                self.status, imgShow = utils.recognize_hand_gesture(self.gesture_names[self.currentGesture_idx],  frame)
-                if self.status == True:
+                status, imgShow, prediction = utils.recognize_hand_gesture(self.gesture_names[self.currentGesture_idx],  frame, self.draw_feedback)
+                # only draw feedback when buffer is full
+                if self.draw_feedback: 
+                    self.draw_feedback = False
+                self.prediction_buffer.append(prediction)
+                prediction_count = self.prediction_buffer.count(self.gesture_names[self.currentGesture_idx])
+
+                if status == True and prediction_count >= 4 :
+                    # continue to next gesture until the last gesture
                     if self.currentGesture_idx != len(self.gesture_names) - 1:
                         self.currentGesture_idx += 1
                         self.status_label.setText(f"Correct! Next gesture: {self.gesture_names[self.currentGesture_idx]}")
@@ -143,15 +153,24 @@ class handGesturePracticeToolWidget(QWidget):
                         self.finish_practice = True
                         self.clock.stop()
                         self.finishPractice()
+                buffer_text = f"Buffer: {self.prediction_buffer}"
+                cv2.putText(imgShow, buffer_text, (50,50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2, cv2.LINE_AA)
                 q_img = tool.frame2QImg(imgShow)
+
+                # Check if buffer is full
+                if len(self.prediction_buffer) == self.buffer_size:
+                    self.draw_feedback = True
+                    self.prediction_buffer.clear()  # Clear the buffer after processing
+
             else:
                 if self.effect and  self.png_num <= self.effect_length:
                     q_img = self.play_effect(frame)
                     self.png_num += 1
                 else:
                     q_img = tool.frame2QImg(frame)
-                        
+
             self.video_frame.setPixmap(QPixmap.fromImage(q_img))
+
 
     def finishPractice(self):
         self.status_label.setText("You finish practice all selected gesture!")

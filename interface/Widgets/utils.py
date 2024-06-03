@@ -163,10 +163,11 @@ def hand_segmentation_MOG(frame):
     return False, None
 
 def hand_segmentation_Mediapipe(frame):
+    frame = frame.copy()
     # Initialize MediaPipe Hands
     mp_hands = mp.solutions.hands
     hands = mp_hands.Hands(static_image_mode=True,min_detection_confidence=0.3,  min_tracking_confidence=0.3, max_num_hands=2)
-    mp_drawing = mp.solutions.drawing_utils
+    # mp_drawing = mp.solutions.drawing_utils
     # process the hand
     results = hands.process(frame)
     exist = results.multi_hand_landmarks is not None and  len(results.multi_hand_landmarks) == 2 # 2 hand detected
@@ -175,7 +176,7 @@ def hand_segmentation_Mediapipe(frame):
         
         # Get the bounding box coordinates
         for hand_landmarks in results.multi_hand_landmarks:
-            mp_drawing.draw_landmarks(frame, hand_landmarks, mp_hands.HAND_CONNECTIONS)
+            # mp_drawing.draw_landmarks(frame, hand_landmarks, mp_hands.HAND_CONNECTIONS)
             x_min = min(landmark.x for landmark in hand_landmarks.landmark)
             x_max = max(landmark.x for landmark in hand_landmarks.landmark)
             y_min = min(landmark.y for landmark in hand_landmarks.landmark)
@@ -189,6 +190,7 @@ def hand_segmentation_Mediapipe(frame):
     return False, None
 
 def hand_segmentation_Skin(frame):
+    frame = frame.copy()
     
     # Applying Bilateral Filter
     frame = cv2.bilateralFilter(frame, d=9, sigmaColor=75, sigmaSpace=75)
@@ -226,13 +228,15 @@ def hand_segmentation_Skin(frame):
         return False, None
     
     
-def recognize_hand_gesture(gesture_name ,frame):
+def recognize_hand_gesture(gesture_name ,frame, is_draw_feedback):
     status = False
     imageShow = frame.copy()
-    
+    prediction = None
     # set the method for hand segmentation to check whether someone is here
-    exist, hand_area_coordinates = hand_segmentation_Skin(imageShow)
-    if exist:
+    exist1, _ = hand_segmentation_Skin(imageShow) # function is set for the situation that mediapipe fail to detect the hand
+    exist2, hand_area_coordinates = hand_segmentation_Mediapipe(imageShow) # check hand really exist
+    
+    if exist1 or exist2:
         cx, cy, cw, ch = hand_area_coordinates
         all_pred, prediction, prediction_percentage = model.get_max_prediction(imageShow)
         prediction_text = f"{prediction}: {prediction_percentage:.2f}%"
@@ -242,8 +246,9 @@ def recognize_hand_gesture(gesture_name ,frame):
             status = True
         else:
             status = False
-            imageShow = keypoints_utils.analyse_keypoints(imageShow, gesture_name)
+            if is_draw_feedback:
+                imageShow = keypoints_utils.analyse_keypoints(imageShow, gesture_name)
     else:
         status = None
         
-    return status, imageShow
+    return status, imageShow, prediction
