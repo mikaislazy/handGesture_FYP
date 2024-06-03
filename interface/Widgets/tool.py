@@ -11,20 +11,14 @@ from PyQt5.QtGui import QPixmap, QFont, QIcon, QImage
 from PyQt5.QtCore import Qt, QTimer, QTime
 import cv2
 import numpy
-from gesture_constants import GESTURES_INDICS
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
 # variable
-
 frameWidth = 1280/1.2
 frameHeight = 720/1.2
 label_x, label_y = int(frameWidth//2), 50
 
-
-# Define the lower and upper boundaries of the HSV values for skin color
-lower_hsv = np.array([0, 48, 80], dtype=np.uint8)  # Adjusted for typical skin detection
-upper_hsv = np.array([20, 255, 255], dtype=np.uint8)
 
 def load_question(gesture_name, json_file):
     questions = []
