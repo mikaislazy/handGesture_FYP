@@ -1,14 +1,12 @@
 from pathlib import Path
-import shutil
 import numpy as np
-import math
 import json
 import os
 import cv2
 import mediapipe as mp
 from gesture_constants import GESTURES_INDICS
 from Model.VGGModel  import VGGModel 
-import Keypoint.utils as keypoints_utils
+import Keypoint.analyse_keypoint_utils as keypoints_utils
 # the color format of the frame is RGB
 
 # variable
@@ -244,8 +242,8 @@ def recognize_hand_gesture(gesture_name ,frame):
             status = True
         else:
             status = False
+            imageShow = keypoints_utils.analyse_keypoints(imageShow, gesture_name)
     else:
         status = None
-        # self.show_hand_absence_alert()
         
     return status, imageShow

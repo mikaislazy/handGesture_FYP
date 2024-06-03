@@ -5,8 +5,7 @@ import numpy as np
 import json
 from collections import deque
 import tensorflow as tf
-from constants import GESTURES_INDICS
-import utils
+from . import  common_utils
 # Initialize MediaPipe Hands
 mp_hands = mp.solutions.hands
 hands = mp_hands.Hands()
@@ -14,6 +13,9 @@ hands = mp_hands.Hands()
 # Buffer to store recent predictions
 buffer_size = 15  # Number of frames to consider for temporal smoothing
 prediction_buffer = deque(maxlen=buffer_size)
+
+# load the template keypoints for all gestures
+
 
 # Compare keypoints with the template keypoints and provide feedback
 def compare_keypoints(current_keypoints, template_keypoints):
@@ -79,7 +81,7 @@ def draw_adjustments(image, adjustments, current_keypoints):
         text_position = (keypoint[0] + 10, keypoint[1] + 10)
         cv2.putText(image, direction, text_position, cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0), 2, cv2.LINE_AA)
 
-def process_webcam(model, gesture_name, template_keypoints, buffer_size=4):
+def process_webcam(frame,  gesture_name, template_keypoints, buffer_size=4):
     cap = cv2.VideoCapture(0)
 
     while cap.isOpened():
@@ -89,7 +91,7 @@ def process_webcam(model, gesture_name, template_keypoints, buffer_size=4):
             continue
 
         # Extract hand keypoints
-        current_keypoints = utils.extract_hand_keypoints(image)
+        current_keypoints = common_utils.extract_hand_keypoints(image)
         if current_keypoints is None:
             cv2.putText(image, "No hand detected", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_AA)
             cv2.imshow('Hand Gesture Recognition', image)
@@ -100,10 +102,10 @@ def process_webcam(model, gesture_name, template_keypoints, buffer_size=4):
         # Normalize current keypoints
         normalized_keypoints = {'is_left': False, 'is_right': False}
         if current_keypoints['is_left']:
-            normalized_keypoints['left_hand_pts']= utils.normalize_keypoints(current_keypoints['left_hand_pts'])
+            normalized_keypoints['left_hand_pts']= common_utils.normalize_keypoints(current_keypoints['left_hand_pts'])
             normalized_keypoints['is_left'] = True
         if current_keypoints['is_right']:
-            normalized_keypoints['right_hand_pts']= utils.normalize_keypoints(current_keypoints['right_hand_pts'])
+            normalized_keypoints['right_hand_pts']= common_utils.normalize_keypoints(current_keypoints['right_hand_pts'])
             normalized_keypoints['is_right'] = True
 
         # Predict gesture using the model (assuming the model has a predict function that returns gesture class)
@@ -128,26 +130,60 @@ def process_webcam(model, gesture_name, template_keypoints, buffer_size=4):
     cap.release()
     cv2.destroyAllWindows()
 
+def analyse_keypoints(frame, gesture_name):
+    """
+    Process a single frame to detect hand gestures and provide feedback.
+
+    Parameters:
+    - frame: The input frame from the webcam or video source.
+    - gesture_name: The name of the gesture to recognize.
+    - template_keypoints: The template keypoints for the gesture.
+    - prediction_buffer: A list used to store recent predictions.
+    - buffer_size: The size of the prediction buffer.
+
+    Returns:
+    - processed_frame: The frame with feedback drawn on it.
+    - prediction_buffer: Updated prediction buffer.
+    """
+    # Extract hand keypoints
+    current_keypoints = common_utils.extract_hand_keypoints(frame)
+    if current_keypoints is None:
+        cv2.putText(frame, "No hand detected. Please attempt the task again in a well-lit area or put your hand closer.", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2, cv2.LINE_AA)
+        return frame, prediction_buffer
+
+    # Normalize current keypoints
+    normalized_keypoints = {'is_left': False, 'is_right': False}
+    if current_keypoints['is_left']:
+        normalized_keypoints['left_hand_pts'] = common_utils.normalize_keypoints(current_keypoints['left_hand_pts'])
+        normalized_keypoints['is_left'] = True
+    if current_keypoints['is_right']:
+        normalized_keypoints['right_hand_pts'] = common_utils.normalize_keypoints(current_keypoints['right_hand_pts'])
+        normalized_keypoints['is_right'] = True
+
+    
+    # Compare keypoints and provide feedback
+    adjustments = compare_keypoints(normalized_keypoints, template_keypoints)
+    draw_adjustments(frame, adjustments, current_keypoints)
+
+    return frame
+
 # Load the normalized template keypoints for the specific gesture
 gesture_name = "ChanDingYin"
 json_filename = "normalized_keypoints_data/ChanDingYin_normalized.json"
-template_keypoints = utils.load_and_normalize_json(json_filename)
+template_keypoints = common_utils.load_and_normalize_json(json_filename)
 
-# Assuming you have a trained model that can classify gestures
-class TrainedModel:
-    def __init__(self):
-        self.target_size = (224, 224)
-        self.model = tf.keras.models.load_model("../interface/Model/color_fps4_splited_dataset.h5")
+# if __name__ == "__main__":
+#     print("current dir", os.path.dirname(__file__))
+#     # Load the normalized template keypoints for the specific gesture
+#     gesture_name = "ChanDingYin"
+#     json_filename = "normalized_keypoints_data/ChanDingYin_normalized.json"
+#     template_keypoints = common_utils.load_and_normalize_json(json_filename)
 
-    def predict(self, frame):
-        processed_image = cv2.resize(frame, self.target_size)
-        x = tf.expand_dims(processed_image, 0)
-        pred = self.model.predict(x)[0]
-        prediction = GESTURES_INDICS[pred.argmax()]
-        return prediction
+#     # Process the frame
+#     frame = cv2.imread("frame.jpg")
+#     processed_frame = process_frame(frame, gesture_name, template_keypoints)
 
-model = TrainedModel()
-
-# Process webcam input and provide feedback
-process_webcam(model, gesture_name, template_keypoints)
-# print(template_keypoints)
+#     # Display the processed frame
+#     cv2.imwrite("processed_frame.jpg", processed_frame)
+#     cv2.waitKey(0)
+#     cv2.destroyAllWindows()
