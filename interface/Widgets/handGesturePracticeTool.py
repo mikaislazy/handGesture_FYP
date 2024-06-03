@@ -5,7 +5,7 @@ from PyQt5.QtCore import Qt, QTimer, QTime
 import cv2
 import os
 import tool
-
+import utils
 # Add model path
 abs_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../model'))
 sys.path.insert(0, abs_path)
@@ -133,7 +133,7 @@ class handGesturePracticeToolWidget(QWidget):
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             # frame = cv2.flip(frame, 1)
             if self.finish_practice == False:
-                self.status, q_img = tool.recognize_hand_gesture(self.gesture_names[self.currentGesture_idx],  frame)
+                self.status, imgShow = utils.recognize_hand_gesture(self.gesture_names[self.currentGesture_idx],  frame)
                 if self.status == True:
                     if self.currentGesture_idx != len(self.gesture_names) - 1:
                         self.currentGesture_idx += 1
@@ -143,14 +143,13 @@ class handGesturePracticeToolWidget(QWidget):
                         self.finish_practice = True
                         self.clock.stop()
                         self.finishPractice()
+                q_img = tool.frame2QImg(imgShow)
             else:
                 if self.effect and  self.png_num <= self.effect_length:
                     q_img = self.play_effect(frame)
                     self.png_num += 1
                 else:
-                    height, width, channel = frame.shape
-                    bytesPerLine = 3 * width
-                    q_img = QImage(frame.data, width, height, bytesPerLine, QImage.Format_RGB888)
+                    q_img = tool.frame2QImg(frame)
                         
             self.video_frame.setPixmap(QPixmap.fromImage(q_img))
 
@@ -166,7 +165,6 @@ class handGesturePracticeToolWidget(QWidget):
     def backToMain(self):
         self.release_webcam()
         self.parent_widget.navigate_to_main_widget()
-        self.close()
     
     def release_webcam(self):
         if self.cap.isOpened():

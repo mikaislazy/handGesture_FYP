@@ -7,7 +7,7 @@ import os
 import sys
 import  tool
 import numpy 
-
+import utils
 # Calculate the absolute path
 abs_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../model'))
 sys.path.insert(0, abs_path)
@@ -115,12 +115,13 @@ class handGestureRecognitionWidget(QWidget):
         if ret:
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             # frame = cv2.flip(frame, 1)
-            self.status, q_img = tool.recognize_hand_gesture(self.gesture_name,  frame)
+            self.status, imgShow = utils.recognize_hand_gesture(self.gesture_name,  frame)
             self.show_gesture_comment(self.status)
             if self.status:
                 # end the task
                 self.release_webcam()
                 self.closeBtn.show()
+            q_img = tool.frame2QImg(imgShow)
             self.video_frame.setPixmap(QPixmap.fromImage(q_img))
     
     def show_gesture_comment(self, status):
