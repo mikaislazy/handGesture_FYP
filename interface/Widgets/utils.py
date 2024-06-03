@@ -8,8 +8,11 @@ import cv2
 import mediapipe as mp
 from gesture_constants import GESTURES_INDICS
 from Model.VGGModel  import VGGModel 
+import Keypoint.utils as keypoints_utils
+# the color format of the frame is RGB
+
+# variable
 model = VGGModel()
-# Initialize the background subtractor
 bg_subtractor = cv2.createBackgroundSubtractorMOG2(history=1000, varThreshold=25, detectShadows=True)
 
 
@@ -193,12 +196,12 @@ def hand_segmentation_Skin(frame):
     frame = cv2.bilateralFilter(frame, d=9, sigmaColor=75, sigmaSpace=75)
     
     # Converting from BGR to HSV color space
-    frame_HSV = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    frame_HSV = cv2.cvtColor(frame, cv2.COLOR_RGB2HSV)
     HSV_mask = cv2.inRange(frame_HSV, (0, 30, 60), (20, 150, 255))
     HSV_mask = cv2.medianBlur(HSV_mask, 5)
 
     # Converting from BGR to YCbCr color space
-    frame_YCrCb = cv2.cvtColor(frame, cv2.COLOR_BGR2YCrCb)
+    frame_YCrCb = cv2.cvtColor(frame, cv2.COLOR_RGB2YCrCb)
     YCrCb_mask = cv2.inRange(frame_YCrCb, (0, 133, 77), (235, 173, 127))
     YCrCb_mask = cv2.medianBlur(YCrCb_mask, 5)
 
