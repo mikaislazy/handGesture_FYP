@@ -3,7 +3,7 @@ import cv2
 import mediapipe as mp
 import numpy as np
 import json
-import utils
+from . import common_utils
 from constants import GESTURES
 
 # Function to extract the hand landmarks keypoints from the frames
@@ -22,7 +22,7 @@ def get_hand_landmarks_keypoints_dataset(category, main_dataset_folder):
                 image = cv2.imread(image_path)
 
                 # Extract hand keypoints from the image
-                hand_keypoints = utils.extract_hand_keypoints(image)
+                hand_keypoints = common_utils.extract_hand_keypoints(image)
 
                 # Save the keypoints in the dictionary
                 img_name = os.path.splitext(image_filename)[0]
