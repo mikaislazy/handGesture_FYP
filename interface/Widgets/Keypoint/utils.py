@@ -4,7 +4,7 @@ import cv2
 import mediapipe as mp
 import numpy as np
 import json
-
+from constants import GESTURES
 # Initialize MediaPipe Hands
 mp_hands = mp.solutions.hands
 hands = mp_hands.Hands()
@@ -84,3 +84,13 @@ def load_and_normalize_json(json_path):
 
     return {'left_hand_pts': left_normalized, 'right_hand_pts': right_normalized, 
             'is_left': bool(left_normalized), 'is_right': bool(right_normalized)}
+            
+def get_normalized_mean_multiple_normalized_keypoints(args):
+    output_json = "mean_of_normalized_keypoints.json"
+    for gesture in GESTURES:
+        data = {}
+        #mean of multiple sets of normalized keypoints
+        data[gesture] = load_and_normalize_json( f'normalized_keypoints_data/{gesture}_normalized.json')
+        with open(output_json, 'a') as outfile:
+            json.dump(data , outfile, indent=4)
+    
