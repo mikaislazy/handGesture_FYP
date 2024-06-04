@@ -145,6 +145,9 @@ class handGesturePracticeWidget(QWidget):
         if not input_value: 
             QMessageBox.warning(self, "Input Error", "Please input at least one number.")
             return False
+        if len(input_value.split()) > 9:
+            QMessageBox.warning(self, "Input Error", "Please input at most 9 number.")
+            return False
         for num in input_value.split():
             try:
                 if int(num) < 1 or int(num) > 9:

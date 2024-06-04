@@ -126,15 +126,16 @@ class handGestureRecognitionWidget(QWidget):
                 self.release_webcam()
                 self.closeBtn.show()
              # Check if buffer is full
-            if len(self.prediction_buffer) == self.buffer_size:
+            if len(self.prediction_buffer) == self.buffer_size//2:
                 self.draw_feedback = True
+            if len(self.prediction_buffer) == self.buffer_size:
                 self.prediction_buffer.clear()  # Clear the buffer after processing
             q_img = tool.frame2QImg(imgShow)
             self.video_frame.setPixmap(QPixmap.fromImage(q_img))
     
     def show_gesture_comment(self, status):
         if status is None:
-                self.show_hand_absence_alert()
+            self.show_hand_absence_alert()
         elif status == True:
             self.correctGesture()
         else:
@@ -161,6 +162,7 @@ class handGestureRecognitionWidget(QWidget):
             time = 60 - self.duration
         else:
             time = 60
+        if not self.status: self.status = False
         self.insert_record_task2_callback(self.gesture_name, self.status, time)
         self.release_webcam()
         self.close()

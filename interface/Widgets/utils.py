@@ -170,7 +170,7 @@ def hand_segmentation_Mediapipe(frame):
     # mp_drawing = mp.solutions.drawing_utils
     # process the hand
     results = hands.process(frame)
-    exist = results.multi_hand_landmarks is not None and  len(results.multi_hand_landmarks) == 2 # 2 hand detected
+    exist = results.multi_hand_landmarks is not None # 2 hand detected
     if exist:
         # hand keypoints
         x_min = y_min = float('inf')
@@ -222,28 +222,40 @@ def hand_segmentation_Skin(frame):
         # Get the coordinates of the largest contour
         x, y, w, h = cv2.boundingRect(largest_contour)
 
-        return True,[x, y, w, h]
+        # Check if the contour meets the defined thresholds
+        if  check_contour(largest_contour, 10000, 1000, 30, 30):
+            return True, [x, y, w+200, h+200]
 
-    # If no contours were found
-    else:
-        return False, None
-    
+
+    return False, None
+def check_contour(contour, max_area_threshold, min_area_threshold, width_threshold, height_threshold):
+    # Calculate the area, width, and height of the contour
+    area = cv2.contourArea(contour)
+    x, y, w, h = cv2.boundingRect(contour)
+
+    # Check if the contour meets the defined thresholds
+    if area < max_area_threshold and area > min_area_threshold and w > width_threshold and h > height_threshold:
+        return True
+    return False
+
     
 def recognize_hand_gesture(gesture_name ,frame, is_draw_feedback):
     status = False
     imageShow = frame.copy()
     prediction = None
     # set the method for hand segmentation to check whether someone is here
-    exist1, hand_area_coordinates1 = hand_segmentation_Skin(imageShow) # function is set for the situation that mediapipe fail to detect the hand
     exist2, hand_area_coordinates2 = hand_segmentation_Mediapipe(imageShow) # check hand really exist
-    
+    exist1, hand_area_coordinates1 = hand_segmentation_Skin(imageShow) # function is set for the situation that mediapipe fail to detect the hand
+
+
     if exist1 or exist2:
-        cx, cy, cw, ch = hand_area_coordinates2 if exist2 else hand_area_coordinates1
+        # cx, cy, cw, ch = hand_area_coordinates2 if exist2 else hand_area_coordinates1
+        cx, cy, cw, ch =  hand_area_coordinates1 if exist1 else hand_area_coordinates2
         all_pred, prediction, prediction_percentage = model.get_max_prediction(imageShow)
         prediction_text = f"{prediction}: {prediction_percentage:.2f}%"
-        cv2.putText(imageShow,prediction_text, (cx,cy), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
-        if exist2:
-            imageShow = cv2.rectangle(img=imageShow, pt1=(cx, cy), pt2=(cx+cw, cy+ch), color=(245, 66, 108), thickness=2)
+        # cv2.putText(imageShow,prediction_text, (cx,cy), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
+        # if exist2:
+        imageShow = cv2.rectangle(img=imageShow, pt1=(cx, cy), pt2=(cx+cw, cy+ch), color=(245, 66, 108), thickness=2)
         if prediction == gesture_name and prediction_percentage >= 0.9:
             status = True
         else:
