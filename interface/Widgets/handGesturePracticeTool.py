@@ -85,6 +85,7 @@ class handGesturePracticeToolWidget(QWidget):
         self.stopBtn.setCursor(Qt.PointingHandCursor)
         self.stopBtn.setStyleSheet("background-color: red; border: none; font: 15px; color: white;")
         self.stopBtn.clicked.connect(self.toggleStop)
+        self.stopBtn.hide()
         bottom_layout.addWidget(self.stopBtn, alignment=Qt.AlignRight)
         
         
@@ -102,11 +103,27 @@ class handGesturePracticeToolWidget(QWidget):
         self.setLayout(main_layout)
         
     def toggleStart(self):
+        # initialize the value for restart
+        self.prediction_buffer.clear()
+        self.draw_feedback = False
+        self.png_num = 1
+        self.finish_practice = False
+        self.status_label.setText("")
+        self.comment_label.setText("")
+        self.currentGesture_idx = 0
+        self.reopen_webcam()
+        
         self.startBtn.hide()
+        self.stopBtn.show()
         self.start_timer()
         self.recognitionTask()
         
     def toggleStop(self):
+        self.startBtn.setText("Restart")
+        self.status_label.setText("")
+        self.comment_label.setText("")
+        self.startBtn.show()
+        self.stopBtn.hide()
         self.stop_timer()
     
     def toggleClose(self):
@@ -150,6 +167,7 @@ class handGesturePracticeToolWidget(QWidget):
                 prediction_count = self.prediction_buffer.count(self.gesture_names[self.currentGesture_idx])
                 self.show_gesture_comment(status)
                 if status == True and prediction_count >= 4 :
+                    self.prediction_buffer.clear()
                     # continue to next gesture until the last gesture
                     if self.currentGesture_idx != len(self.gesture_names) - 1:
                         self.currentGesture_idx += 1
@@ -214,7 +232,10 @@ class handGesturePracticeToolWidget(QWidget):
     def release_webcam(self):
         if self.cap.isOpened():
             self.cap.release()
-
+            
+    def reopen_webcam(self):
+        if not self.cap.isOpened():
+            self.cap = cv2.VideoCapture(0)
        
 
     

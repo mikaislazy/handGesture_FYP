@@ -122,6 +122,7 @@ class handGestureRecognitionWidget(QWidget):
             self.show_gesture_comment(self.status)
             
             if self.status == True and prediction_count >= 4 :
+                self.prediction_buffer.clear()
                 # end the task
                 self.release_webcam()
                 self.closeBtn.show()
