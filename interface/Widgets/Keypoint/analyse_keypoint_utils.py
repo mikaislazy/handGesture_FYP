@@ -15,6 +15,12 @@ buffer_size = 15  # Number of frames to consider for temporal smoothing
 prediction_buffer = deque(maxlen=buffer_size)
 
 # load the template keypoints for all gestures
+# Get the directory of the current script
+curr_dir = os.path.dirname(os.path.realpath(__file__))
+json_filename = os.path.join(curr_dir, "mean_of_normalized_keypoints.json")
+
+with open(json_filename, 'r') as file:
+    all_template_keypoints = json.load(file)
 
 
 # Compare keypoints with the template keypoints and provide feedback
@@ -37,8 +43,8 @@ def compare_keypoints(current_keypoints, template_keypoints):
     def get_adjustment(current_pt, template_pt, part_name, keypoint_index):
         delta_x = template_pt[0] - current_pt[0] # compare x-axis
         delta_y = template_pt[1] - current_pt[1] # compare y-axis
-        direction_x = 'left' if delta_x > 0 else 'right' if delta_x < 0 else ''
-        direction_y = 'up' if delta_y > 0 else 'down' if delta_y < 0 else ''
+        direction_x = 'left' if delta_x < 0 else 'right' 
+        direction_y = 'up' if delta_y < 0 else 'down'
         direction = direction_y if direction_y else direction_x
 
         if direction:
@@ -81,55 +87,6 @@ def draw_adjustments(image, adjustments, current_keypoints):
         text_position = (keypoint[0] + 10, keypoint[1] + 10)
         cv2.putText(image, direction, text_position, cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0), 2, cv2.LINE_AA)
 
-def process_webcam(frame,  gesture_name, template_keypoints, buffer_size=4):
-    cap = cv2.VideoCapture(0)
-
-    while cap.isOpened():
-        success, image = cap.read()
-        if not success:
-            print("Ignoring empty camera frame.")
-            continue
-
-        # Extract hand keypoints
-        current_keypoints = common_utils.extract_hand_keypoints(image)
-        if current_keypoints is None:
-            cv2.putText(image, "No hand detected", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_AA)
-            cv2.imshow('Hand Gesture Recognition', image)
-            if cv2.waitKey(5) & 0xFF == 27:
-                break
-            continue
-
-        # Normalize current keypoints
-        normalized_keypoints = {'is_left': False, 'is_right': False}
-        if current_keypoints['is_left']:
-            normalized_keypoints['left_hand_pts']= common_utils.normalize_keypoints(current_keypoints['left_hand_pts'])
-            normalized_keypoints['is_left'] = True
-        if current_keypoints['is_right']:
-            normalized_keypoints['right_hand_pts']= common_utils.normalize_keypoints(current_keypoints['right_hand_pts'])
-            normalized_keypoints['is_right'] = True
-
-        # Predict gesture using the model (assuming the model has a predict function that returns gesture class)
-        gesture_class = model.predict(image)  # Pass the raw image to the model for prediction
-
-        # Update the prediction buffer
-        prediction_buffer.append(gesture_class)
-        buffer_text = f"Buffer: {prediction_buffer}"
-        cv2.putText(image, buffer_text, (10,50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2, cv2.LINE_AA)
-        # Check if buffer is full and filled with other predictions
-        if len(prediction_buffer) == buffer_size:
-            # Compare keypoints and provide feedback
-            adjustments = compare_keypoints(normalized_keypoints, template_keypoints)
-            draw_adjustments(image, adjustments, current_keypoints)
-            prediction_buffer.clear()  # Clear the buffer after processing
-
-        # Display the image
-        cv2.imshow('Hand Gesture Recognition', image)
-        if cv2.waitKey(5) & 0xFF == 27:
-            break
-
-    cap.release()
-    cv2.destroyAllWindows()
-
 def analyse_keypoints(frame, gesture_name):
     """
     Process a single frame to detect hand gestures and provide feedback.
@@ -145,11 +102,16 @@ def analyse_keypoints(frame, gesture_name):
     - processed_frame: The frame with feedback drawn on it.
     - prediction_buffer: Updated prediction buffer.
     """
+    frame = frame.copy()
+    # json_filename = f"normalized_keypoints_data/{gesture_name}_normalized.json"
+    # template_keypoints = common_utils.load_and_normalize_json(json_filename)
+    template_keypoints = all_template_keypoints[gesture_name]
+    
     # Extract hand keypoints
     current_keypoints = common_utils.extract_hand_keypoints(frame)
     if current_keypoints is None:
         cv2.putText(frame, "No hand detected. Please attempt the task again in a well-lit area or put your hand closer.", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2, cv2.LINE_AA)
-        return frame, prediction_buffer
+        return frame
 
     # Normalize current keypoints
     normalized_keypoints = {'is_left': False, 'is_right': False}
@@ -167,10 +129,10 @@ def analyse_keypoints(frame, gesture_name):
 
     return frame
 
-# Load the normalized template keypoints for the specific gesture
-gesture_name = "ChanDingYin"
-json_filename = "normalized_keypoints_data/ChanDingYin_normalized.json"
-template_keypoints = common_utils.load_and_normalize_json(json_filename)
+# # Load the normalized template keypoints for the specific gesture
+# gesture_name = "ChanDingYin"
+# json_filename = "normalized_keypoints_data/ChanDingYin_normalized.json"
+# template_keypoints = common_utils.load_and_normalize_json(json_filename)
 
 # if __name__ == "__main__":
 #     print("current dir", os.path.dirname(__file__))

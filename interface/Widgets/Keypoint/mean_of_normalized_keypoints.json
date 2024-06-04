@@ -216,8 +216,7 @@
         ],
         "is_left": true,
         "is_right": true
-    }
-}{
+    },
     "ChanDingYin": {
         "left_hand_pts": [
             [
@@ -435,8 +434,7 @@
         ],
         "is_left": true,
         "is_right": true
-    }
-}{
+    },
     "MiTuoDingYin": {
         "left_hand_pts": [
             [
@@ -654,8 +652,7 @@
         ],
         "is_left": true,
         "is_right": true
-    }
-}{
+    },
     "Retsu": {
         "left_hand_pts": [
             [
@@ -873,8 +870,7 @@
         ],
         "is_left": true,
         "is_right": true
-    }
-}{
+    },
     "Rin": {
         "left_hand_pts": [
             [
@@ -1092,8 +1088,7 @@
         ],
         "is_left": true,
         "is_right": true
-    }
-}{
+    },
     "Zai": {
         "left_hand_pts": [
             [
@@ -1311,8 +1306,7 @@
         ],
         "is_left": true,
         "is_right": true
-    }
-}{
+    },
     "Zen": {
         "left_hand_pts": [
             [
@@ -1530,8 +1524,7 @@
         ],
         "is_left": true,
         "is_right": true
-    }
-}{
+    },
     "ZhiJiXiangYin": {
         "left_hand_pts": [
             [
@@ -1749,8 +1742,7 @@
         ],
         "is_left": true,
         "is_right": true
-    }
-}{
+    },
     "TaiJiYin": {
         "left_hand_pts": [
             [
