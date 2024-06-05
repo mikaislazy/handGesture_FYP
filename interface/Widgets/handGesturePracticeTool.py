@@ -158,6 +158,7 @@ class handGesturePracticeToolWidget(QWidget):
         ret, frame = self.cap.read()
         if ret:
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            frame = cv2.flip(frame, 1)
             if self.finish_practice == False:
                 status, imgShow, prediction = utils.recognize_hand_gesture(self.gesture_names[self.currentGesture_idx],  frame, self.draw_feedback)
                 # only draw feedback when buffer is full
