@@ -10,20 +10,13 @@ from . import  common_utils
 mp_hands = mp.solutions.hands
 hands = mp_hands.Hands()
 
-# Buffer to store recent predictions
-buffer_size = 15  # Number of frames to consider for temporal smoothing
-prediction_buffer = deque(maxlen=buffer_size)
-
-# load the template keypoints for all gestures
-# Get the directory of the current script
+# Load the template keypoints for all gestures
 curr_dir = os.path.dirname(os.path.realpath(__file__))
 json_filename = os.path.join(curr_dir, "mean_of_normalized_keypoints.json")
 
 with open(json_filename, 'r') as file:
     all_template_keypoints = json.load(file)
 
-
-# Compare keypoints with the template keypoints and provide feedback
 def compare_keypoints(current_keypoints, template_keypoints):
     feedback = []
 
@@ -32,60 +25,73 @@ def compare_keypoints(current_keypoints, template_keypoints):
     if not template_keypoints:
         return "No template keypoints found"
 
-    keypoint_mapping = {
-        4: 'thumb tip',
-        8: 'index finger tip',
-        12: 'middle finger tip',
-        16: 'ring finger tip',
-        20: 'little finger tip'
+    keypoint_groups = {
+        'thumb': [1, 2, 3, 4],
+        'index': [5, 6, 7, 8],
+        'middle': [9, 10, 11, 12],
+        'ring': [13, 14, 15, 16],
+        'little': [17, 18, 19, 20]
     }
 
-    def get_adjustment(current_pt, template_pt, part_name, keypoint_index):
-        delta_x = template_pt[0] - current_pt[0] # compare x-axis
-        delta_y = template_pt[1] - current_pt[1] # compare y-axis
-        direction_x = 'left' if delta_x < 0 else 'right' 
-        direction_y = 'up' if delta_y < 0 else 'down'
-        direction = direction_y if direction_y else direction_x
+    def get_finger_adjustment(current_pts, template_pts, finger_name):
+        deltas = template_pts - current_pts
+        delta_x = deltas[:, 0]
+        delta_y = deltas[:, 1]
 
-        if direction:
-            return [(keypoint_index, direction, part_name)]
-        return []
+        direction_x = 'left' if np.mean(delta_x) < 0 else 'right'
+        direction_y = 'up' if np.mean(delta_y) < 0 else 'down'
+        
+        return (finger_name, direction_y, direction_x)
+
+    def aggregate_finger_directions(current_hand_pts, template_hand_pts):
+        finger_adjustments = []
+        for finger_name, indices in keypoint_groups.items():
+            current_pts = np.array([current_hand_pts[i] for i in indices])
+            template_pts = np.array([template_hand_pts[i] for i in indices])
+            adjustment = get_finger_adjustment(current_pts, template_pts, finger_name)
+            if adjustment:
+                finger_adjustments.append(adjustment)
+        return finger_adjustments
 
     if current_keypoints['is_left'] and template_keypoints['is_left']:
-        # Compare left hand keypoints
-        for i in keypoint_mapping:
-            current_pt = np.array(current_keypoints['left_hand_pts'][i])
-            template_pt = np.array(template_keypoints['left_hand_pts'][i])
-            part_name = keypoint_mapping[i]
-            feedback.extend(get_adjustment(current_pt, template_pt, part_name, i))
+        left_finger_adjustments = aggregate_finger_directions(current_keypoints['left_hand_pts'], template_keypoints['left_hand_pts'])
+        feedback.extend(left_finger_adjustments)
     
     if current_keypoints['is_right'] and template_keypoints['is_right']:
-        # Compare right hand keypoints
-        for i in keypoint_mapping:
-            current_pt = np.array(current_keypoints['right_hand_pts'][i])
-            template_pt = np.array(template_keypoints['right_hand_pts'][i])
-            part_name = keypoint_mapping[i]
-            feedback.extend(get_adjustment(current_pt, template_pt, part_name, i))
+        right_finger_adjustments = aggregate_finger_directions(current_keypoints['right_hand_pts'], template_keypoints['right_hand_pts'])
+        feedback.extend(right_finger_adjustments)
     
     return feedback
 
-# draw the feedback on the image
 def draw_adjustments(image, adjustments, current_keypoints):
+    keypoint_groups = {
+        'thumb': 4,
+        'index': 8,
+        'middle': 12,
+        'ring': 16,
+        'little': 20
+    }
+
     for adjustment in adjustments:
-        keypoint_index, direction, part_name = adjustment
-        if current_keypoints['is_left'] and keypoint_index < len(current_keypoints['left_hand_pts']):
-            keypoint = (np.array(current_keypoints['left_hand_pts'][keypoint_index][:2]) * np.array([image.shape[1], image.shape[0]])).astype(int)
-        elif current_keypoints['is_right'] and keypoint_index < len(current_keypoints['right_hand_pts']):
-            keypoint = (np.array(current_keypoints['right_hand_pts'][keypoint_index][:2]) * np.array([image.shape[1], image.shape[0]])).astype(int)
-        else:
-            continue
-
-        # Draw a circle at the keypoint
-        cv2.circle(image, tuple(keypoint), 5, (0, 0, 255), -1)
-
-        # Draw text indicating the direction
-        text_position = (keypoint[0] + 10, keypoint[1] + 10)
-        cv2.putText(image, direction, text_position, cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0), 2, cv2.LINE_AA)
+        finger_name, direction_y, direction_x = adjustment
+        if finger_name in keypoint_groups:
+            keypoint_index = keypoint_groups[finger_name]
+            # Draw feedback for the left hand if detected
+            if current_keypoints['is_left'] and keypoint_index < len(current_keypoints['left_hand_pts']):
+                keypoint = (np.array(current_keypoints['left_hand_pts'][keypoint_index][:2]) * np.array([image.shape[1], image.shape[0]])).astype(int)
+                # Draw a circle at the keypoint
+                cv2.circle(image, tuple(keypoint), 5, (0, 0, 255), -1)
+                # Draw text indicating the direction
+                text_position = (keypoint[0] + 10, keypoint[1] + 10)
+                cv2.putText(image, f"{direction_y} {direction_x}", text_position, cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0), 2, cv2.LINE_AA)
+            # Draw feedback for the right hand if detected
+            if current_keypoints['is_right'] and keypoint_index < len(current_keypoints['right_hand_pts']):
+                keypoint = (np.array(current_keypoints['right_hand_pts'][keypoint_index][:2]) * np.array([image.shape[1], image.shape[0]])).astype(int)
+                # Draw a circle at the keypoint
+                cv2.circle(image, tuple(keypoint), 5, (0, 0, 255), -1)
+                # Draw text indicating the direction
+                text_position = (keypoint[0] + 10, keypoint[1] + 10)
+                cv2.putText(image, f"{direction_y} {direction_x}", text_position, cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0), 2, cv2.LINE_AA)
 
 def analyse_keypoints(frame, gesture_name):
     """
@@ -94,17 +100,17 @@ def analyse_keypoints(frame, gesture_name):
     Parameters:
     - frame: The input frame from the webcam or video source.
     - gesture_name: The name of the gesture to recognize.
-    - template_keypoints: The template keypoints for the gesture.
-    - prediction_buffer: A list used to store recent predictions.
-    - buffer_size: The size of the prediction buffer.
 
     Returns:
     - processed_frame: The frame with feedback drawn on it.
-    - prediction_buffer: Updated prediction buffer.
     """
-    frame = frame.copy()
-    # json_filename = f"normalized_keypoints_data/{gesture_name}_normalized.json"
-    # template_keypoints = common_utils.load_and_normalize_json(json_filename)
+    # frame = frame.copy()
+    
+    # Check if the gesture template is available
+    if gesture_name not in all_template_keypoints:
+        cv2.putText(frame, "Gesture template not found.", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2, cv2.LINE_AA)
+        return frame
+
     template_keypoints = all_template_keypoints[gesture_name]
     
     # Extract hand keypoints
@@ -121,31 +127,8 @@ def analyse_keypoints(frame, gesture_name):
     if current_keypoints['is_right']:
         normalized_keypoints['right_hand_pts'] = common_utils.normalize_keypoints(current_keypoints['right_hand_pts'])
         normalized_keypoints['is_right'] = True
-
-    
     # Compare keypoints and provide feedback
     adjustments = compare_keypoints(normalized_keypoints, template_keypoints)
     draw_adjustments(frame, adjustments, current_keypoints)
 
     return frame
-
-# # Load the normalized template keypoints for the specific gesture
-# gesture_name = "ChanDingYin"
-# json_filename = "normalized_keypoints_data/ChanDingYin_normalized.json"
-# template_keypoints = common_utils.load_and_normalize_json(json_filename)
-
-# if __name__ == "__main__":
-#     print("current dir", os.path.dirname(__file__))
-#     # Load the normalized template keypoints for the specific gesture
-#     gesture_name = "ChanDingYin"
-#     json_filename = "normalized_keypoints_data/ChanDingYin_normalized.json"
-#     template_keypoints = common_utils.load_and_normalize_json(json_filename)
-
-#     # Process the frame
-#     frame = cv2.imread("frame.jpg")
-#     processed_frame = process_frame(frame, gesture_name, template_keypoints)
-
-#     # Display the processed frame
-#     cv2.imwrite("processed_frame.jpg", processed_frame)
-#     cv2.waitKey(0)
-#     cv2.destroyAllWindows()

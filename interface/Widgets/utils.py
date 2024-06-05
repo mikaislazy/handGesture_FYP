@@ -192,19 +192,17 @@ def hand_segmentation_Mediapipe(frame):
 
 def hand_segmentation_Skin(frame):
     frame = frame.copy()
-    
-    # Applying Bilateral Filter
-    frame = cv2.bilateralFilter(frame, d=9, sigmaColor=75, sigmaSpace=75)
+
     
     # Converting from BGR to HSV color space
     frame_HSV = cv2.cvtColor(frame, cv2.COLOR_RGB2HSV)
-    HSV_mask = cv2.inRange(frame_HSV, (0, 30, 60), (20, 150, 255))
-    HSV_mask = cv2.medianBlur(HSV_mask, 5)
+    HSV_mask = cv2.inRange(frame_HSV, (0, 58, 0), (50, 173, 255))
+    # HSV_mask = cv2.medianBlur(HSV_mask, 5)
 
     # Converting from BGR to YCbCr color space
     frame_YCrCb = cv2.cvtColor(frame, cv2.COLOR_RGB2YCrCb)
-    YCrCb_mask = cv2.inRange(frame_YCrCb, (0, 133, 77), (235, 173, 127))
-    YCrCb_mask = cv2.medianBlur(YCrCb_mask, 5)
+    YCrCb_mask = cv2.inRange(frame_YCrCb, (0, 85, 135), (255, 135, 180))
+    # YCrCb_mask = cv2.medianBlur(YCrCb_mask, 5)
 
     # Merge skin detection (YCbCr and HSV)
     global_mask = cv2.bitwise_and(YCrCb_mask, HSV_mask)
@@ -228,6 +226,7 @@ def hand_segmentation_Skin(frame):
 
 
     return False, None
+
 def check_contour(contour, max_area_threshold, min_area_threshold, width_threshold, height_threshold):
     # Calculate the area, width, and height of the contour
     area = cv2.contourArea(contour)
@@ -253,7 +252,7 @@ def recognize_hand_gesture(gesture_name ,frame, is_draw_feedback):
         cx, cy, cw, ch =  hand_area_coordinates1 if exist1 else hand_area_coordinates2
         all_pred, prediction, prediction_percentage = model.get_max_prediction(imageShow)
         prediction_text = f"{prediction}: {prediction_percentage:.2f}%"
-        # cv2.putText(imageShow,prediction_text, (cx,cy), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
+        cv2.putText(imageShow,prediction_text, (cx,cy), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
         # if exist2:
         imageShow = cv2.rectangle(img=imageShow, pt1=(cx, cy), pt2=(cx+cw, cy+ch), color=(245, 66, 108), thickness=2)
         if prediction == gesture_name and prediction_percentage >= 0.9:
