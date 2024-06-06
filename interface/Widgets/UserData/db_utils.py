@@ -32,14 +32,6 @@ def create_db():
                 );
                 ''')
         
-        # Create database for user information
-        c.execute('''
-                    CREATE TABLE IF NOT EXISTS User(
-                        username TEXT PRIMARY KEY,
-                        start_date TEXT NOT NULL
-                    );
-                    ''')
-        
     except Error as e:
         print(e)
     finally:
@@ -47,13 +39,7 @@ def create_db():
             conn.commit()
             conn.close()
 
-# retrieve data from database  
-def retrieve_user_info():
-    conn = sqlite3.connect(database_name)
-    user_data_query = 'SELECT * FROM User;'
-    user_data_df = pd.read_sql_query(user_data_query, conn)
-    conn.close()
-    return user_data_df
+
 
 def retrieve_table_info():
     conn = sqlite3.connect(database_name)
@@ -161,12 +147,7 @@ def populate_test_data():
     conn = sqlite3.connect(database_name)
     c = conn.cursor()
     
-    user_data = [
-        ('test_user1', '2022-01-01'),
-    ]
-    
-    c.execute('DELETE FROM User')
-    c.executemany('INSERT INTO User VALUES (?, ?)', user_data)
+   
 
     gesture_task1_data = [
         ('ZhiJiXiangYin', 4, '2022-05-01'),
@@ -187,12 +168,7 @@ def populate_test_data():
     conn.commit()
     conn.close()
     
-# Test case functions
-def test_retrieve_user_info():
-    user_data_df = retrieve_user_info()
-    print("User data retrieved:", user_data_df)
-    assert user_data_df.shape[0] == 1
-    assert user_data_df.iloc[0]['username'] == 'test_user1'
+
 
 def test_retrieve_gesture_score_task1():
     scores = retrieve_gesture_score_task1('ZhiJiXiangYin')
@@ -238,7 +214,6 @@ def clear_db():
     conn = sqlite3.connect(database_name)
     c = conn.cursor()
     
-    c.execute('DELETE FROM User')
     c.execute('DELETE FROM Gesture_Task1')
     c.execute('DELETE FROM Gesture_Task2')
     
