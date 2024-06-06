@@ -201,7 +201,7 @@ def hand_segmentation_Skin(frame):
 
     # Converting from BGR to YCbCr color space
     frame_YCrCb = cv2.cvtColor(frame, cv2.COLOR_RGB2YCrCb)
-    YCrCb_mask = cv2.inRange(frame_YCrCb, (0, 85, 135), (255, 135, 180))
+    YCrCb_mask = cv2.inRange(frame_YCrCb, (0, 135, 85), (255, 180, 135))
     # YCrCb_mask = cv2.medianBlur(YCrCb_mask, 5)
 
     # Merge skin detection (YCbCr and HSV)
