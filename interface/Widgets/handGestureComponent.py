@@ -26,7 +26,6 @@ class handGestureWidget(QWidget):
         self.original_size = self.size()  # Original size of the window
 
         self.layout = QHBoxLayout(self)
-        # self.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
         # Gesture layout
         self.gesture_widget = QWidget()
         gesture_layout = QGridLayout()
@@ -125,14 +124,9 @@ class handGestureWidget(QWidget):
         self.stacked_widget.setCurrentWidget(self.practiceTool_widget)
 
     def navigate_to_main_widget(self):
-        # self.resize(self.original_size )
         self.gesture_widget.show()
         self.btn_practice_widget.show()
 
-        # if self.stacked_widget is not None:
-        #     self.layout.removeWidget(self.stacked_widget)
-        #     self.stacked_widget.deleteLater()
-        #     self.stacked_widget = None
         self.layout.removeWidget(self.stacked_widget)
         self.stacked_widget = QStackedWidget(self) 
 

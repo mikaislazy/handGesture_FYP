@@ -9,6 +9,7 @@ from handGesturePractice import handGesturePracticeWidget
 from handGesturePracticeTool import handGesturePracticeToolWidget
 from handGestureTaskSelection import handGestureTaskSelectionWidget
 from userPerformance import userPerformanceWidget
+from system import systemWidget
 
 class mainWindow(QMainWindow):
     def __init__(self):
@@ -28,18 +29,18 @@ class mainWindow(QMainWindow):
         sidebar_widget = QWidget()
         sidebar_widget.setStyleSheet("""
             QWidget {
-                background-color: #f0f0f0;  /* Light grey background */
-                border-right: 1px solid #dcdcdc;  /* Light grey right border */
+                background-color: #f0f0f0;  
+                border-right: 1px solid #dcdcdc;  
             }
             QPushButton {
-                border: none;  /* No border for buttons */
-                background-color: #f0f0f0;  /* Light grey background */
+                border: none; 
+                background-color: #f0f0f0; 
                 padding: 10px;
                 text-align: left;
                 font-size: 16px;
             }
             QPushButton:pressed {
-                background-color: #e0e0e0;  /* Slightly darker grey when pressed */
+                background-color: #e0e0e0; 
             }
         """)
         sidebar_layout = QVBoxLayout(sidebar_widget)
@@ -57,6 +58,7 @@ class mainWindow(QMainWindow):
         
         # Setting button
         btn_setting = QPushButton('Setting')
+        btn_setting.clicked.connect(self.switch_to_system)
         sidebar_layout.addWidget(btn_setting)
         
         # Spacer
@@ -75,11 +77,10 @@ class mainWindow(QMainWindow):
         self.user_performance_widget = userPerformanceWidget(self)
         self.central_widget.addWidget(self.user_performance_widget)
         
-        
-        # Set the testing widget to hand gesture learning
-        # self.testingWidget = handGestureWidget(self)
-        # self.central_widget.addWidget(self.testingWidget)
-        
+        # add the System widget
+        self.system_widget = systemWidget(self)
+        self.central_widget.addWidget(self.system_widget)
+
     def switch_to_dashboard(self):
         self.central_widget.setCurrentWidget(self.hand_gesture_widget)
     
@@ -90,3 +91,6 @@ class mainWindow(QMainWindow):
         self.user_performance_widget = userPerformanceWidget(self)
         self.central_widget.addWidget(self.user_performance_widget)
         self.central_widget.setCurrentWidget(self.user_performance_widget)
+    
+    def switch_to_system(self):
+        self.central_widget.setCurrentWidget(self.system_widget)

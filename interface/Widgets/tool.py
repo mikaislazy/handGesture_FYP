@@ -1,4 +1,3 @@
-# handGestureData.py
 import json
 import os
 import sys
@@ -6,9 +5,8 @@ import utils
 import mediapipe as mp
 import numpy as np
 import tensorflow as tf
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QGroupBox, QRadioButton, QStackedWidget, QFrame
-from PyQt5.QtGui import QPixmap, QFont, QIcon, QImage
-from PyQt5.QtCore import Qt, QTimer, QTime
+from PyQt5.QtWidgets import QLabel,  QFrame
+from PyQt5.QtGui import QImage
 import cv2
 import numpy
 
