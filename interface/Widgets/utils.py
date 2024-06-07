@@ -252,7 +252,7 @@ def recognize_hand_gesture(gesture_name ,frame, is_draw_feedback):
         cx, cy, cw, ch =  hand_area_coordinates1 if exist1 else hand_area_coordinates2
         all_pred, prediction, prediction_percentage = model.get_max_prediction(imageShow)
         prediction_text = f"{prediction}: {prediction_percentage:.2f}%"
-        cv2.putText(imageShow,prediction_text, (cx,cy), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
+        # cv2.putText(imageShow,prediction_text, (cx,cy), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
         # if exist2:
         imageShow = cv2.rectangle(img=imageShow, pt1=(cx, cy), pt2=(cx+cw, cy+ch), color=(245, 66, 108), thickness=2)
         if prediction == gesture_name and prediction_percentage >= 0.9:
