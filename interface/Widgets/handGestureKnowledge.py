@@ -63,6 +63,7 @@ class handGestureKnowledgeTaskWidget(QWidget):
         
         self.result_label = QLabel("")
         self.result_label.setAlignment(Qt.AlignCenter)
+        self.result_label.setWordWrap(True)
         layout.addWidget(self.result_label)    
         
         # Next Button 

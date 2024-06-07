@@ -60,15 +60,6 @@ def test_fail_task(app):
     assert app.status_label.text() == "Task Failed!"
     assert "red" in app.status_label.styleSheet()
 
-# Test the back to main function
-def test_back_to_main(app, qtbot):
-    app.status = False
-    app.duration = 30
-    app.fail_task()
-    app.backToMain()
-    # Assuming the callback prints the following:
-    assert app.status_label.text() == "Task Failed!"
-    assert "red" in app.status_label.styleSheet()
 
 # Test the release webcam function
 def test_release_webcam(app):

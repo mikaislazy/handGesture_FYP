@@ -31,6 +31,7 @@ class handGesturePracticeToolWidget(QWidget):
         self.buffer_size = 8  # Number of frames to consider for temporal smoothing
         self.prediction_buffer = deque(maxlen=self.buffer_size)
         self.draw_feedback = False
+        self.cap = cv2.VideoCapture(0)
         # Layout setup
         main_layout = QVBoxLayout()
         
@@ -73,6 +74,10 @@ class handGesturePracticeToolWidget(QWidget):
         self.status_label.setStyleSheet("font-size: 20px;")
         bottom_layout.addWidget(self.status_label, alignment=Qt.AlignCenter)
         
+        self.comment_label = QLabel("")
+        self.status_label.setStyleSheet("font-size: 20px;")
+        bottom_layout.addWidget(self.comment_label, alignment=Qt.AlignCenter)
+        
         # Add Close Button
         self.stopBtn = QPushButton("Stop")
         self.stopBtn.setContentsMargins(0, 0, 0, 0)
@@ -80,6 +85,7 @@ class handGesturePracticeToolWidget(QWidget):
         self.stopBtn.setCursor(Qt.PointingHandCursor)
         self.stopBtn.setStyleSheet("background-color: red; border: none; font: 15px; color: white;")
         self.stopBtn.clicked.connect(self.toggleStop)
+        self.stopBtn.hide()
         bottom_layout.addWidget(self.stopBtn, alignment=Qt.AlignRight)
         
         
@@ -97,11 +103,27 @@ class handGesturePracticeToolWidget(QWidget):
         self.setLayout(main_layout)
         
     def toggleStart(self):
+        # initialize the value for restart
+        self.prediction_buffer.clear()
+        self.draw_feedback = False
+        self.png_num = 1
+        self.finish_practice = False
+        self.status_label.setText("")
+        self.comment_label.setText("")
+        self.currentGesture_idx = 0
+        self.reopen_webcam()
+        
         self.startBtn.hide()
+        self.stopBtn.show()
         self.start_timer()
         self.recognitionTask()
         
     def toggleStop(self):
+        self.startBtn.setText("Restart")
+        self.status_label.setText("")
+        self.comment_label.setText("")
+        self.startBtn.show()
+        self.stopBtn.hide()
         self.stop_timer()
     
     def toggleClose(self):
@@ -120,21 +142,23 @@ class handGesturePracticeToolWidget(QWidget):
         self.timerLabel.setText(f"{minutes:02}:{seconds:02}")
     
     def stop_timer(self):
-        self.clock.stop()
-        self.release_webcam()
+        if hasattr(self, 'clock'):
+            self.clock.stop()
+        if hasattr(self, 'cap'):
+            self.release_webcam()
         
     def recognitionTask(self):
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.update_frame)
         
         # Open the default webcam
-        self.cap = cv2.VideoCapture(0)
         self.timer.start(100)  
         
     def update_frame(self):
         ret, frame = self.cap.read()
         if ret:
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            frame = cv2.flip(frame, 1)
             if self.finish_practice == False:
                 status, imgShow, prediction = utils.recognize_hand_gesture(self.gesture_names[self.currentGesture_idx],  frame, self.draw_feedback)
                 # only draw feedback when buffer is full
@@ -142,8 +166,9 @@ class handGesturePracticeToolWidget(QWidget):
                     self.draw_feedback = False
                 self.prediction_buffer.append(prediction)
                 prediction_count = self.prediction_buffer.count(self.gesture_names[self.currentGesture_idx])
-
+                self.show_gesture_comment(status)
                 if status == True and prediction_count >= 4 :
+                    self.prediction_buffer.clear()
                     # continue to next gesture until the last gesture
                     if self.currentGesture_idx != len(self.gesture_names) - 1:
                         self.currentGesture_idx += 1
@@ -158,8 +183,9 @@ class handGesturePracticeToolWidget(QWidget):
                 q_img = tool.frame2QImg(imgShow)
 
                 # Check if buffer is full
-                if len(self.prediction_buffer) == self.buffer_size:
+                if len(self.prediction_buffer) == self.buffer_size//2:
                     self.draw_feedback = True
+                if len(self.prediction_buffer) == self.buffer_size:
                     self.prediction_buffer.clear()  # Clear the buffer after processing
 
             else:
@@ -171,10 +197,29 @@ class handGesturePracticeToolWidget(QWidget):
 
             self.video_frame.setPixmap(QPixmap.fromImage(q_img))
 
-
+    def show_gesture_comment(self, status):
+        if status is None:
+            self.show_hand_absence_alert()
+        elif status == True:
+            self.correctGesture()
+        else:
+            self.wrongGesture()
+            
+    def correctGesture(self):
+        self.comment_label.setText("Correct Gesture!")
+        self.comment_label.setStyleSheet(" color: green;")
+    
+    def wrongGesture(self):
+        self.comment_label.setText("Wrong Gesture!")
+        self.comment_label.setStyleSheet(" color: red;")
+        
+    def show_hand_absence_alert(self):
+        self.comment_label.setText("No hand detected!")
+        self.comment_label.setStyleSheet(" color: red;")
+        
     def finishPractice(self):
         self.status_label.setText("You finish practice all selected gesture!")
-        self.status_label.setStyleSheet("font-size: 20px; color: green;")
+        self.status_label.setStyleSheet(" color: green;")
     
     def play_effect(self, frame):
         frame = tool.add_gif2frame(self.effect, frame ,self.png_num)
@@ -188,7 +233,10 @@ class handGesturePracticeToolWidget(QWidget):
     def release_webcam(self):
         if self.cap.isOpened():
             self.cap.release()
-
+            
+    def reopen_webcam(self):
+        if not self.cap.isOpened():
+            self.cap = cv2.VideoCapture(0)
        
 
     
