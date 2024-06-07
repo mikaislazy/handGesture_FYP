@@ -45,7 +45,7 @@ class handGesturePracticeToolWidget(QWidget):
 
         # Gesture images layout
         self.gesture_layout = QHBoxLayout()
-        self.gesture_layout.setSpacing(0)  # Set spacing to 0
+        self.gesture_layout.setSpacing(0) 
         self.gesture_layout.setContentsMargins(0, 0, 0, 0)
         for gesture_name in gesture_names:
             img = f'images/handGestureBtn/{gesture_name}Btn.png'
