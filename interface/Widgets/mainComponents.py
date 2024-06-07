@@ -74,12 +74,7 @@ class mainWindow(QMainWindow):
         # add the User Performance widget
         self.user_performance_widget = userPerformanceWidget(self)
         self.central_widget.addWidget(self.user_performance_widget)
-        
-        
-        # Set the testing widget to hand gesture learning
-        # self.testingWidget = handGestureWidget(self)
-        # self.central_widget.addWidget(self.testingWidget)
-        
+
     def switch_to_dashboard(self):
         self.central_widget.setCurrentWidget(self.hand_gesture_widget)
     

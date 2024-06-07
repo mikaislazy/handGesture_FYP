@@ -83,11 +83,6 @@ class handGestureKnowledgeTaskWidget(QWidget):
     def on_next_button_clicked(self):
         parent = self.parent_widget
         self.navigate_to_next_question()
-        # if self.result == True:
-        #     self.navigate_to_next_question()
-        # else:
-        #     parent.navigate_to_main_widget()
-            
         
     def on_option_click(self, selected_option):
         print(f'Option clicked: {selected_option}')
@@ -97,16 +92,12 @@ class handGestureKnowledgeTaskWidget(QWidget):
             self.result = True
             self.result_label.setText("Correct!")
             self.result_label.setStyleSheet("color: green; font:15px;")
-            # if self.is_last_question():
-            #     self.next_button.setText("Back to Main Page")
-            # self.navigate_to_next_question()
+            
         else:
             self.result = False
             self.result_label.setText(f"Wrong! The correct option is {self.answer}.")
             self.result_label.setStyleSheet("color: red;  font:15px;")
-            # self.parent_widget.navigate_to_main_widget()
-            # set the next button to back to main
-            # self.next_button.setText("Back to Main Page")
+            
         if self.is_last_question():
             self.next_button.setText("Back to Main Page")
             

@@ -58,12 +58,7 @@ def image_processing(target_size, img, hand_area_only):
     gaussBlurImg = cv2.GaussianBlur(filteredImg,(3,3),0)
     # automatic contrast adjustment
     adjustedImg = auto_contrast_adjustment(gaussBlurImg, 255, 0)
-    # convert image to grayscale
-    # grayImg = cv2.cvtColor(adjustedImg, cv2.COLOR_BGR2GRAY)
-    # apply binary thresholding to image
-    # ret, threshImg = cv2.threshold(grayImg,160,255,cv2.THRESH_BINARY)
-    # apply canny edge detection to image
-    # cannyImg = cv2.Canny(threshImg,10,100)
+
     # resize the image to target size
     resizedImg = cv2.resize(adjustedImg, target_size)
     return resizedImg
@@ -75,7 +70,7 @@ def auto_contrast_adjustment(img, max_val, min_val):
 
     image = min_val + (image - low) * ((max_val - min_val) / (high - low))
 
-    return image.astype(np.uint8) # for canny edge detection
+    return image.astype(np.uint8) # 
 
 def crop_hand_area(img, adj_x = 0, adj_y = 0, adj_w = 0, adj_h = 0):
     """ crop the hand area only
@@ -248,7 +243,6 @@ def recognize_hand_gesture(gesture_name ,frame, is_draw_feedback):
 
 
     if exist1 or exist2:
-        # cx, cy, cw, ch = hand_area_coordinates2 if exist2 else hand_area_coordinates1
         cx, cy, cw, ch =  hand_area_coordinates1 if exist1 else hand_area_coordinates2
         all_pred, prediction, prediction_percentage = model.get_max_prediction(imageShow)
         prediction_text = f"{prediction}: {prediction_percentage:.2f}%"

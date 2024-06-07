@@ -9,7 +9,7 @@ import sys
 import  tool
 import numpy 
 import utils
-# Calculate the absolute path
+
 abs_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../model'))
 sys.path.insert(0, abs_path)
 
@@ -47,7 +47,6 @@ class handGestureRecognitionWidget(QWidget):
         video_frame_title = f"{gesture_name} Recognition Task"
         self.video_frame = tool.create_webcam_widget(video_frame_title)
         self.layout.addWidget(self.video_frame, alignment=Qt.AlignCenter)
-        # self.layout.addStretch()
         
         # Add Start Button
         self.startBtn = QPushButton(f"Start!")
@@ -57,7 +56,6 @@ class handGestureRecognitionWidget(QWidget):
         self.startBtn.setStyleSheet("background-color: green; border: none; font: 15px; color: white;")
         self.startBtn.clicked.connect(self.toggleStart)
         bottom_layout.addWidget(self.startBtn, alignment=Qt.AlignLeft)
-        # self.layout.addWidget(self.startBtn, alignment=Qt.AlignLeft)
         
         # add label for comment
         self.status_label = QLabel("")
@@ -126,9 +124,10 @@ class handGestureRecognitionWidget(QWidget):
                 # end the task
                 self.release_webcam()
                 self.closeBtn.show()
-             # Check if buffer is full
+             # if buffer is half full -> draw feedback
             if len(self.prediction_buffer) == self.buffer_size//2:
                 self.draw_feedback = True
+            # if buffer is full -> clear the buffer
             if len(self.prediction_buffer) == self.buffer_size:
                 self.prediction_buffer.clear()  # Clear the buffer after processing
             q_img = tool.frame2QImg(imgShow)

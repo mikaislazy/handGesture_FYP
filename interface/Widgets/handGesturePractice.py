@@ -12,8 +12,8 @@ class handGesturePracticeWidget(QWidget):
         self.selected_effect = None
         
         main_layout = QVBoxLayout()
-        main_layout.setContentsMargins(0, 0, 0, 0)  # Set margins to 0
-        main_layout.setSpacing(0)  # Set spacing to 0
+        main_layout.setContentsMargins(0, 0, 0, 0) 
+        main_layout.setSpacing(0) 
 
         # Gesture images layout
         gesture_layout = QHBoxLayout()
@@ -31,7 +31,7 @@ class handGesturePracticeWidget(QWidget):
             gesture_icon.setFixedSize(100, 100)
             
             vbox = QVBoxLayout()
-            vbox.setSpacing(0)  # Set spacing to 0
+            vbox.setSpacing(0)  
             vbox.addWidget(gesture_icon)
             name_label = QLabel(f"{i+1}. {gesture_name}")
             name_label.setAlignment(Qt.AlignCenter)
@@ -43,7 +43,7 @@ class handGesturePracticeWidget(QWidget):
             
             gesture_layout.addWidget(container)
 
-        main_layout.addLayout(gesture_layout)  # Center the gesture layout
+        main_layout.addLayout(gesture_layout) 
 
         # Instruction label
         instruction_label = QLabel("Please input the order of the hand gesture: (at least one):")
@@ -75,8 +75,8 @@ class handGesturePracticeWidget(QWidget):
         
         # layout for radio buttons
         effect_layout = QVBoxLayout()
-        effect_layout.setSpacing(0)  # Set spacing to 0
-        effect_layout.setContentsMargins(0, 0, 0, 0)  # Set margins to 0
+        effect_layout.setSpacing(0) 
+        effect_layout.setContentsMargins(0, 0, 0, 0) 
         
         self.fire_effect = QRadioButton("Fire effect")
         self.thunder_effect = QRadioButton("Thunder effect")
