@@ -15,11 +15,11 @@ class handGestureWidget(QWidget):
         self.setMaximumWidth(1200)
         self.setStyleSheet("""
             QPushButton {
-                border: none;  /* No border for buttons */
-                background-color: transparent;  /* Transparent background to show icon only */
+                border: none;  
+                background-color: transparent; 
             }
             QPushButton:pressed {
-                background-color: #DDDDDD;  /* Slight grey background when pressed */
+                background-color: #DDDDDD; 
             }
         """)
 

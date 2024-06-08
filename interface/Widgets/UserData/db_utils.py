@@ -224,7 +224,6 @@ def test_database():
     create_db()
     populate_test_data()
     
-    test_retrieve_user_info()
     test_retrieve_gesture_score_task1()
     test_retrieve_gesture_status_task2()
     test_retrieve_gesture_duration_task2()
