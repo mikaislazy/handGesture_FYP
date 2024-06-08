@@ -1,7 +1,7 @@
 import json  
 import numpy as np  
 from constants import GESTURES
-from . import common_utils
+import common_utils
 
 # Function to normalize keypoints from input JSON and save to output JSON
 def get_normalized__keypoints_dataset(input_json, output_json):
@@ -24,5 +24,5 @@ def get_normalized__keypoints_dataset(input_json, output_json):
     print(f"The normalized data is stored in {output_json}.")
 
 if __name__ == "__main__":
-    for gesture in GESTURES.values():
+    for gesture in GESTURES:
         get_normalized__keypoints_dataset(f'keypoints_data/{gesture}.json', f'normalized_keypoints_data/{gesture}_normalized.json')

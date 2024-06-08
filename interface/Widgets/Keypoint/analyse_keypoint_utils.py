@@ -108,7 +108,7 @@ def analyse_keypoints(frame, gesture_name):
     
     # Check if the gesture template is available
     if gesture_name not in all_template_keypoints:
-        cv2.putText(frame, "Gesture template not found.", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2, cv2.LINE_AA)
+        cv2.putText(frame, "Gesture template not found.", (100, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2, cv2.LINE_AA)
         return frame
 
     template_keypoints = all_template_keypoints[gesture_name]
@@ -116,7 +116,7 @@ def analyse_keypoints(frame, gesture_name):
     # Extract hand keypoints
     current_keypoints = common_utils.extract_hand_keypoints(frame)
     if current_keypoints is None:
-        cv2.putText(frame, "No hand detected. Please attempt the task again in a well-lit area or put your hand closer.", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2, cv2.LINE_AA)
+        cv2.putText(frame, "No hand detected. Please attempt the task again in a well-lit area or put your hand closer.", (150,150), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2, cv2.LINE_AA)
         return frame
 
     # Normalize current keypoints

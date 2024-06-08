@@ -104,7 +104,7 @@ class handGestureRecognitionWidget(QWidget):
         
         # Open the default webcam
         
-        self.timer.start(300) 
+        self.timer.start(100) 
 
     def update_frame(self):
         ret, frame = self.cap.read()
