@@ -115,8 +115,8 @@ def analyse_keypoints(frame, gesture_name):
     
     # Extract hand keypoints
     current_keypoints = common_utils.extract_hand_keypoints(frame)
-    if current_keypoints is None:
-        cv2.putText(frame, "No hand detected. Please attempt the task again in a well-lit area or put your hand closer.", (150,150), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2, cv2.LINE_AA)
+    if current_keypoints['is_left'] == False and  current_keypoints['is_right'] == False:
+        cv2.putText(frame, "No hand detected. Please attempt the task again in a well-lit area or put your hand closer.", (100,150), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0), 2, cv2.LINE_AA)
         return frame
 
     # Normalize current keypoints
