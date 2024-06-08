@@ -96,6 +96,6 @@ def get_normalized_mean_multiple_normalized_keypoints(gestures):
     with open(output_json, 'w') as outfile:
         json.dump(data , outfile, indent=4)
 
-if __name__ == "__main__":
-    get_normalized_mean_multiple_normalized_keypoints(GESTURES)
+# if __name__ == "__main__":
+#     get_normalized_mean_multiple_normalized_keypoints(GESTURES)
     
