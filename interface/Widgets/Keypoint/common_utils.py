@@ -4,26 +4,28 @@ import cv2
 import mediapipe as mp
 import numpy as np
 import json
+# from constants import GESTURES
 # Initialize MediaPipe Hands
 mp_hands = mp.solutions.hands
 hands = mp_hands.Hands()
 # Function to normalize the given keypoints
 def normalize_keypoints(keypoints):
-    if len( keypoints ) == 0:
+    if keypoints is  None or len(keypoints) == 0:
         return keypoints
     
-    keypoints = np.array(keypoints)  # Convert keypoints to a numpy array
-    center_x = np.mean(keypoints[:, 0])  # Calculate the mean of the x-coordinates
-    center_y = np.mean(keypoints[:, 1])  # Calculate the mean of the y-coordinates
+    keypoints = np.array(keypoints)
     
+    # Convert to relative coordinates from wrist
+    center_x, center_y = keypoints[0][:2]
+    relative_keypoints = keypoints[:, :2] - [center_x, center_y]
+
     # Calculate the Euclidean distance from each point to the center
-    distances = np.sqrt(np.sum((keypoints[:, :2] - [center_x, center_y])**2, axis=1))
+    distances = np.sqrt(np.sum((relative_keypoints[:, :2] - [center_x, center_y])**2, axis=1))
     
     l = np.max(distances)  # Find the maximum distance
-    # Normalize the keypoints by centering and scaling with the max distance
-    normalized_keypoints = (keypoints - [center_x, center_y, 0]) / l
+    normalized_keypoints = (relative_keypoints - [center_x, center_y]) / l
     
-    return normalized_keypoints.tolist() 
+    return normalized_keypoints.tolist()
 
 # Function to extract hand keypoints from an image
 def extract_hand_keypoints(image):
@@ -56,15 +58,15 @@ def extract_hand_keypoints(image):
     return hand_keypoints
 
 # Function to load and normalize the template keypoints from JSON file
+
 def load_and_normalize_json(json_path):
-    json_path = os.path.join(os.path.dirname(__file__), json_path)
     with open(json_path, 'r') as file:
         data = json.load(file)
     
     left_hand_points = []
     right_hand_points = []
     
-    for _, points in data.items():
+    for points in data.values():
         if points['is_left']:
             left_hand_points.append(np.array(points['left_hand_pts']))
         if points['is_right']:
@@ -72,13 +74,13 @@ def load_and_normalize_json(json_path):
     
     if left_hand_points:
         left_hand_points = np.mean(left_hand_points, axis=0)
-        left_normalized= normalize_keypoints(left_hand_points)
+        left_normalized = normalize_keypoints(left_hand_points)
     else:
         left_normalized = []
 
     if right_hand_points:
         right_hand_points = np.mean(right_hand_points, axis=0)
-        right_normalized= normalize_keypoints(right_hand_points)
+        right_normalized = normalize_keypoints(right_hand_points)
     else:
         right_normalized = []
 
@@ -87,10 +89,13 @@ def load_and_normalize_json(json_path):
             
 def get_normalized_mean_multiple_normalized_keypoints(gestures):
     output_json = "mean_of_normalized_keypoints.json"
+    data = {}
     for gesture in gestures:
-        data = {}
         #mean of multiple sets of normalized keypoints
         data[gesture] = load_and_normalize_json( f'normalized_keypoints_data/{gesture}_normalized.json')
-        with open(output_json, 'a') as outfile:
-            json.dump(data , outfile, indent=4)
+    with open(output_json, 'w') as outfile:
+        json.dump(data , outfile, indent=4)
+
+if __name__ == "__main__":
+    get_normalized_mean_multiple_normalized_keypoints(GESTURES)
     

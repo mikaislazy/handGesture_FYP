@@ -26,7 +26,7 @@ class userPerformanceWidget(QWidget):
         colors = ['b', 'g', 'r', 'c', 'm', 'grey', 'k', 'orange', 'purple']
 
         # Chart 1: Score of Each Gesture in Each Trial
-        self.plot1 = pg.PlotWidget(title="Score of Task 1 in Each Trial for All Gestures")
+        self.plot1 = pg.PlotWidget(title="Score of Knowledge Task in Each Trial for All Gestures")
         self.plot1.setBackground("w")
         self.plot1.addLegend(offset=(-1, 1))  # top-left corner line label
 
@@ -47,8 +47,8 @@ class userPerformanceWidget(QWidget):
         self.plot1.setLabel('bottom', 'Trial')
         layout_score_duration.addWidget(self.plot1)
 
-        # Chart 2: Duration of Task 2 in Each Trial
-        self.plot2 = pg.PlotWidget(title="Duration of Task 2 in Each Trial for All Gestures")
+        # Chart 2: Duration of Recognition Task in Each Trial
+        self.plot2 = pg.PlotWidget(title="Duration of Recognition Task in Each Trial for All Gestures")
         self.plot2.setBackground("w")
         self.plot2.addLegend(offset=(-1, 1))  # top-left corner line label
 
@@ -71,8 +71,8 @@ class userPerformanceWidget(QWidget):
         # layout for error rate
         layout_error_rate = QHBoxLayout()
 
-        # Chart 3: Error Rate of Task 1
-        self.plot3 = pg.PlotWidget(title="Error Rate of Task 1")
+        # Chart 3: Error Rate of Knowledge Task"
+        self.plot3 = pg.PlotWidget(title="Error Rate of Knowledge Task")
         self.plot3.setBackground("w")
         self.plot3.addLegend(offset=(-1, 1))  # top-left corner line label
 
@@ -91,8 +91,8 @@ class userPerformanceWidget(QWidget):
         self.plot3.setLabel('bottom', 'Trial')
         layout_error_rate.addWidget(self.plot3)
 
-        # Chart 4: Error Rate of Task 2
-        self.plot4 = pg.PlotWidget(title="Error Rate of Task 2")
+        # Chart 4: Error Rate of Recognition Task
+        self.plot4 = pg.PlotWidget(title="Error Rate of Recognition Task")
         self.plot4.setBackground("w")
         self.plot4.addLegend(offset=(-1, 1))
 
