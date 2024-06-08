@@ -1,6 +1,7 @@
 # EdTech Application for learning Taoism and Buddhism gesture
 
-This is the interface part of the application
+The interface folder contains the interface
+The model contain the training information of the model
 
 ## Run the application
 ```
