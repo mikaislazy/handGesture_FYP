@@ -91,6 +91,7 @@ def check_contour(contour, max_area_threshold, min_area_threshold, width_thresho
 def recognize_hand_gesture(gesture_name ,frame, is_draw_feedback):
     status = False
     imageShow = frame.copy()
+    flip_frame = cv2.flip(frame, 1)
     prediction = None
     # set the method for hand segmentation to check whether someone is here
     exist2, hand_area_coordinates2 = hand_segmentation_Mediapipe(imageShow) # check hand really exist
@@ -99,7 +100,7 @@ def recognize_hand_gesture(gesture_name ,frame, is_draw_feedback):
 
     if exist1 or exist2:
         cx, cy, cw, ch =  hand_area_coordinates1 if exist1 else hand_area_coordinates2
-        all_pred, prediction, prediction_percentage = model.get_max_prediction(imageShow)
+        all_pred, prediction, prediction_percentage = model.get_max_prediction(flip_frame)
         prediction_text = f"{prediction}: {prediction_percentage:.2f}%"
         # cv2.putText(imageShow,prediction_text, (cx,cy), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
         # if exist2:
