@@ -4,6 +4,7 @@
 > The interface folder contains the interface
 
 > The model contain the training information of the model
+> Please run the application on MACOS
 
 ## Run the application
 ```
@@ -18,6 +19,7 @@ python test_runner.py
 ```
 ## Install the environment using Anaconda
 ```
+cd set-up-env
 conda env create -f UI-env.yml
 ```
 ### Resources:

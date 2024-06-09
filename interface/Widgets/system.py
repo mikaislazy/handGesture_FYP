@@ -9,7 +9,7 @@ class systemWidget(QWidget):
         super().__init__(parent)
         # Main layout
         self.layout = QVBoxLayout()
-        # Clear data button
+        
         self.setStyleSheet("""
             
             QPushButton {
@@ -23,6 +23,7 @@ class systemWidget(QWidget):
             background-color: #e0e0e0; 
             }
         """)
+        # Clear data button
         self.clear_button = QPushButton("Clear Data", self)
         self.clear_button.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
         
