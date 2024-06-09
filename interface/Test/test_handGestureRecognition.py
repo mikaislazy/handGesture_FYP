@@ -13,7 +13,7 @@ def mock_insert_record_task2_callback():
 # Fixture to create a temporary widget for testing
 @pytest.fixture
 def app(mock_insert_record_task2_callback, qtbot):
-    test_handGestureRecognitionWidget = handGestureRecognitionWidget('TestGesture', mock_insert_record_task2_callback)
+    test_handGestureRecognitionWidget = handGestureRecognitionWidget('TestGesture', mock_insert_record_task2_callback, "Method of TestGesture")
     qtbot.addWidget(test_handGestureRecognitionWidget)
     return test_handGestureRecognitionWidget
 
