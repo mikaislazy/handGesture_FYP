@@ -14,6 +14,7 @@ python main.py
 ```
 cd interface
 python test_runner.py
+# the db will be cleared after the test
 ```
 ## Install the environment using Anaconda
 ```
