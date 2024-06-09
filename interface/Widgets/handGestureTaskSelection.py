@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLab
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QSize, Qt
 from handGestureKnowledge import handGestureKnowledgeTaskWidget
-from  tool import load_question, load_answer
+from  tool import load_question, load_answer, load_method
 
 class handGestureTaskSelectionWidget(QWidget):
     def __init__(self, gesture_name, start_knowledge_task_callback, start_recognition_task_callback, parent=None):
@@ -48,4 +48,5 @@ class handGestureTaskSelectionWidget(QWidget):
         self.start_knowledge_task_callback(gesture_name, questions, options, answers)
 
     def start_gesture_recognition_task(self):
-        self.start_recognition_task_callback(self.gesture_name)
+        method = load_method(self.gesture_name, 'other/method.json')
+        self.start_recognition_task_callback(self.gesture_name, method)

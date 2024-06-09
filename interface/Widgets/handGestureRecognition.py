@@ -19,7 +19,7 @@ import numpy as np
 import tensorflow as tf
 
 class handGestureRecognitionWidget(QWidget):
-    def __init__(self, gesture_name, insert_record_task2_callback , parent=None):
+    def __init__(self, gesture_name, insert_record_task2_callback , method, parent=None):
         super().__init__(parent)
         
         self.parent_widget = parent
@@ -44,8 +44,9 @@ class handGestureRecognitionWidget(QWidget):
         self.layout.addWidget(self.timerLabel, alignment=Qt.AlignCenter)
         
         # Add webcam feed
-        video_frame_title = f"{gesture_name} Recognition Task"
+        video_frame_title = f"{gesture_name} Recognition Task:\n{method}"
         self.video_frame = tool.create_webcam_widget(video_frame_title)
+        self.video_frame.setWordWrap(True)
         self.layout.addWidget(self.video_frame, alignment=Qt.AlignCenter)
         
         # Add Start Button
