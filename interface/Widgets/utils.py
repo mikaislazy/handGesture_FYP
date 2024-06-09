@@ -17,7 +17,7 @@ def hand_segmentation_Mediapipe(frame):
     # Initialize MediaPipe Hands
     mp_hands = mp.solutions.hands
     hands = mp_hands.Hands(static_image_mode=True,min_detection_confidence=0.3,  min_tracking_confidence=0.3, max_num_hands=2)
-    # mp_drawing = mp.solutions.drawing_utils
+
     # process the hand
     results = hands.process(frame)
     exist = results.multi_hand_landmarks is not None # 2 hand detected
@@ -44,12 +44,12 @@ def hand_segmentation_Skin(frame):
     frame = frame.copy()
 
     
-    # Converting from BGR to HSV color space
+    # Converting from RGB to HSV color space
     frame_HSV = cv2.cvtColor(frame, cv2.COLOR_RGB2HSV)
     HSV_mask = cv2.inRange(frame_HSV, (0, 58, 0), (50, 173, 255))
     # HSV_mask = cv2.medianBlur(HSV_mask, 5)
 
-    # Converting from BGR to YCbCr color space
+    # Converting from RGB to YCbCr color space
     frame_YCrCb = cv2.cvtColor(frame, cv2.COLOR_RGB2YCrCb)
     YCrCb_mask = cv2.inRange(frame_YCrCb, (0, 135, 85), (255, 180, 135))
     # YCrCb_mask = cv2.medianBlur(YCrCb_mask, 5)

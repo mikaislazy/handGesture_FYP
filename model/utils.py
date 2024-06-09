@@ -75,13 +75,6 @@ def image_processing(target_size, img, hand_area_only):
     gaussBlurImg = cv2.GaussianBlur(filteredImg,(3,3),0)
     # automatic contrast adjustment
     adjustedImg = auto_contrast_adjustment(gaussBlurImg, 255, 0)
-    # convert image to grayscale
-    # grayImg = cv2.cvtColor(adjustedImg, cv2.COLOR_BGR2GRAY)
-    # apply binary thresholding to image
-    # ret, threshImg = cv2.threshold(grayImg,160,255,cv2.THRESH_BINARY)
-    # apply canny edge detection to image
-    # cannyImg = cv2.Canny(threshImg,10,100)
-    # resize the image to target size
     resizedImg = cv2.resize(adjustedImg, target_size)
     return resizedImg
 

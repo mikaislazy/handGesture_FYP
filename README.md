@@ -1,7 +1,9 @@
 # EdTech Application for learning Taoism and Buddhism gesture
 
-The interface folder contains the interface
-The model contain the training information of the model
+
+> The interface folder contains the interface
+
+> The model contain the training information of the model
 
 ## Run the application
 ```
@@ -12,6 +14,7 @@ python main.py
 ```
 cd interface
 python test_runner.py
+# the db will be cleared after the test
 ```
 ## Install the environment using Anaconda
 ```

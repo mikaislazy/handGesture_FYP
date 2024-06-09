@@ -7,6 +7,7 @@ import numpy as np
 import tensorflow as tf
 from PyQt5.QtWidgets import QLabel,  QFrame
 from PyQt5.QtGui import QImage
+from PyQt5.QtCore import Qt
 import cv2
 import numpy
 
@@ -38,6 +39,13 @@ def load_answer(gesture_name, json_file):
             answers.append(ans["correct_option"])
     return answers
 
+def load_method(gesture_name, json_file):
+    answers = []
+    with open(json_file, 'r') as f:
+        method_bank = json.load(f)
+        method= method_bank[gesture_name]["method"]
+        
+    return method
 
 def create_webcam_widget(title):
     
@@ -45,6 +53,7 @@ def create_webcam_widget(title):
     video_frame.setFrameShape(QFrame.Box)
     video_frame.setFixedWidth(frameWidth)
     video_frame.setFixedHeight(frameHeight)
+    video_frame.setAlignment(Qt.AlignCenter) 
     video_frame.setStyleSheet("font: 15px;")
     return video_frame
 

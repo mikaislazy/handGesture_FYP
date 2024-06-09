@@ -12,8 +12,6 @@ class userPerformanceWidget(QWidget):
         self.layout = QVBoxLayout()
         # initialize the database if it is empty
         db_utils.create_db()
-        # db_utils.populate_test_data()
-        # db_utils.teardown_test_db()
 
         # plot the charts
         self.plot_chart()
