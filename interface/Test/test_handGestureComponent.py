@@ -76,7 +76,7 @@ def test_navigate_to_main_widget(widget, qtbot):
 # Test starting the gesture recognition task
 def test_start_gesture_recognition_task(widget):
     gesture_name = "TestGesture"
-    widget.start_gesture_recognition_task(gesture_name)
+    widget.start_gesture_recognition_task(gesture_name, "Method of TestGesture")
 
     assert isinstance(widget.stacked_widget.currentWidget(), handGestureRecognitionWidget)
 
