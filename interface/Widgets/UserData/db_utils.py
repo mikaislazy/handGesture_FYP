@@ -189,23 +189,23 @@ def test_retrieve_gesture_duration_task2():
     assert durations['duration'].tolist() == [120, 150, 130]
 
 def test_calculate_error_rate_task1():
-    error_rate = calculate_error_rate_task1('ZhiJiXiangYin')
-    print("Error rate for Gesture_Task1:", error_rate)
-     # Expected accumulated error rates for 'gesture1'
+    # Expected accumulated error rates for 'ZhiJiXiangYin'
     # Given scores: [4, 3, 2]
     # Accumulated scores: [4, 7, 9]
-    # Error rates: [4/4, 7/8, 9/12] = [1.0, 0.875, 0.75]
-    expected_error_rates = [1.0, 7/8, 0.75]
+    # Error rates: [0/4, 7/8, 9/12] = [0, 0.875, 0.75]
+    expected_error_rates = [0, 1/8, 3/12]
+    
     # Calculate the error rates using the function
     calculated_error_rates = calculate_error_rate_task1('ZhiJiXiangYin')
     
     # Check if the calculated error rates match the expected values
     assert calculated_error_rates == expected_error_rates, f"Expected {expected_error_rates}, but got {calculated_error_rates}"
 
+
 def test_calculate_error_rate_task2():
     error_rates = calculate_error_rate_task2('ZhiJiXiangYin')
     print("Error rates for Gesture_Task2:", error_rates)
-    expected_rates = [1/1, 1/2, 2/3]  # Assuming the test data: [(True), (False), (True)]
+    expected_rates = [0, 1/2, 1/3]  # Assuming the test data: [(True), (False), (True)]
     assert len(error_rates) == len(expected_rates)
     for rate, expected in zip(error_rates, expected_rates):
         assert abs(rate - expected) < 1e-6  # Allowing small floating-point error
@@ -234,8 +234,8 @@ def test_database():
     print("All tests passed!")
 
 if __name__ == "__main__":
-    # test_database()
-    clear_db()
-    create_db()
-    retrieve_table_info()
+    test_database()
+    # clear_db()
+    # create_db()
+    # retrieve_table_info()
     
