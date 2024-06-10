@@ -105,7 +105,7 @@ def calculate_error_rate_task1(gesture_name):
         for i, score in enumerate(accumulated_score):
             full_score = (i+1) * 4
             rate = accumulated_score[i]/ full_score
-            error_rate.append(rate)
+            error_rate.append(1 - rate)
         return error_rate
 
 def calculate_error_rate_task2(gesture_name):
@@ -120,7 +120,7 @@ def calculate_error_rate_task2(gesture_name):
         for i, status in enumerate( all_status):
             if status:
                 trial_success += 1
-            error_rate.append(trial_success/(i+1))
+            error_rate.append(1- (trial_success/(i+1)))
     return error_rate
             
 # database operation
