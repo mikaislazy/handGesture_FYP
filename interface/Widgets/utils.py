@@ -94,8 +94,8 @@ def recognize_hand_gesture(gesture_name ,frame, is_draw_feedback):
     flip_frame = cv2.flip(frame, 1)
     prediction = None
     # set the method for hand segmentation to check whether someone is here
-    exist2, hand_area_coordinates2 = hand_segmentation_Mediapipe(imageShow) # check hand really exist
     exist1, hand_area_coordinates1 = hand_segmentation_Skin(imageShow) # function is set for the situation that mediapipe fail to detect the hand
+    exist2, hand_area_coordinates2 = hand_segmentation_Mediapipe(imageShow) # check hand really exist
 
 
     if exist1 or exist2:

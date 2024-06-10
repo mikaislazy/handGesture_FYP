@@ -7,7 +7,7 @@ class VGGModel:
     def __init__(self):
         self.target_size = (224, 224)
         
-        model_file = os.path.join(os.path.dirname(__file__), 'color_fps4_splited_dataset.h5')
+        model_file = os.path.join(os.path.dirname(__file__), 'overall_dataset.h5')
         self.model = tf.keras.models.load_model(model_file)
 
     

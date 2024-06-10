@@ -1,3 +1,5 @@
+import json
+
 GESTURES = [
     'HuoYanYin',
     'ChanDingYin',
@@ -9,12 +11,17 @@ GESTURES = [
     'ZhiJiXiangYin',
     'TaiJiYin'
 ]
-GESTURES_INDICS = {0: 'ChanDingYin', 
-                 1: 'HuoYanYin', 
-                 2: 'MiTuoDingYin', 
-                 3: 'Retsu', 
-                 4: 'Rin', 
-                 5: 'TaiJiYin', 
-                 6: 'Zai', 
-                 7: 'Zen', 
-                 8: 'ZhiJiXiangYin'}
+GESTURES_INDICS = {
+    0: 'Background',
+    1: 'ChanDingYin',
+    2: 'HuoYanYin',
+    3: 'MiTuoDingYin',
+    4: 'No_gesture',
+    5: 'Retsu',
+    6: 'Rin',
+    7: 'TaiJiYin',
+    8: 'Zai',
+    9: 'Zen',
+    10: 'ZhiJiXiangYin'
+}
+
