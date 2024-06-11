@@ -99,7 +99,7 @@ def recognize_hand_gesture(gesture_name ,frame, is_draw_feedback):
 
 
     if exist1 or exist2:
-        cx, cy, cw, ch =  hand_area_coordinates2 if exist2 else hand_area_coordinates2
+        cx, cy, cw, ch =  hand_area_coordinates2 if exist2 else hand_area_coordinates1
         all_pred, prediction, prediction_percentage = model.get_max_prediction(flip_frame)
         prediction_text = f"{prediction}: {prediction_percentage:.2f}%"
         # cv2.putText(imageShow,prediction_text, (cx,cy), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
