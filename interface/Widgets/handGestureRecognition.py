@@ -50,13 +50,13 @@ class handGestureRecognitionWidget(QWidget):
         self.layout.addWidget(self.video_frame, alignment=Qt.AlignCenter)
         
         # Add Start Button
-        self.startBtn = QPushButton(f"Start!")
-        self.startBtn.setContentsMargins(0, 0, 0, 0)
-        self.startBtn.setFixedSize(100, 50)
-        self.startBtn.setCursor(Qt.PointingHandCursor)
-        self.startBtn.setStyleSheet("background-color: green; border: none; font: 15px; color: white;")
-        self.startBtn.clicked.connect(self.toggleStart)
-        bottom_layout.addWidget(self.startBtn, alignment=Qt.AlignLeft)
+        self.start_btn = QPushButton(f"Start!")
+        self.start_btn.setContentsMargins(0, 0, 0, 0)
+        self.start_btn.setFixedSize(100, 50)
+        self.start_btn.setCursor(Qt.PointingHandCursor)
+        self.start_btn.setStyleSheet("background-color: green; border: none; font: 15px; color: white;")
+        self.start_btn.clicked.connect(self.toggle_start)
+        bottom_layout.addWidget(self.start_btn, alignment=Qt.AlignLeft)
         
         # add label for comment
         self.status_label = QLabel("")
@@ -64,23 +64,23 @@ class handGestureRecognitionWidget(QWidget):
         bottom_layout.addWidget(self.status_label, alignment=Qt.AlignCenter)
         
         # Add Close Button
-        self.closeBtn = QPushButton("Close")
-        self.closeBtn.setContentsMargins(0, 0, 0, 0)
-        self.closeBtn.setFixedSize(100, 50)
-        self.closeBtn.setCursor(Qt.PointingHandCursor)
-        self.closeBtn.setStyleSheet("background-color: red; border: none; font: 15px; color: white;")
-        self.closeBtn.clicked.connect(self.backToMain)
-        bottom_layout.addWidget(self.closeBtn, alignment=Qt.AlignRight)
-        self.closeBtn.hide() # hide before the task is finished
+        self.close_btn = QPushButton("Close")
+        self.close_btn.setContentsMargins(0, 0, 0, 0)
+        self.close_btn.setFixedSize(100, 50)
+        self.close_btn.setCursor(Qt.PointingHandCursor)
+        self.close_btn.setStyleSheet("background-color: red; border: none; font: 15px; color: white;")
+        self.close_btn.clicked.connect(self.back_to_main)
+        bottom_layout.addWidget(self.close_btn, alignment=Qt.AlignRight)
+        self.close_btn.hide() # hide before the task is finished
         
         self.layout.addLayout(bottom_layout)
     
     
     
-    def toggleStart(self):
-        self.startBtn.hide()
+    def toggle_start(self):
+        self.start_btn.hide()
         self.start_timer()
-        self.recognitionTask()
+        self.recognition_task()
     
     def start_timer(self):
         self.clock = QTimer(self)
@@ -93,13 +93,13 @@ class handGestureRecognitionWidget(QWidget):
             self.clock.stop()
             self.release_webcam()
             self.fail_task()
-            self.closeBtn.show()
+            self.close_btn.show()
         else:
             minutes = self.duration // 60
             seconds = self.duration % 60
             self.timerLabel.setText(f"{minutes:02}:{seconds:02}")
         
-    def recognitionTask(self):
+    def recognition_task(self):
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.update_frame)
         
@@ -124,7 +124,7 @@ class handGestureRecognitionWidget(QWidget):
                 self.prediction_buffer.clear()
                 # end the task
                 self.release_webcam()
-                self.closeBtn.show()
+                self.close_btn.show()
              # if buffer is half full -> draw feedback
             if len(self.prediction_buffer) == self.buffer_size//2:
                 self.draw_feedback = True
@@ -138,15 +138,15 @@ class handGestureRecognitionWidget(QWidget):
         if status is None:
             self.show_hand_absence_alert()
         elif status == True:
-            self.correctGesture()
+            self.correct_gesture()
         else:
-            self.wrongGesture()
+            self.wrong_gesture()
             
-    def correctGesture(self):
+    def correct_gesture(self):
         self.status_label.setText("Correct Gesture!")
         self.status_label.setStyleSheet("font-size: 20px; color: green;")
     
-    def wrongGesture(self):
+    def wrong_gesture(self):
         self.status_label.setText("Wrong Gesture!")
         self.status_label.setStyleSheet("font-size: 20px; color: red;")
         
@@ -158,7 +158,7 @@ class handGestureRecognitionWidget(QWidget):
         self.status_label.setText("Task Failed!")
         self.status_label.setStyleSheet("font-size: 20px; color: red;")
         
-    def backToMain(self):
+    def back_to_main(self):
         if self.status:
             time = 60 - self.duration
         else:

@@ -11,20 +11,20 @@ class handGesturePracticeWidget(QWidget):
         self.gesture_names = []
         self.selected_effect = None
         
-        main_layout = QVBoxLayout()
-        main_layout.setContentsMargins(0, 0, 0, 0) 
-        main_layout.setSpacing(0) 
+        layout = QVBoxLayout()
+        layout.setContentsMargins(0, 0, 0, 0) 
+        layout.setSpacing(0) 
 
         # Gesture images layout
         gesture_layout = QHBoxLayout()
-        gesture_layout.setSpacing(0)  # Set spacing to 0
+        gesture_layout.setSpacing(0)
         gesture_layout.setContentsMargins(0, 0, 0, 0)
         gestures = GESTURES
         
         for i, gesture_name in enumerate(gestures):
             img = f'images/handGesture/{gesture_name}.png'
             pixmap = QPixmap(img)
-            pixmap = pixmap.scaled(100, 100, Qt.KeepAspectRatio)  # Scale the pixmap
+            pixmap = pixmap.scaled(100, 100, Qt.KeepAspectRatio) 
             gesture_icon = QLabel()
             gesture_icon.setPixmap(pixmap)
             gesture_icon.setAlignment(Qt.AlignCenter)
@@ -43,14 +43,14 @@ class handGesturePracticeWidget(QWidget):
             
             gesture_layout.addWidget(container)
 
-        main_layout.addLayout(gesture_layout) 
+        layout.addLayout(gesture_layout) 
 
         # Instruction label
         instruction_label = QLabel("Please input the order of the hand gesture: (at least one):")
         instruction_label.setStyleSheet("font-size: 16px;border:none;")
         instruction_label.setFixedSize(800, 50)
         instruction_label.setContentsMargins(-1, -1, -1, 0)
-        main_layout.addWidget(instruction_label, alignment=Qt.AlignLeft)
+        layout.addWidget(instruction_label, alignment=Qt.AlignLeft)
 
         # Text input for gesture order
         self.gesture_order_input = QLineEdit()
@@ -58,16 +58,16 @@ class handGesturePracticeWidget(QWidget):
         self.gesture_order_input.setStyleSheet("padding: 5px; font-size: 14px;")
         self.gesture_order_input.setFixedSize(800, 30)
         self.gesture_order_input.setAlignment(Qt.AlignTop)
-        main_layout.addWidget(self.gesture_order_input, alignment=Qt.AlignLeft)
+        layout.addWidget(self.gesture_order_input, alignment=Qt.AlignLeft)
 
-        # Connect the textChanged signal to the method that enables/disables the button
+        # Connect the textChanged signal to the next button
         self.gesture_order_input.textChanged.connect(self.update_button_state)
 
         # Desired effect label
         effect_label = QLabel("Please choose the desired effect after finishing the practice:")
         effect_label.setStyleSheet("font-size: 16px;border:none;")
         effect_label.setFixedSize(800, 50)
-        main_layout.addWidget(effect_label, alignment=Qt.AlignLeft)
+        layout.addWidget(effect_label, alignment=Qt.AlignLeft)
 
         # Radio buttons for desired effect
         self.effect_group = QGroupBox()
@@ -99,7 +99,7 @@ class handGesturePracticeWidget(QWidget):
         effect_layout.addWidget(self.lighting_effect)
 
         self.effect_group.setLayout(effect_layout)
-        main_layout.addWidget(self.effect_group, alignment=Qt.AlignTop)
+        layout.addWidget(self.effect_group, alignment=Qt.AlignTop)
 
         # Submit button (arrow button)
         self.next_btn = QPushButton("→")
@@ -113,11 +113,11 @@ class handGesturePracticeWidget(QWidget):
         """)
         self.next_btn.setCursor(Qt.PointingHandCursor)
         self.next_btn.clicked.connect(self.start_practice)
-        self.next_btn.setEnabled(False)  # Initially disable the button
+        self.next_btn.setEnabled(False)  # only enable the button when there is input
 
-        main_layout.addWidget(self.next_btn, alignment=Qt.AlignRight)
+        layout.addWidget(self.next_btn, alignment=Qt.AlignRight)
 
-        self.setLayout(main_layout)
+        self.setLayout(layout)
 
     def update_button_state(self):
         input_value = self.gesture_order_input.text().strip()

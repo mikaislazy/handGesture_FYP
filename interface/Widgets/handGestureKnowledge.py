@@ -37,13 +37,13 @@ class handGestureKnowledgeTaskWidget(QWidget):
         layout.addWidget(self.question_label, alignment=Qt.AlignCenter)
         
         # Options buttons
-        self.optionGroup = QButtonGroup()
-        self.optionGroup.setExclusive(True)
-        self.option_buttons = []
+        self.opt_group = QButtonGroup()
+        self.opt_group.setExclusive(True)
+        self.opt_buttons = []
         opt_order = ["A.", "B.", "C."]
         
-        for order, option_text in zip(opt_order, options):
-            btn = QPushButton(f"{order} {option_text}")
+        for order, opt_text in zip(opt_order, options):
+            btn = QPushButton(f"{order} {opt_text}")
             btn.setFixedSize(700, 50)
             btn.setStyleSheet("""
                 font-size: 16px;
@@ -56,9 +56,9 @@ class handGestureKnowledgeTaskWidget(QWidget):
                 margin: 0;
             """)
             btn.setCursor(Qt.PointingHandCursor)
-            btn.clicked.connect(lambda checked, option_text=option_text: self.on_option_click(option_text))
-            self.option_buttons.append(btn)
-            self.optionGroup.addButton(btn)
+            btn.clicked.connect(lambda checked, opt_text=opt_text: self.on_option_click(opt_text))
+            self.opt_buttons.append(btn)
+            self.opt_group.addButton(btn)
             layout.addWidget(btn, alignment=Qt.AlignCenter)
         
         self.result_label = QLabel("")
@@ -81,7 +81,6 @@ class handGestureKnowledgeTaskWidget(QWidget):
         self.setLayout(layout)
         
     def on_next_button_clicked(self):
-        parent = self.parent_widget
         self.navigate_to_next_question()
         
     def on_option_click(self, selected_option):
@@ -101,7 +100,7 @@ class handGestureKnowledgeTaskWidget(QWidget):
         if self.is_last_question():
             self.next_button.setText("Back to Main Page")
             
-        for btn in self.option_buttons:
+        for btn in self.opt_buttons:
             btn.setEnabled(False)
             btn.setStyleSheet("""
                 font-size: 16px;

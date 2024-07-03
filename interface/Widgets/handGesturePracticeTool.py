@@ -28,20 +28,21 @@ class handGesturePracticeToolWidget(QWidget):
         self.effect_length = tool.get_effect_frame_length(self.effect)
         self.png_num = 1
         self.finish_practice = False
-        self.buffer_size = 8  # Number of frames to consider for temporal smoothing
+        self.buffer_size = 8  # buffer size management
         self.prediction_buffer = deque(maxlen=self.buffer_size)
         self.draw_feedback = False
         self.cap = cv2.VideoCapture(0)
+        
         # Layout setup
-        main_layout = QVBoxLayout()
+        layout = QVBoxLayout()
         
         # Timer widget
         self.timerLabel = QLabel("00:00")
-        main_layout.addWidget(self.timerLabel, alignment=Qt.AlignCenter)
+        layout.addWidget(self.timerLabel, alignment=Qt.AlignCenter)
 
         # Add webcam feed
         self.video_frame = tool.create_webcam_widget("Let's practice!")
-        main_layout.addWidget(self.video_frame, alignment=Qt.AlignCenter)
+        layout.addWidget(self.video_frame, alignment=Qt.AlignCenter)
 
         # Gesture images layout
         self.gesture_layout = QHBoxLayout()
@@ -56,18 +57,18 @@ class handGesturePracticeToolWidget(QWidget):
             gesture_icon.setFixedSize(150, 150)
             self.gesture_layout.addWidget(gesture_icon)
         self.gesture_layout.addStretch(1)
-        main_layout.addLayout(self.gesture_layout)
+        layout.addLayout(self.gesture_layout)
         
         # button layout
         bottom_layout = QHBoxLayout()
-         # Add Start Button
-        self.startBtn = QPushButton(f"Start!")
-        self.startBtn.setContentsMargins(0, 0, 0, 0)
-        self.startBtn.setFixedSize(100, 50)
-        self.startBtn.setCursor(Qt.PointingHandCursor)
-        self.startBtn.setStyleSheet("background-color: green; border: none; font: 15px; color: white;")
-        self.startBtn.clicked.connect(self.toggleStart)
-        bottom_layout.addWidget(self.startBtn, alignment=Qt.AlignLeft)
+        # add Start Button
+        self.start_btn = QPushButton(f"Start!")
+        self.start_btn.setContentsMargins(0, 0, 0, 0)
+        self.start_btn.setFixedSize(100, 50)
+        self.start_btn.setCursor(Qt.PointingHandCursor)
+        self.start_btn.setStyleSheet("background-color: green; border: none; font: 15px; color: white;")
+        self.start_btn.clicked.connect(self.toggle_start)
+        bottom_layout.addWidget(self.start_btn, alignment=Qt.AlignLeft)
         
         # add label for comment
         self.status_label = QLabel("")
@@ -78,31 +79,31 @@ class handGesturePracticeToolWidget(QWidget):
         self.status_label.setStyleSheet("font-size: 20px;")
         bottom_layout.addWidget(self.comment_label, alignment=Qt.AlignCenter)
         
-        # Add Close Button
-        self.stopBtn = QPushButton("Stop")
-        self.stopBtn.setContentsMargins(0, 0, 0, 0)
-        self.stopBtn.setFixedSize(100, 50)
-        self.stopBtn.setCursor(Qt.PointingHandCursor)
-        self.stopBtn.setStyleSheet("background-color: red; border: none; font: 15px; color: white;")
-        self.stopBtn.clicked.connect(self.toggleStop)
-        self.stopBtn.hide()
-        bottom_layout.addWidget(self.stopBtn, alignment=Qt.AlignRight)
+        # add stop button
+        self.stop_btn = QPushButton("Stop")
+        self.stop_btn.setContentsMargins(0, 0, 0, 0)
+        self.stop_btn.setFixedSize(100, 50)
+        self.stop_btn.setCursor(Qt.PointingHandCursor)
+        self.stop_btn.setStyleSheet("background-color: red; border: none; font: 15px; color: white;")
+        self.stop_btn.clicked.connect(self.toggle_stop)
+        self.stop_btn.hide()
+        bottom_layout.addWidget(self.stop_btn, alignment=Qt.AlignRight)
         
         
-         # Add Close Button
-        self.closeBtn = QPushButton("Close")
-        self.closeBtn.setContentsMargins(0, 0, 0, 0)
-        self.closeBtn.setFixedSize(100, 50)
-        self.closeBtn.setCursor(Qt.PointingHandCursor)
-        self.closeBtn.setStyleSheet("background-color: red; border: none; font: 15px; color: white;")
-        self.closeBtn.clicked.connect(self.toggleClose)
-        bottom_layout.addWidget(self.closeBtn, alignment=Qt.AlignRight)
+         # add close button
+        self.close_btn = QPushButton("Close")
+        self.close_btn.setContentsMargins(0, 0, 0, 0)
+        self.close_btn.setFixedSize(100, 50)
+        self.close_btn.setCursor(Qt.PointingHandCursor)
+        self.close_btn.setStyleSheet("background-color: red; border: none; font: 15px; color: white;")
+        self.close_btn.clicked.connect(self.toggle_close)
+        bottom_layout.addWidget(self.close_btn, alignment=Qt.AlignRight)
         
-        main_layout.addLayout(bottom_layout)
+        layout.addLayout(bottom_layout)
 
-        self.setLayout(main_layout)
+        self.setLayout(layout)
         
-    def toggleStart(self):
+    def toggle_start(self):
         # initialize the value for restart
         self.prediction_buffer.clear()
         self.draw_feedback = False
@@ -113,22 +114,22 @@ class handGesturePracticeToolWidget(QWidget):
         self.currentGesture_idx = 0
         self.reopen_webcam()
         
-        self.startBtn.hide()
-        self.stopBtn.show()
+        self.start_btn.hide()
+        self.stop_btn.show()
         self.start_timer()
-        self.recognitionTask()
+        self.recognition_task()
         
-    def toggleStop(self):
-        self.startBtn.setText("Restart")
+    def toggle_stop(self):
+        self.start_btn.setText("Restart")
         self.status_label.setText("")
         self.comment_label.setText("")
-        self.startBtn.show()
-        self.stopBtn.hide()
+        self.start_btn.show()
+        self.stop_btn.hide()
         self.stop_timer()
     
-    def toggleClose(self):
-        self.toggleStop()
-        self.backToMain()
+    def toggle_close(self):
+        self.toggle_stop()
+        self.back_to_main()
         
     def start_timer(self):
         self.clock = QTimer(self)
@@ -147,7 +148,7 @@ class handGesturePracticeToolWidget(QWidget):
         if hasattr(self, 'cap'):
             self.release_webcam()
         
-    def recognitionTask(self):
+    def recognition_task(self):
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.update_frame)
         
@@ -177,7 +178,7 @@ class handGesturePracticeToolWidget(QWidget):
                     else:
                         self.finish_practice = True
                         self.clock.stop()
-                        self.finishPractice()
+                        self.show_finish_practice()
                 buffer_text = f"Buffer: {self.prediction_buffer}"
                 cv2.putText(imgShow, buffer_text, (50,50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2, cv2.LINE_AA)
                 q_img = tool.frame2QImg(imgShow)
@@ -201,15 +202,15 @@ class handGesturePracticeToolWidget(QWidget):
         if status is None:
             self.show_hand_absence_alert()
         elif status == True:
-            self.correctGesture()
+            self.correct_gesture()
         else:
-            self.wrongGesture()
+            self.wrong_gesture()
             
-    def correctGesture(self):
+    def correct_gesture(self):
         self.comment_label.setText("Correct Gesture!")
         self.comment_label.setStyleSheet(" color: green;")
     
-    def wrongGesture(self):
+    def wrong_gesture(self):
         self.comment_label.setText("Wrong Gesture!")
         self.comment_label.setStyleSheet(" color: red;")
         
@@ -217,7 +218,7 @@ class handGesturePracticeToolWidget(QWidget):
         self.comment_label.setText("No hand detected!")
         self.comment_label.setStyleSheet(" color: red;")
         
-    def finishPractice(self):
+    def show_finish_practice(self):
         self.status_label.setText("You finish practice all selected gesture!")
         self.status_label.setStyleSheet(" color: green;")
     
@@ -226,7 +227,7 @@ class handGesturePracticeToolWidget(QWidget):
         return frame
         
         
-    def backToMain(self):
+    def back_to_main(self):
         self.release_webcam()
         self.parent_widget.navigate_to_main_widget()
     

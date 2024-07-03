@@ -26,8 +26,8 @@ def test_initial_state(app):
 
 # Test the start button and its associated behavior
 def test_start_task(app, qtbot):
-    qtbot.mouseClick(app.startBtn, Qt.LeftButton)
-    assert not app.startBtn.isVisible()
+    qtbot.mouseClick(app.start_btn, Qt.LeftButton)
+    assert not app.start_btn.isVisible()
     assert app.clock.isActive()
     assert app.timer.isActive()
     assert app.cap.isOpened()
@@ -63,7 +63,7 @@ def test_fail_task(app):
 
 # Test the release webcam function
 def test_release_webcam(app):
-    app.recognitionTask()
+    app.recognition_task()
     assert app.cap.isOpened()
     app.release_webcam()
     assert not app.cap.isOpened()
