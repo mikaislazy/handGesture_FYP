@@ -79,9 +79,9 @@ class userPerformanceWidget(QWidget):
                 scatter = pg.ScatterPlotItem(x=x, y=y, pen=pg.mkPen(None), brush=pg.mkBrush(colors[i]))
                 scatter.sigClicked.connect(self.create_tooltip_callback(gesture))
                 self.plot3.addItem(scatter)
-        
-        # self.plot3.getPlotItem().getAxis('bottom').setTicks(
-        #     [[(i, str(i)) for i in range(1, max([len(db_utils.calculate_error_rate_task1(g)) for g in GESTURES]) + 1)]])
+        # if min([len(db_utils.calculate_error_rate_task1(g)) for g in GESTURES]) > 0:        
+        self.plot3.getPlotItem().getAxis('bottom').setTicks(
+            [[(i, str(i)) for i in range(1, max([len(db_utils.calculate_error_rate_task1(g)) for g in GESTURES]) + 1)]])
         self.plot3.setLabel('left', 'Error Rate')
         self.plot3.setLabel('bottom', 'Trial')
         layout_error_rate.addWidget(self.plot3)
@@ -101,9 +101,8 @@ class userPerformanceWidget(QWidget):
                 scatter = pg.ScatterPlotItem(x=x, y=y, pen=pg.mkPen(None), brush=pg.mkBrush(colors[i]))
                 scatter.sigClicked.connect(self.create_tooltip_callback(gesture))
                 self.plot4.addItem(scatter)
-
-        # self.plot4.getPlotItem().getAxis('bottom').setTicks(
-        #     [[(i, str(i)) for i in range(1, max([len(db_utils.calculate_error_rate_task2(g)) for g in GESTURES]) + 1)]])
+        self.plot4.getPlotItem().getAxis('bottom').setTicks(
+            [[(i, str(i)) for i in range(1, max([len(db_utils.calculate_error_rate_task2(g)) for g in GESTURES]) + 1)]])
         self.plot4.setLabel('left', 'Error Rate')
         self.plot4.setLabel('bottom', 'Trial')
         layout_error_rate.addWidget(self.plot4)

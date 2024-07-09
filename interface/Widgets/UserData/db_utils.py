@@ -91,7 +91,7 @@ def calculate_error_rate_task1(gesture_name):
     gesture_score = retrieve_gesture_score_task1(gesture_name)
     trial = len(gesture_score)
     if gesture_score.empty:
-        return None
+        return []
     else:
         # total_score = gesture_score.sum().values[0]
         all_score = gesture_score['score'].tolist()
@@ -112,7 +112,7 @@ def calculate_error_rate_task2(gesture_name):
     gesture_status = retrieve_gesture_status_task2(gesture_name)
     trial = len(gesture_status)
     if gesture_status.empty:
-        return None
+        return []
     else:
         all_status = gesture_status['status'].tolist()
         error_rate = []
