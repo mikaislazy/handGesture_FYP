@@ -86,7 +86,7 @@ def retrieve_gesture_duration_task2(gesture_name):
     conn.close()
     return user_data_df
 
-#calculation function
+# calculation function
 def calculate_error_rate_task1(gesture_name):
     gesture_score = retrieve_gesture_score_task1(gesture_name)
     trial = len(gesture_score)

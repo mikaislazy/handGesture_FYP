@@ -103,8 +103,6 @@ class handGestureRecognitionWidget(QWidget):
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.update_frame)
         
-        # Open the default webcam
-        
         self.timer.start(100) 
 
     def update_frame(self):
@@ -135,24 +133,25 @@ class handGestureRecognitionWidget(QWidget):
             self.video_frame.setPixmap(QPixmap.fromImage(q_img))
     
     def show_gesture_comment(self, status):
-        if status is None:
-            self.show_hand_absence_alert()
-        elif status == True:
-            self.correct_gesture()
-        else:
-            self.wrong_gesture()
-            
-    def correct_gesture(self):
-        self.status_label.setText("Correct Gesture!")
-        self.status_label.setStyleSheet("font-size: 20px; color: green;")
-    
-    def wrong_gesture(self):
-        self.status_label.setText("Wrong Gesture!")
-        self.status_label.setStyleSheet("font-size: 20px; color: red;")
+        def correct_gesture(self):
+            self.status_label.setText("Correct Gesture!")
+            self.status_label.setStyleSheet("font-size: 20px; color: green;")
         
-    def show_hand_absence_alert(self):
-        self.status_label.setText("No hand detected!")
-        self.status_label.setStyleSheet("font-size: 20px; color: red;")
+        def wrong_gesture(self):
+            self.status_label.setText("Wrong Gesture!")
+            self.status_label.setStyleSheet("font-size: 20px; color: red;")
+            
+        def show_hand_absence_alert(self):
+            self.status_label.setText("No hand detected!")
+            self.status_label.setStyleSheet("font-size: 20px; color: red;")
+            
+        if status is None:
+            show_hand_absence_alert(self)
+        elif status == True:
+            correct_gesture(self)
+        else:
+            wrong_gesture(self)
+            
     
     def fail_task(self):
         self.status_label.setText("Task Failed!")

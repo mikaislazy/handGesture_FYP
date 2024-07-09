@@ -49,6 +49,7 @@ def test_start_practice(app, mock_start_practice_callback, qtbot):
 
 # Test the check_input_value function  
 def test_check_input_value(app):
+    # dont pop up the message box when testing
     with patch.object(QMessageBox, 'warning', return_value=None):
         assert app.check_input_value("1 2 3") == True
         assert app.check_input_value("10 11 12") == False

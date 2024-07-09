@@ -67,26 +67,26 @@ class handGestureKnowledgeTaskWidget(QWidget):
         layout.addWidget(self.result_label)    
         
         # Next Button 
-        self.next_button = QPushButton("→")
-        self.next_button.setFixedSize(150, 50)
-        self.next_button.setCursor(Qt.PointingHandCursor)
-        self.next_button.setStyleSheet("background-color: #3ba6ff; border: none; font: 15px; color: white;")
-        self.next_button.clicked.connect(self.on_next_button_clicked)
-        layout.addWidget(self.next_button, alignment=Qt.AlignRight)
+        self.next_btn = QPushButton("→")
+        self.next_btn.setFixedSize(150, 50)
+        self.next_btn.setCursor(Qt.PointingHandCursor)
+        self.next_btn.setStyleSheet("background-color: #3ba6ff; border: none; font: 15px; color: white;")
+        self.next_btn.clicked.connect(self.on_next_btn_clicked)
+        layout.addWidget(self.next_btn, alignment=Qt.AlignRight)
         
         # Next button hide before the option is selected
-        self.next_button.hide()
+        self.next_btn.hide()
         
         # Set the layout only once
         self.setLayout(layout)
         
-    def on_next_button_clicked(self):
+    def on_next_btn_clicked(self):
         self.navigate_to_next_question()
         
     def on_option_click(self, selected_option):
         print(f'Option clicked: {selected_option}')
         print(f"Correct answer: {self.answer}")
-        self.next_button.show()
+        self.next_btn.show()
         if selected_option.lower() == self.answer.lower():
             self.result = True
             self.result_label.setText("Correct!")
@@ -98,7 +98,7 @@ class handGestureKnowledgeTaskWidget(QWidget):
             self.result_label.setStyleSheet("color: red;  font:15px;")
             
         if self.is_last_question():
-            self.next_button.setText("Back to Main Page")
+            self.next_btn.setText("Back to Main Page")
             
         for btn in self.opt_buttons:
             btn.setEnabled(False)

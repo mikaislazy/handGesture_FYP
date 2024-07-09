@@ -9,7 +9,6 @@ class systemWidget(QWidget):
         super().__init__(parent)
         # Main layout
         self.layout = QVBoxLayout()
-        
         self.setStyleSheet("""
             
             QPushButton {
@@ -24,10 +23,9 @@ class systemWidget(QWidget):
             }
         """)
         # Clear data button
-        self.clear_button = QPushButton("Clear Data", self)
-        self.clear_button.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
-        
-        self.clear_button.setStyleSheet(""" 
+        self.clear_btn = QPushButton("Clear Data", self)
+        self.clear_btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        self.clear_btn.setStyleSheet(""" 
                         
             border: none;  
             background-color: #f0f0f0;
@@ -36,10 +34,9 @@ class systemWidget(QWidget):
             font-size: 16px;
             border-bottom: 1px solid black;
             """)
-        self.clear_button.setCursor(Qt.PointingHandCursor)
-        
-        self.clear_button.setMouseTracking(True)
-        self.clear_button.clicked.connect(self.clear_data)
+        self.clear_btn.setCursor(Qt.PointingHandCursor)
+        self.clear_btn.setMouseTracking(True)
+        self.clear_btn.clicked.connect(self.clear_data)
         
         self.setLayout(self.layout)
 
@@ -56,9 +53,3 @@ class systemWidget(QWidget):
             QMessageBox.information(self, 'Cancelled', 'Data clearing cancelled.')
         
 
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    widget = systemWidget()
-    widget.resize(300, 200)
-    widget.show()
-    sys.exit(app.exec_())

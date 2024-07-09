@@ -25,13 +25,13 @@ def normalize_keypoints(keypoints):
     
     return normalized_keypoints.tolist() 
 
-# Function to extract hand keypoints from an image
+# Function to extract hand keypoints from an frame
 def extract_hand_keypoints(image):
-    # Convert the BGR image to RGB
-    rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    # # Convert the BGR image to RGB
+    # rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
     # Process the image with MediaPipe Hands
-    results = hands.process(rgb_image)
+    results = hands.process(image)
 
     hand_keypoints = {
         'left_hand_pts': None,
@@ -46,10 +46,10 @@ def extract_hand_keypoints(image):
             hand_label = handedness.classification[0].label
             keypoints = [[landmark.x, landmark.y, landmark.z] for landmark in hand_landmarks.landmark]
             # the frame is filp, so we need to change swap the keypoint
-            if hand_label == 'Right':
+            if hand_label == 'Left':
                 hand_keypoints['left_hand_pts'] = keypoints
                 hand_keypoints['is_left'] = True
-            elif hand_label == 'Left':
+            elif hand_label == 'Right':
                 hand_keypoints['right_hand_pts'] = keypoints
                 hand_keypoints['is_right'] = True
     

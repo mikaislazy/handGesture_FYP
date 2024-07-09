@@ -13,12 +13,7 @@ class userPerformanceWidget(QWidget):
         # initialize the database if it is empty
         db_utils.create_db()
 
-        # plot the charts
-        self.plot_chart()
-
-        self.setLayout(self.layout)
-
-    def plot_chart(self):
+        
         # layout for score and duration
         layout_score_duration = QHBoxLayout()
         colors = ['b', 'g', 'r', 'c', 'm', 'grey', 'k', 'orange', 'purple']
@@ -115,6 +110,8 @@ class userPerformanceWidget(QWidget):
 
         self.layout.addLayout(layout_score_duration)
         self.layout.addLayout(layout_error_rate)
+        
+        self.setLayout(self.layout)
 
     def create_tooltip_callback(self, gesture):
         return lambda _, points: self.show_tooltip(points, gesture)
