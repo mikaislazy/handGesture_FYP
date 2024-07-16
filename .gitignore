@@ -1,5 +1,5 @@
 .DS_STORE
-_pycache_/
+__pycache__/
 data/
 *.jpg
 *.h5
