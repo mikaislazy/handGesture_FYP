@@ -6,7 +6,6 @@ import Widgets.UserData.db_utils as db_utils
 Please run this file in interface directory.
 """
 
-#the working directory to the  root directory
 project_root = os.path.dirname(os.path.abspath(__file__))
 
 # directory of the test cases

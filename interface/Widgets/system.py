@@ -1,4 +1,3 @@
-import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QSizePolicy
 from PyQt5.QtCore import Qt
 from UserData import db_utils

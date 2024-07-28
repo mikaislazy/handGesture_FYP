@@ -1,8 +1,5 @@
 import pytest
-from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QApplication, QLabel, QPushButton
-from PyQt5.QtTest import QTest
-from PyQt5.QtCore import Qt
 from handGestureTaskSelection import handGestureTaskSelectionWidget
 from unittest.mock import Mock
 

@@ -2,7 +2,6 @@ from handGesturePracticeTool import handGesturePracticeToolWidget
 from handGestureRecognition import handGestureRecognitionWidget
 from handGestureTaskSelection import handGestureTaskSelectionWidget
 from handGesturePractice import handGesturePracticeWidget
-from handGestureComponent import handGestureWidget
 from mainComponents import mainWindow
 import pytest
 from PyQt5.QtWidgets import QApplication

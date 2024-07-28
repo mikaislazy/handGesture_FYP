@@ -1,15 +1,9 @@
 import json
 import os
-import sys
-import utils
-import mediapipe as mp
-import numpy as np
-import tensorflow as tf
 from PyQt5.QtWidgets import QLabel,  QFrame
 from PyQt5.QtGui import QImage
 from PyQt5.QtCore import Qt
 import cv2
-import numpy
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 

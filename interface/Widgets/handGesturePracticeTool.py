@@ -1,8 +1,8 @@
 from collections import deque
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QGroupBox, QRadioButton, QStackedWidget, QFrame
-from PyQt5.QtGui import QPixmap, QFont, QIcon, QImage
-from PyQt5.QtCore import Qt, QTimer, QTime
+from PyQt5.QtGui import QPixmap
+from PyQt5.QtCore import Qt, QTimer
 import cv2
 import os
 import tool
@@ -11,10 +11,7 @@ import utils
 abs_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../model'))
 sys.path.insert(0, abs_path)
 import utils
-import mediapipe as mp
-import numpy as np
-import tensorflow as tf
-from handGestureRecognition import handGestureRecognitionWidget
+
 
 class handGesturePracticeToolWidget(QWidget):
     def __init__(self, gesture_names, effect_name,  parent=None):
@@ -179,8 +176,6 @@ class handGesturePracticeToolWidget(QWidget):
                         self.finish_practice = True
                         self.clock.stop()
                         self.show_finish_practice()
-                buffer_text = f"Buffer: {self.prediction_buffer}"
-                cv2.putText(imgShow, buffer_text, (50,50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2, cv2.LINE_AA)
                 q_img = tool.frame2QImg(imgShow)
 
                 # Check if buffer is full

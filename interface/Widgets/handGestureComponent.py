@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QGridLayout, QPushButton, QHBoxLayout, QStackedWidget, QMainWindow, QSizePolicy
+from PyQt5.QtWidgets import QWidget,  QGridLayout, QPushButton, QHBoxLayout, QStackedWidget, QMainWindow, QSizePolicy
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QSize, Qt
 from handGestureTaskSelection import handGestureTaskSelectionWidget
@@ -141,14 +141,11 @@ class handGestureWidget(QWidget):
         return None
     
     def add_question_score_task1(self, gesture_name, score, is_last_question):
-        print("add_question_score_task1")
         self.trial_score += score
         if is_last_question:
-            print('insert record of task 1 to db.')
             db_utils.insert_record_task1(gesture_name, self.trial_score)
     
     def insert_record_task2(self, gesture_name, status, duration):
-        print('insert record of task 2 to db.')
         db_utils.insert_record_task2(gesture_name, status, duration)
         
             

@@ -1,11 +1,10 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QPushButton, QButtonGroup, QHBoxLayout
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QPushButton, QButtonGroup
 from PyQt5.QtCore import Qt
 
 class handGestureKnowledgeTaskWidget(QWidget):
     def __init__(self, gesture_name, question, options, answer,add_question_score_task1_callback, parent=None):
         super().__init__(parent)
-        print(f"Completed hand gesture question: {question}")
         self.gesture_name = gesture_name
         self.question = question
         self.options = options
@@ -77,7 +76,6 @@ class handGestureKnowledgeTaskWidget(QWidget):
         # Next button hide before the option is selected
         self.next_btn.hide()
         
-        # Set the layout only once
         self.setLayout(layout)
         
     def on_next_btn_clicked(self):

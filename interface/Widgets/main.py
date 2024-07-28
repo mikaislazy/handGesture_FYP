@@ -10,7 +10,7 @@ from mainComponents import mainWindow
 def main(): 
     # create a GUI window 
     app = QtWidgets.QApplication(sys.argv) 
-    window = mainWindow() #base
+    window = mainWindow()
     window.show()
     sys.exit(app.exec_())  
 

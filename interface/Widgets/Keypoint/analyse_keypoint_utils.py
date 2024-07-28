@@ -3,10 +3,8 @@ import cv2
 import mediapipe as mp
 import numpy as np
 import json
-from collections import deque
-import tensorflow as tf
 from . import  common_utils
-# Initialize MediaPipe Hands
+
 mp_hands = mp.solutions.hands
 hands = mp_hands.Hands()
 
@@ -16,13 +14,12 @@ json_filename = os.path.join(curr_dir, "mean_of_normalized_keypoints.json")
 
 with open(json_filename, 'r') as file:
     all_template_keypoints = json.load(file)
+    
 def compare_keypoints(current_keypoints, template_keypoints):
     feedback = []
 
-    if not current_keypoints:
-        return "No keypoints detected"
-    if not template_keypoints:
-        return "No template keypoints found"
+    if not current_keypoints or not template_keypoints:
+        return feedback
 
     # the finger keypoint on the finger 
     keypoint_groups = {
@@ -33,7 +30,7 @@ def compare_keypoints(current_keypoints, template_keypoints):
         'little': [17, 18, 19, 20]
     }
 
-    def get_finger_adjustment(current_pts, template_pts, fonger):
+    def get_finger_adjustment(current_pts, template_pts, finger):
         deltas = template_pts - current_pts
         delta_x = []
         for i in range(len(deltas)):
@@ -45,7 +42,7 @@ def compare_keypoints(current_keypoints, template_keypoints):
         direction_x = 'left' if np.mean(delta_x) < 0 else 'right'
         direction_y = 'up' if np.mean(delta_y) < 0 else 'down'
         
-        return (fonger, direction_y, direction_x)
+        return (finger, direction_y, direction_x)
 
     def aggregate_finger_directions(current_hand_pts, template_hand_pts):
         finger_adjustments = []
@@ -105,19 +102,7 @@ def draw_adjustments(frame, adjustments, current_keypoints):
                 cv2.putText(frame, f"{direction_y} {direction_x}", text_position, cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0), 2, cv2.LINE_AA)
 
 def analyse_keypoints(frame, gesture_name):
-    """
-    Process a single frame to detect hand gestures and provide feedback.
-
-    Parameters:
-    - frame: The input frame from the webcam or video source.
-    - gesture_name: The name of the gesture to recognize.
-
-    Returns:
-    - processed_frame: The frame with feedback drawn on it.
-    """
-    # frame = frame.copy()
     
-    # Check if the gesture template is available
     if gesture_name not in all_template_keypoints:
         cv2.putText(frame, "Gesture template not found.", (100, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2, cv2.LINE_AA)
         return frame
@@ -138,7 +123,7 @@ def analyse_keypoints(frame, gesture_name):
     if current_keypoints['is_right']:
         normalized_keypoints['right_hand_pts'] = common_utils.normalize_keypoints(current_keypoints['right_hand_pts'])
         normalized_keypoints['is_right'] = True
-    # Compare keypoints and provide feedback
+    # Compare keypoints and provide suggestion via draw adjustment
     adjustments = compare_keypoints(normalized_keypoints, template_keypoints)
     draw_adjustments(frame, adjustments, current_keypoints)
 

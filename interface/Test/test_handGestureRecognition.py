@@ -1,7 +1,6 @@
 import pytest
-from PyQt5.QtWidgets import QApplication
 from PyQt5.QtTest import QTest
-from PyQt5.QtCore import Qt, QTimer
+from PyQt5.QtCore import Qt
 from handGestureRecognition import handGestureRecognitionWidget
 from unittest.mock import Mock
 

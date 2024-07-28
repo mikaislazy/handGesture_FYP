@@ -1,13 +1,5 @@
-import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QGridLayout, QStackedWidget
-from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import QSize
+from PyQt5.QtWidgets import  QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QStackedWidget
 from handGestureComponent import handGestureWidget 
-from handGestureRecognition import handGestureRecognitionWidget
-from handGestureKnowledge import handGestureKnowledgeTaskWidget
-from handGesturePractice import handGesturePracticeWidget
-from handGesturePracticeTool import handGesturePracticeToolWidget
-from handGestureTaskSelection import handGestureTaskSelectionWidget
 from userPerformance import userPerformanceWidget
 from system import systemWidget
 
@@ -61,14 +53,13 @@ class mainWindow(QMainWindow):
         btn_setting.clicked.connect(self.switch_to_system)
         sidebar_layout.addWidget(btn_setting)
         
-        # Spacer
         sidebar_layout.addStretch()
 
         # Central widget layout
         self.central_widget = QStackedWidget()
         main_layout.addWidget(self.central_widget)
         
-        # Create and add the hand gesture learning widget
+        # add the hand gesture learning widget
         self.hand_gesture_widget = handGestureWidget(self)
         self.central_widget.addWidget(self.hand_gesture_widget)
         self.central_widget.setCurrentWidget(self.hand_gesture_widget)
@@ -85,7 +76,8 @@ class mainWindow(QMainWindow):
         self.central_widget.setCurrentWidget(self.hand_gesture_widget)
     
     def switch_to_user(self):
-        self.central_widget.removeWidget(self.user_performance_widget)
+        # ensure the line chart is updated when user visited the User Page
+        self.central_widget.removeWidget(self.user_performance_widget) 
         self.user_performance_widget.setParent(None)
         self.user_performance_widget = None
         self.user_performance_widget = userPerformanceWidget(self)

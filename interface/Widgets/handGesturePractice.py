@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QRadioButton, QGroupBox, QPushButton, QSizePolicy, QMessageBox)
+from PyQt5.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QRadioButton, QGroupBox, QPushButton, QMessageBox)
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt
 from gesture_constants import GESTURES
@@ -101,7 +101,7 @@ class handGesturePracticeWidget(QWidget):
         self.effect_group.setLayout(effect_layout)
         layout.addWidget(self.effect_group, alignment=Qt.AlignTop)
 
-        # Submit button (arrow button)
+        # Next button (arrow button)
         self.next_btn = QPushButton("→")
         self.next_btn.setStyleSheet("""
             font-size: 24px;

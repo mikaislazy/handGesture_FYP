@@ -47,12 +47,10 @@ def hand_segmentation_Skin(frame):
     # convert from RGB to HSV color space
     frame_HSV = cv2.cvtColor(frame, cv2.COLOR_RGB2HSV)
     HSV_mask = cv2.inRange(frame_HSV, (0, 58, 0), (50, 173, 255))
-    # HSV_mask = cv2.medianBlur(HSV_mask, 5)
 
     # convert from RGB to YCbCr color space
     frame_YCrCb = cv2.cvtColor(frame, cv2.COLOR_RGB2YCrCb)
     YCrCb_mask = cv2.inRange(frame_YCrCb, (0, 135, 85), (255, 180, 135))
-    # YCrCb_mask = cv2.medianBlur(YCrCb_mask, 5)
 
     # Merge skin detection (YCbCr and HSV)
     global_mask = cv2.bitwise_and(YCrCb_mask, HSV_mask)
@@ -99,9 +97,7 @@ def recognize_hand_gesture(gesture_name ,frame, is_draw_feedback):
     if exist1 or exist2:
         cx, cy, cw, ch =  hand_area_coordinates2 if exist2 else hand_area_coordinates1
         all_pred, prediction, prediction_percentage = model.get_max_prediction(flip_frame)
-        prediction_text = f"{prediction}: {prediction_percentage:.2f}%"
-        # cv2.putText(imageShow,prediction_text, (cx,cy), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
-        # if exist2:
+
         imageShow = cv2.rectangle(img=imageShow, pt1=(cx, cy), pt2=(cx+cw, cy+ch), color=(245, 66, 108), thickness=2)
         if prediction == gesture_name and prediction_percentage >= 0.9:
             status = True

@@ -1,22 +1,18 @@
 from collections import deque
-from PyQt5 import QtWidgets, QtGui, QtCore
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QGridLayout, QPushButton, QHBoxLayout, QStackedWidget, QLabel, QFrame
-from PyQt5.QtGui import QIcon, QPixmap, QImage
-from PyQt5.QtCore import QSize, Qt, QTimer
+from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QPushButton, QHBoxLayout, QLabel
+from PyQt5.QtGui import  QPixmap
+from PyQt5.QtCore import Qt, QTimer
 import cv2
 import os
 import sys
 import  tool
-import numpy 
 import utils
 
 abs_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../model'))
 sys.path.insert(0, abs_path)
 
 import utils
-import mediapipe as mp
-import numpy as np
-import tensorflow as tf
 
 class handGestureRecognitionWidget(QWidget):
     def __init__(self, gesture_name, insert_record_task2_callback , method, parent=None):
@@ -26,7 +22,7 @@ class handGestureRecognitionWidget(QWidget):
         self.insert_record_task2_callback = insert_record_task2_callback
         
         # set the buffer
-        self.buffer_size = 8  # Number of frames to consider for temporal smoothing
+        self.buffer_size = 8  # buffer size management
         self.prediction_buffer = deque(maxlen=self.buffer_size)
         self.draw_feedback = False
         # Open the default webcam
