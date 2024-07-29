@@ -82,8 +82,7 @@ class handGestureKnowledgeTaskWidget(QWidget):
         self.navigate_to_next_question()
         
     def on_option_click(self, selected_option):
-        print(f'Option clicked: {selected_option}')
-        print(f"Correct answer: {self.answer}")
+        
         self.next_btn.show()
         if selected_option.lower() == self.answer.lower():
             self.result = True

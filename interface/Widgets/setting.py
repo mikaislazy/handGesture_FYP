@@ -3,7 +3,7 @@ from PyQt5.QtCore import Qt
 from UserData import db_utils
 from PyQt5.QtWidgets import QMessageBox
 
-class systemWidget(QWidget):
+class settingWidget(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         # Main layout

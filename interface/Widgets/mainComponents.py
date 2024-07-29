@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import  QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QStackedWidget
 from handGestureComponent import handGestureWidget 
 from userPerformance import userPerformanceWidget
-from system import systemWidget
+from setting import settingWidget
 
 class mainWindow(QMainWindow):
     def __init__(self):
@@ -69,7 +69,7 @@ class mainWindow(QMainWindow):
         self.central_widget.addWidget(self.user_performance_widget)
         
         # add the System widget
-        self.system_widget = systemWidget(self)
+        self.system_widget = settingWidget(self)
         self.central_widget.addWidget(self.system_widget)
 
     def switch_to_dashboard(self):

@@ -12,7 +12,6 @@ def get_hand_landmarks_keypoints_dataset(category, main_dataset_folder):
         gesture_keypoints = {}
 
         gesture_path = os.path.join(main_dataset_folder, gesture)
-        print(f"Processing gesture: {gesture}")
 
         if os.path.exists(gesture_path):
             for image_filename in os.listdir(gesture_path):

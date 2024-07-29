@@ -31,7 +31,6 @@ conda env create -f UI-env.yml
 ## Project Structure
 ```
 handGesture_FYP
-├─ .gitignore
 ├─ README.md
 ├─ interface
 │  ├─ Test
@@ -77,7 +76,7 @@ handGesture_FYP
 │  │  ├─ handGestureRecognition.py
 │  │  ├─ handGestureTaskSelection.py
 │  │  ├─ images
-│  │  ├─ system.py
+│  │  ├─ setting.py
 │  │  ├─ tool.py
 │  │  ├─ userPerformance.py
 │  │  └─ utils.py

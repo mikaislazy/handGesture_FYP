@@ -139,7 +139,6 @@ class handGesturePracticeWidget(QWidget):
 
     def update_selected_effect(self, effect_name):
         self.selected_effect = effect_name
-        print("update_selected_effect", self.selected_effect)
     
     def check_input_value(self, input_value):
         if not input_value: 
