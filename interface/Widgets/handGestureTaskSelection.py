@@ -7,7 +7,6 @@ from  tool import load_question, load_answer, load_method
 class handGestureTaskSelectionWidget(QWidget):
     def __init__(self, gesture_name, start_knowledge_task_callback, start_recognition_task_callback, parent=None):
         super().__init__(parent)
-        print("selecting hand gesture task...")
         self.layout = QHBoxLayout(self)
         self.gesture_name = gesture_name
         self.start_knowledge_task_callback = start_knowledge_task_callback

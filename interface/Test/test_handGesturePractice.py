@@ -1,10 +1,8 @@
 import pytest
-from PyQt5 import QtCore, QtWidgets
-from PyQt5.QtWidgets import QApplication, QMessageBox
-from PyQt5.QtTest import QTest
+from PyQt5.QtWidgets import  QMessageBox
 from PyQt5.QtCore import Qt
 from unittest.mock import Mock, patch
-from handGesturePractice import handGesturePracticeWidget  # Adjust the import as needed
+from handGesturePractice import handGesturePracticeWidget 
 from gesture_constants import GESTURES
 
 # Fixture to create a mock function of start_practice_callback
@@ -49,6 +47,7 @@ def test_start_practice(app, mock_start_practice_callback, qtbot):
 
 # Test the check_input_value function  
 def test_check_input_value(app):
+    # dont pop up the message box when testing
     with patch.object(QMessageBox, 'warning', return_value=None):
         assert app.check_input_value("1 2 3") == True
         assert app.check_input_value("10 11 12") == False

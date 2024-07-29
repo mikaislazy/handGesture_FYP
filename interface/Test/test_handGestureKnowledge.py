@@ -1,9 +1,7 @@
 import pytest
-from PyQt5.QtWidgets import QApplication
-from PyQt5.QtTest import QTest
 from PyQt5.QtCore import Qt
 from unittest.mock import Mock
-from handGestureKnowledge import handGestureKnowledgeTaskWidget  # Adjust the import as needed
+from handGestureKnowledge import handGestureKnowledgeTaskWidget 
 import tool 
 
 # Fixture to create a mock function of add_question_score_task1_callback
@@ -42,13 +40,13 @@ def test_initial_state(app):
     assert app.question_label.text() == f"Question: {question}"
     assert app.result_label.text() == ""
 
-    for i, btn in enumerate(app.option_buttons):
+    for i, btn in enumerate(app.opt_buttons):
         assert btn.text() == f"{['A.', 'B.', 'C.'][i]} {app.options[i]}"
 
 # Test the option selection
 def test_option_selection(app, mock_add_question_score_task1_callback, qtbot):
     # Select the correct option
-    correct_option_button = app.option_buttons[answer_index]
+    correct_option_button = app.opt_buttons[answer_index]
     qtbot.mouseClick(correct_option_button, Qt.LeftButton)
     
     assert app.result == True
@@ -56,7 +54,7 @@ def test_option_selection(app, mock_add_question_score_task1_callback, qtbot):
      
     # reset the button state
     app.result_label.setText("")
-    for btn in app.option_buttons:
+    for btn in app.opt_buttons:
             btn.setEnabled(True)
             btn.setStyleSheet("""
                 font-size: 16px;
@@ -70,7 +68,7 @@ def test_option_selection(app, mock_add_question_score_task1_callback, qtbot):
             """)
 
     # Select an incorrect option
-    incorrect_option_button = app.option_buttons[2-answer_index]
+    incorrect_option_button = app.opt_buttons[2-answer_index]
     qtbot.mouseClick(incorrect_option_button, Qt.LeftButton)
     
     assert app.result == False

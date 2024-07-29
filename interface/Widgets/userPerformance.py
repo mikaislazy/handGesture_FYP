@@ -13,12 +13,7 @@ class userPerformanceWidget(QWidget):
         # initialize the database if it is empty
         db_utils.create_db()
 
-        # plot the charts
-        self.plot_chart()
-
-        self.setLayout(self.layout)
-
-    def plot_chart(self):
+        
         # layout for score and duration
         layout_score_duration = QHBoxLayout()
         colors = ['b', 'g', 'r', 'c', 'm', 'grey', 'k', 'orange', 'purple']
@@ -84,7 +79,9 @@ class userPerformanceWidget(QWidget):
                 scatter = pg.ScatterPlotItem(x=x, y=y, pen=pg.mkPen(None), brush=pg.mkBrush(colors[i]))
                 scatter.sigClicked.connect(self.create_tooltip_callback(gesture))
                 self.plot3.addItem(scatter)
-
+                
+        self.plot3.getPlotItem().getAxis('bottom').setTicks(
+            [[(i, str(i)) for i in range(1, max([len(db_utils.calculate_error_rate_task1(g)) for g in GESTURES]) + 1)]])
         self.plot3.setLabel('left', 'Error Rate')
         self.plot3.setLabel('bottom', 'Trial')
         layout_error_rate.addWidget(self.plot3)
@@ -104,19 +101,23 @@ class userPerformanceWidget(QWidget):
                 scatter = pg.ScatterPlotItem(x=x, y=y, pen=pg.mkPen(None), brush=pg.mkBrush(colors[i]))
                 scatter.sigClicked.connect(self.create_tooltip_callback(gesture))
                 self.plot4.addItem(scatter)
-
+                
+        self.plot4.getPlotItem().getAxis('bottom').setTicks(
+            [[(i, str(i)) for i in range(1, max([len(db_utils.calculate_error_rate_task2(g)) for g in GESTURES]) + 1)]])
         self.plot4.setLabel('left', 'Error Rate')
-        self.plot4.setLabel('bottom', 'Gesture Name')
+        self.plot4.setLabel('bottom', 'Trial')
         layout_error_rate.addWidget(self.plot4)
 
         self.layout.addLayout(layout_score_duration)
         self.layout.addLayout(layout_error_rate)
+        
+        self.setLayout(self.layout)
 
     def create_tooltip_callback(self, gesture):
         return lambda _, points: self.show_tooltip(points, gesture)
 
     def show_tooltip(self, points, gesture):
-        point = points[0]  # We only need the first point for the tooltip
+        point = points[0]  
         pos = point.pos()
         data = f"Value: {pos.y():.2f}\nLabel: {gesture}"
         QToolTip.showText(QCursor.pos(), data)

@@ -2,7 +2,6 @@ from handGesturePracticeTool import handGesturePracticeToolWidget
 from handGestureRecognition import handGestureRecognitionWidget
 from handGestureTaskSelection import handGestureTaskSelectionWidget
 from handGesturePractice import handGesturePracticeWidget
-from handGestureComponent import handGestureWidget
 from mainComponents import mainWindow
 import pytest
 from PyQt5.QtWidgets import QApplication
@@ -45,7 +44,7 @@ def test_initial_state(widget):
 def test_open_task_selection(widget, qtbot):
     gesture_name = "TestGesture"
     qtbot.mouseClick(widget.gesture_widget.layout().itemAt(0).widget(), Qt.LeftButton)
-    widget.openTaskSelection(gesture_name)
+    widget.open_task_selection(gesture_name)
 
     assert not widget.gesture_widget.isVisible()
     assert not widget.btn_practice_widget.isVisible()
@@ -55,7 +54,7 @@ def test_open_task_selection(widget, qtbot):
 # Test opening the practice tool
 def test_open_practice_tool(widget, qtbot):
     qtbot.mouseClick(widget.btn_practice_widget.layout().itemAt(0).widget(), Qt.LeftButton)
-    widget.openPracticeTool()
+    widget.open_practice_tool()
 
     assert not widget.gesture_widget.isVisible()
     assert not widget.btn_practice_widget.isVisible()
@@ -66,7 +65,7 @@ def test_open_practice_tool(widget, qtbot):
 def test_navigate_to_main_widget(widget, qtbot):
     gesture_name = "TestGesture"
     qtbot.mouseClick(widget.gesture_widget.layout().itemAt(0).widget(), Qt.LeftButton)
-    widget.openTaskSelection(gesture_name)
+    widget.open_task_selection(gesture_name)
 
     widget.navigate_to_main_widget()
     assert widget.gesture_widget.isVisible()

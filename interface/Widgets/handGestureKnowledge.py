@@ -1,11 +1,10 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QPushButton, QButtonGroup, QHBoxLayout
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QPushButton, QButtonGroup
 from PyQt5.QtCore import Qt
 
 class handGestureKnowledgeTaskWidget(QWidget):
     def __init__(self, gesture_name, question, options, answer,add_question_score_task1_callback, parent=None):
         super().__init__(parent)
-        print(f"Completed hand gesture question: {question}")
         self.gesture_name = gesture_name
         self.question = question
         self.options = options
@@ -37,13 +36,13 @@ class handGestureKnowledgeTaskWidget(QWidget):
         layout.addWidget(self.question_label, alignment=Qt.AlignCenter)
         
         # Options buttons
-        self.optionGroup = QButtonGroup()
-        self.optionGroup.setExclusive(True)
-        self.option_buttons = []
+        self.opt_group = QButtonGroup()
+        self.opt_group.setExclusive(True)
+        self.opt_buttons = []
         opt_order = ["A.", "B.", "C."]
         
-        for order, option_text in zip(opt_order, options):
-            btn = QPushButton(f"{order} {option_text}")
+        for order, opt_text in zip(opt_order, options):
+            btn = QPushButton(f"{order} {opt_text}")
             btn.setFixedSize(700, 50)
             btn.setStyleSheet("""
                 font-size: 16px;
@@ -56,9 +55,9 @@ class handGestureKnowledgeTaskWidget(QWidget):
                 margin: 0;
             """)
             btn.setCursor(Qt.PointingHandCursor)
-            btn.clicked.connect(lambda checked, option_text=option_text: self.on_option_click(option_text))
-            self.option_buttons.append(btn)
-            self.optionGroup.addButton(btn)
+            btn.clicked.connect(lambda checked, opt_text=opt_text: self.on_option_click(opt_text))
+            self.opt_buttons.append(btn)
+            self.opt_group.addButton(btn)
             layout.addWidget(btn, alignment=Qt.AlignCenter)
         
         self.result_label = QLabel("")
@@ -67,27 +66,24 @@ class handGestureKnowledgeTaskWidget(QWidget):
         layout.addWidget(self.result_label)    
         
         # Next Button 
-        self.next_button = QPushButton("→")
-        self.next_button.setFixedSize(150, 50)
-        self.next_button.setCursor(Qt.PointingHandCursor)
-        self.next_button.setStyleSheet("background-color: #3ba6ff; border: none; font: 15px; color: white;")
-        self.next_button.clicked.connect(self.on_next_button_clicked)
-        layout.addWidget(self.next_button, alignment=Qt.AlignRight)
+        self.next_btn = QPushButton("→")
+        self.next_btn.setFixedSize(150, 50)
+        self.next_btn.setCursor(Qt.PointingHandCursor)
+        self.next_btn.setStyleSheet("background-color: #3ba6ff; border: none; font: 15px; color: white;")
+        self.next_btn.clicked.connect(self.on_next_btn_clicked)
+        layout.addWidget(self.next_btn, alignment=Qt.AlignRight)
         
         # Next button hide before the option is selected
-        self.next_button.hide()
+        self.next_btn.hide()
         
-        # Set the layout only once
         self.setLayout(layout)
         
-    def on_next_button_clicked(self):
-        parent = self.parent_widget
+    def on_next_btn_clicked(self):
         self.navigate_to_next_question()
         
     def on_option_click(self, selected_option):
-        print(f'Option clicked: {selected_option}')
-        print(f"Correct answer: {self.answer}")
-        self.next_button.show()
+        
+        self.next_btn.show()
         if selected_option.lower() == self.answer.lower():
             self.result = True
             self.result_label.setText("Correct!")
@@ -99,9 +95,9 @@ class handGestureKnowledgeTaskWidget(QWidget):
             self.result_label.setStyleSheet("color: red;  font:15px;")
             
         if self.is_last_question():
-            self.next_button.setText("Back to Main Page")
+            self.next_btn.setText("Back to Main Page")
             
-        for btn in self.option_buttons:
+        for btn in self.opt_buttons:
             btn.setEnabled(False)
             btn.setStyleSheet("""
                 font-size: 16px;

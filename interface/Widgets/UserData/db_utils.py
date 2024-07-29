@@ -3,10 +3,8 @@ from sqlite3 import Error
 import pandas as pd
 from  datetime import date
 import os
-# Get the directory of the current script
-current_dir = os.path.dirname(os.path.abspath(__file__))
 
-# Construct the absolute path to the model file
+current_dir = os.path.dirname(os.path.abspath(__file__))
 database_name = "data.db"
 database_name  = os.path.join(current_dir, database_name)
 
@@ -15,7 +13,6 @@ def create_db():
     try:
         conn = sqlite3.connect(database_name)
         c = conn.cursor()
-        # Create database for hand gesture task progress
         c.execute('''
                 CREATE TABLE IF NOT EXISTS Gesture_Task1(
                     gesture_name TEXT NOT NULL,
@@ -65,7 +62,6 @@ def retrieve_tableData_info(table_name):
     conn.close()
 
 def retrieve_gesture_score_task1(gesture_name):
-    # print("database_name:", database_name)
     conn = sqlite3.connect(database_name)
     user_data_query = 'SELECT score FROM Gesture_Task1 WHERE gesture_name = "{}";'.format(gesture_name)
     user_data_df = pd.read_sql_query(user_data_query, conn)
@@ -86,14 +82,13 @@ def retrieve_gesture_duration_task2(gesture_name):
     conn.close()
     return user_data_df
 
-#calculation function
+# calculation function
 def calculate_error_rate_task1(gesture_name):
     gesture_score = retrieve_gesture_score_task1(gesture_name)
     trial = len(gesture_score)
     if gesture_score.empty:
-        return None
+        return []
     else:
-        # total_score = gesture_score.sum().values[0]
         all_score = gesture_score['score'].tolist()
         accumulated_score = []
         for i in range(0, len(all_score)):
@@ -110,9 +105,8 @@ def calculate_error_rate_task1(gesture_name):
 
 def calculate_error_rate_task2(gesture_name):
     gesture_status = retrieve_gesture_status_task2(gesture_name)
-    trial = len(gesture_status)
     if gesture_status.empty:
-        return None
+        return []
     else:
         all_status = gesture_status['status'].tolist()
         error_rate = []
@@ -130,7 +124,6 @@ def insert_record_task1(gesture_name, score ):
     c.execute('INSERT INTO Gesture_Task1 VALUES (?, ?, ?)', (gesture_name, score, date.today().strftime('%Y-%m-%d')))
     conn.commit()
     conn.close()
-    #print to test
     retrieve_tableData_info("Gesture_Task1")
     
 def insert_record_task2(gesture_name, status, duration):
@@ -139,7 +132,6 @@ def insert_record_task2(gesture_name, status, duration):
     c.execute('INSERT INTO Gesture_Task2 VALUES (?, ?, ?, ?)', (gesture_name, status, duration, date.today().strftime('%Y-%m-%d')))
     conn.commit()
     conn.close()
-    #print to test
     retrieve_tableData_info("Gesture_Task2")
     
 # sample data
@@ -192,7 +184,7 @@ def test_calculate_error_rate_task1():
     # Expected accumulated error rates for 'ZhiJiXiangYin'
     # Given scores: [4, 3, 2]
     # Accumulated scores: [4, 7, 9]
-    # Error rates: [0/4, 7/8, 9/12] = [0, 0.875, 0.75]
+    # Correct rates: [0/4, 7/8, 9/12]
     expected_error_rates = [0, 1/8, 3/12]
     
     # Calculate the error rates using the function
@@ -208,7 +200,7 @@ def test_calculate_error_rate_task2():
     expected_rates = [0, 1/2, 1/3]  # Assuming the test data: [(True), (False), (True)]
     assert len(error_rates) == len(expected_rates)
     for rate, expected in zip(error_rates, expected_rates):
-        assert abs(rate - expected) < 1e-6  # Allowing small floating-point error
+        assert abs(rate - expected) < 1e-6  
 
 def clear_db():
     conn = sqlite3.connect(database_name)

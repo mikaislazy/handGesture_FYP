@@ -1,22 +1,18 @@
 from collections import deque
-from PyQt5 import QtWidgets, QtGui, QtCore
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QGridLayout, QPushButton, QHBoxLayout, QStackedWidget, QLabel, QFrame
-from PyQt5.QtGui import QIcon, QPixmap, QImage
-from PyQt5.QtCore import QSize, Qt, QTimer
+from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QPushButton, QHBoxLayout, QLabel
+from PyQt5.QtGui import  QPixmap
+from PyQt5.QtCore import Qt, QTimer
 import cv2
 import os
 import sys
 import  tool
-import numpy 
 import utils
 
 abs_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../model'))
 sys.path.insert(0, abs_path)
 
 import utils
-import mediapipe as mp
-import numpy as np
-import tensorflow as tf
 
 class handGestureRecognitionWidget(QWidget):
     def __init__(self, gesture_name, insert_record_task2_callback , method, parent=None):
@@ -26,7 +22,7 @@ class handGestureRecognitionWidget(QWidget):
         self.insert_record_task2_callback = insert_record_task2_callback
         
         # set the buffer
-        self.buffer_size = 8  # Number of frames to consider for temporal smoothing
+        self.buffer_size = 8  # buffer size management
         self.prediction_buffer = deque(maxlen=self.buffer_size)
         self.draw_feedback = False
         # Open the default webcam
@@ -50,13 +46,13 @@ class handGestureRecognitionWidget(QWidget):
         self.layout.addWidget(self.video_frame, alignment=Qt.AlignCenter)
         
         # Add Start Button
-        self.startBtn = QPushButton(f"Start!")
-        self.startBtn.setContentsMargins(0, 0, 0, 0)
-        self.startBtn.setFixedSize(100, 50)
-        self.startBtn.setCursor(Qt.PointingHandCursor)
-        self.startBtn.setStyleSheet("background-color: green; border: none; font: 15px; color: white;")
-        self.startBtn.clicked.connect(self.toggleStart)
-        bottom_layout.addWidget(self.startBtn, alignment=Qt.AlignLeft)
+        self.start_btn = QPushButton(f"Start!")
+        self.start_btn.setContentsMargins(0, 0, 0, 0)
+        self.start_btn.setFixedSize(100, 50)
+        self.start_btn.setCursor(Qt.PointingHandCursor)
+        self.start_btn.setStyleSheet("background-color: green; border: none; font: 15px; color: white;")
+        self.start_btn.clicked.connect(self.toggle_start)
+        bottom_layout.addWidget(self.start_btn, alignment=Qt.AlignLeft)
         
         # add label for comment
         self.status_label = QLabel("")
@@ -64,23 +60,23 @@ class handGestureRecognitionWidget(QWidget):
         bottom_layout.addWidget(self.status_label, alignment=Qt.AlignCenter)
         
         # Add Close Button
-        self.closeBtn = QPushButton("Close")
-        self.closeBtn.setContentsMargins(0, 0, 0, 0)
-        self.closeBtn.setFixedSize(100, 50)
-        self.closeBtn.setCursor(Qt.PointingHandCursor)
-        self.closeBtn.setStyleSheet("background-color: red; border: none; font: 15px; color: white;")
-        self.closeBtn.clicked.connect(self.backToMain)
-        bottom_layout.addWidget(self.closeBtn, alignment=Qt.AlignRight)
-        self.closeBtn.hide() # hide before the task is finished
+        self.close_btn = QPushButton("Close")
+        self.close_btn.setContentsMargins(0, 0, 0, 0)
+        self.close_btn.setFixedSize(100, 50)
+        self.close_btn.setCursor(Qt.PointingHandCursor)
+        self.close_btn.setStyleSheet("background-color: red; border: none; font: 15px; color: white;")
+        self.close_btn.clicked.connect(self.back_to_main)
+        bottom_layout.addWidget(self.close_btn, alignment=Qt.AlignRight)
+        self.close_btn.hide() # hide before the task is finished
         
         self.layout.addLayout(bottom_layout)
     
     
     
-    def toggleStart(self):
-        self.startBtn.hide()
+    def toggle_start(self):
+        self.start_btn.hide()
         self.start_timer()
-        self.recognitionTask()
+        self.recognition_task()
     
     def start_timer(self):
         self.clock = QTimer(self)
@@ -93,17 +89,15 @@ class handGestureRecognitionWidget(QWidget):
             self.clock.stop()
             self.release_webcam()
             self.fail_task()
-            self.closeBtn.show()
+            self.close_btn.show()
         else:
             minutes = self.duration // 60
             seconds = self.duration % 60
             self.timerLabel.setText(f"{minutes:02}:{seconds:02}")
         
-    def recognitionTask(self):
+    def recognition_task(self):
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.update_frame)
-        
-        # Open the default webcam
         
         self.timer.start(100) 
 
@@ -124,7 +118,7 @@ class handGestureRecognitionWidget(QWidget):
                 self.prediction_buffer.clear()
                 # end the task
                 self.release_webcam()
-                self.closeBtn.show()
+                self.close_btn.show()
              # if buffer is half full -> draw feedback
             if len(self.prediction_buffer) == self.buffer_size//2:
                 self.draw_feedback = True
@@ -135,30 +129,31 @@ class handGestureRecognitionWidget(QWidget):
             self.video_frame.setPixmap(QPixmap.fromImage(q_img))
     
     def show_gesture_comment(self, status):
-        if status is None:
-            self.show_hand_absence_alert()
-        elif status == True:
-            self.correctGesture()
-        else:
-            self.wrongGesture()
-            
-    def correctGesture(self):
-        self.status_label.setText("Correct Gesture!")
-        self.status_label.setStyleSheet("font-size: 20px; color: green;")
-    
-    def wrongGesture(self):
-        self.status_label.setText("Wrong Gesture!")
-        self.status_label.setStyleSheet("font-size: 20px; color: red;")
+        def correct_gesture(self):
+            self.status_label.setText("Correct Gesture!")
+            self.status_label.setStyleSheet("font-size: 20px; color: green;")
         
-    def show_hand_absence_alert(self):
-        self.status_label.setText("No hand detected!")
-        self.status_label.setStyleSheet("font-size: 20px; color: red;")
+        def wrong_gesture(self):
+            self.status_label.setText("Wrong Gesture!")
+            self.status_label.setStyleSheet("font-size: 20px; color: red;")
+            
+        def show_hand_absence_alert(self):
+            self.status_label.setText("No hand detected!")
+            self.status_label.setStyleSheet("font-size: 20px; color: red;")
+            
+        if status is None:
+            show_hand_absence_alert(self)
+        elif status == True:
+            correct_gesture(self)
+        else:
+            wrong_gesture(self)
+            
     
     def fail_task(self):
         self.status_label.setText("Task Failed!")
         self.status_label.setStyleSheet("font-size: 20px; color: red;")
         
-    def backToMain(self):
+    def back_to_main(self):
         if self.status:
             time = 60 - self.duration
         else:

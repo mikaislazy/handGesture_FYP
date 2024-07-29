@@ -3,10 +3,8 @@ import cv2
 import mediapipe as mp
 import numpy as np
 import json
-from collections import deque
-import tensorflow as tf
 from . import  common_utils
-# Initialize MediaPipe Hands
+
 mp_hands = mp.solutions.hands
 hands = mp_hands.Hands()
 
@@ -16,15 +14,14 @@ json_filename = os.path.join(curr_dir, "mean_of_normalized_keypoints.json")
 
 with open(json_filename, 'r') as file:
     all_template_keypoints = json.load(file)
-
+    
 def compare_keypoints(current_keypoints, template_keypoints):
     feedback = []
 
-    if not current_keypoints:
-        return "No keypoints detected"
-    if not template_keypoints:
-        return "No template keypoints found"
+    if not current_keypoints or not template_keypoints:
+        return feedback
 
+    # the finger keypoint on the finger 
     keypoint_groups = {
         'thumb': [1, 2, 3, 4],
         'index': [5, 6, 7, 8],
@@ -33,22 +30,28 @@ def compare_keypoints(current_keypoints, template_keypoints):
         'little': [17, 18, 19, 20]
     }
 
-    def get_finger_adjustment(current_pts, template_pts, finger_name):
+    def get_finger_adjustment(current_pts, template_pts, finger):
         deltas = template_pts - current_pts
-        delta_x = deltas[:, 0]
-        delta_y = deltas[:, 1]
+        delta_x = []
+        for i in range(len(deltas)):
+            delta_x.append(deltas[i][0])
+        delta_y = []
+        for i in range(len(deltas)):
+            delta_y.append(deltas[i][1])
 
         direction_x = 'left' if np.mean(delta_x) < 0 else 'right'
         direction_y = 'up' if np.mean(delta_y) < 0 else 'down'
         
-        return (finger_name, direction_y, direction_x)
+        return (finger, direction_y, direction_x)
 
     def aggregate_finger_directions(current_hand_pts, template_hand_pts):
         finger_adjustments = []
-        for finger_name, indices in keypoint_groups.items():
-            current_pts = np.array([current_hand_pts[i] for i in indices])
-            template_pts = np.array([template_hand_pts[i] for i in indices])
-            adjustment = get_finger_adjustment(current_pts, template_pts, finger_name)
+        for finger, indices in keypoint_groups.items():
+            current_pts = [current_hand_pts[i] for i in indices]
+            template_pts = [template_hand_pts[i] for i in indices]
+            current_pts = np.array(current_pts)
+            template_pts = np.array(template_pts)
+            adjustment = get_finger_adjustment(current_pts, template_pts, finger)
             if adjustment:
                 finger_adjustments.append(adjustment)
         return finger_adjustments
@@ -63,8 +66,9 @@ def compare_keypoints(current_keypoints, template_keypoints):
     
     return feedback
 
-def draw_adjustments(image, adjustments, current_keypoints):
-    keypoint_groups = {
+def draw_adjustments(frame, adjustments, current_keypoints):
+    # only draw on the finger tip
+    fingertip_group = {
         'thumb': 4,
         'index': 8,
         'middle': 12,
@@ -73,40 +77,32 @@ def draw_adjustments(image, adjustments, current_keypoints):
     }
 
     for adjustment in adjustments:
-        finger_name, direction_y, direction_x = adjustment
-        if finger_name in keypoint_groups:
-            keypoint_index = keypoint_groups[finger_name]
+        finger, direction_y, direction_x = adjustment
+        if finger in fingertip_group:
+            fingertip_idx = fingertip_group[finger]
+            frame_width = frame.shape[1]
+            frame_height = frame.shape[0]
             # Draw feedback for the left hand if detected
-            if current_keypoints['is_left'] and keypoint_index < len(current_keypoints['left_hand_pts']):
-                keypoint = (np.array(current_keypoints['left_hand_pts'][keypoint_index][:2]) * np.array([image.shape[1], image.shape[0]])).astype(int)
+            if current_keypoints['is_left'] and fingertip_idx < len(current_keypoints['left_hand_pts']):
+                current_fingertip_keypoints = current_keypoints['left_hand_pts'][fingertip_idx]
+                fingertip_position = (int(current_fingertip_keypoints[0] * frame_width), int(current_fingertip_keypoints[1] * frame_height))
                 # Draw a circle at the keypoint
-                cv2.circle(image, tuple(keypoint), 5, (0, 0, 255), -1)
+                cv2.circle(frame, tuple(fingertip_position), 5, (0, 0, 255), -1)
                 # Draw text indicating the direction
-                text_position = (keypoint[0] + 10, keypoint[1] + 10)
-                cv2.putText(image, f"{direction_y} {direction_x}", text_position, cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0), 2, cv2.LINE_AA)
+                text_position = (fingertip_position[0] + 10, fingertip_position[1] + 10)
+                cv2.putText(frame, f"{direction_y} {direction_x}", text_position, cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0), 2, cv2.LINE_AA)
             # Draw feedback for the right hand if detected
-            if current_keypoints['is_right'] and keypoint_index < len(current_keypoints['right_hand_pts']):
-                keypoint = (np.array(current_keypoints['right_hand_pts'][keypoint_index][:2]) * np.array([image.shape[1], image.shape[0]])).astype(int)
+            if current_keypoints['is_right'] and fingertip_idx < len(current_keypoints['right_hand_pts']):
+                current_fingertip_keypoints = current_keypoints['right_hand_pts'][fingertip_idx]
+                fingertip_position = (int(current_fingertip_keypoints[0] * frame_width), int(current_fingertip_keypoints[1] * frame_height))
                 # Draw a circle at the keypoint
-                cv2.circle(image, tuple(keypoint), 5, (0, 0, 255), -1)
+                cv2.circle(frame, tuple(fingertip_position), 5, (0, 0, 255), -1)
                 # Draw text indicating the direction
-                text_position = (keypoint[0] + 10, keypoint[1] + 10)
-                cv2.putText(image, f"{direction_y} {direction_x}", text_position, cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0), 2, cv2.LINE_AA)
+                text_position = (fingertip_position[0] + 10, fingertip_position[1] + 10)
+                cv2.putText(frame, f"{direction_y} {direction_x}", text_position, cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0), 2, cv2.LINE_AA)
 
 def analyse_keypoints(frame, gesture_name):
-    """
-    Process a single frame to detect hand gestures and provide feedback.
-
-    Parameters:
-    - frame: The input frame from the webcam or video source.
-    - gesture_name: The name of the gesture to recognize.
-
-    Returns:
-    - processed_frame: The frame with feedback drawn on it.
-    """
-    # frame = frame.copy()
     
-    # Check if the gesture template is available
     if gesture_name not in all_template_keypoints:
         cv2.putText(frame, "Gesture template not found.", (100, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2, cv2.LINE_AA)
         return frame
@@ -127,7 +123,7 @@ def analyse_keypoints(frame, gesture_name):
     if current_keypoints['is_right']:
         normalized_keypoints['right_hand_pts'] = common_utils.normalize_keypoints(current_keypoints['right_hand_pts'])
         normalized_keypoints['is_right'] = True
-    # Compare keypoints and provide feedback
+    # Compare keypoints and provide suggestion via draw adjustment
     adjustments = compare_keypoints(normalized_keypoints, template_keypoints)
     draw_adjustments(frame, adjustments, current_keypoints)
 
