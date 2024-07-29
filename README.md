@@ -82,7 +82,6 @@ handGesture_FYP
 │  │  └─ utils.py
 │  └─ test_runner.py
 ├─ model
-│  ├─ overall_dataset.json
 │  ├─ trainingModel.ipynb
 │  └─ utils.py
 └─ set-up-env
